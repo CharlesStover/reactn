@@ -1,0 +1,9 @@
+{
+  "name": "reactn",
+  "version": "0.0.1",
+  "description": "React, but with built-in global state management.",
+  "main": "index.js",
+  "repository": "https://github.com/CharlesStover/reactn.git",
+  "author": "Charles Stover <npmjs@charlesstover.com>",
+  "license": "MIT"
+}
