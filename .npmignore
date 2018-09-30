@@ -1,0 +1,6 @@
+/src
+/.babelrc
+/.gitignore
+/.npmignore
+/.travis.yml
+/webpack.config.js

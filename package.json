@@ -1,9 +1,29 @@
 {
   "name": "reactn",
   "version": "0.0.1",
+  "author": "Charles Stover <npmjs@charlesstover.com>",
   "description": "React, but with built-in global state management.",
+  "license": "MIT",
   "main": "index.js",
   "repository": "https://github.com/CharlesStover/reactn.git",
-  "author": "Charles Stover <npmjs@charlesstover.com>",
-  "license": "MIT"
+  "scripts": {
+    "build": "webpack",
+    "dev": "set NODE_ENV=development&& webpack",
+    "prepublishOnly": "npm run build",
+    "test": "echo No test exists. && exit 0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.1.2",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
+    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-loader": "^8.0.0-beta.6",
+    "react": "^16.5.2",
+    "webpack": "^4.20.2",
+    "webpack-cli": "^3.1.2"
+  },
+  "peerDependencies": {
+    "react": "^16.5.2"
+  }
 }
