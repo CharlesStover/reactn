@@ -1,30 +1,29 @@
 import React from 'react';
 
-ReactNGlobalState = {
-  version: 1
+const GlobalStateManager = {
+  globalState: Object.create(null),
+  set: (key, value) => {
+    Object.defineProperty(GlobalStateManager.globalState)
+  }
+};
+
+const setGlobalState = function(globalState) {
+  const modification =
+    typeof globalState === 'function' ?
+      globalState(GlobalStateManager.globalState) :
+      globalState;
+  Object.assign(ReactNGlobalState, modification);
 };
 
 const ReactN = {
   ...React,
   Component: class ReactNComponent extends React.Component {
-
-    globalState = ReactNGlobalState;
-
-    setGlobalState = globalState => {
-      Object.assign(ReactNGlobalState, globalState);
-      this.forceUpdate();
-    }
-
+    globalState = GlobalStateManager.globalState;
+    setGlobalState = setGlobalState.bind(this);
   },
   PureComponent: class ReactNPureComponent extends React.PureComponent {
-
-    globalState = ReactNGlobalState;
-
-    setGlobalState = globalState => {
-      Object.assign(ReactNGlobalState, globalState);
-      this.forceUpdate();
-    }
-
+    globalState = GlobalStateManager.globalState;
+    setGlobalState = setGlobalState.bind(this);
   }
 };
 
