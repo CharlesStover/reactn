@@ -6,7 +6,9 @@ const NODE_ENV =
     'production';
 
 module.exports = {
-  entry: './src/reactn.js',
+  entry: {
+    index: './src/reactn.js'
+  },
   externals: {
     'react': {
       amd: 'react',
@@ -29,7 +31,7 @@ module.exports = {
     ]
   },
   output: {
-    filename: 'index.js',
+    filename: '[name].js',
     library: 'reactn',
     libraryTarget: 'umd',
     path: path.resolve(__dirname, '.'),
