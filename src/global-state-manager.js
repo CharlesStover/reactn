@@ -9,6 +9,14 @@ const addListener = (key, instance) => {
   listeners.get(key).add(instance);
 };
 
+const enqueueForceUpdate = instances => {
+  if (instances) {
+    for (const instance of instances) {
+      instance.updater.enqueueForceUpdate(instance, null, 'forceUpdate');
+    }
+  }
+};
+
 export const removeListeners = instance => {
   for (const [ , instances ] of listeners.entries()) {
     if (instances.has(instance)) {
@@ -53,22 +61,13 @@ class GlobalStateManager {
           }
         }
       }
-      if (instances) {
-        for (const instance of instances) {
-          instance.updater.enqueueForceUpdate(instance, null, 'forceUpdate');
-        }
-      }
+      enqueueForceUpdate(instances);
       return;
     }
 
     // Single-key changes.
     this._state[key] = value;
-    const instances = listeners.get(key);
-    if (instances) {
-      for (const instance of instances) {
-        instance.updater.enqueueForceUpdate(instance, null, 'forceUpdate');
-      }
-    }
+    enqueueForceUpdate(listeners.get(key));
   }
 
   state(instance) {

@@ -1,61 +1,50 @@
-import React from 'react';
-import componentWillUnmount from './component-will-unmount';
-import getDerivedGlobalFromProps from './get-derived-global-from-props';
-import globalStateManager from './global-state-manager';
-import setGlobal from './set-global';
-
+import globalStateManager, { removeListeners } from './global-state-manager';
 export { default as reducers } from './reducers';
 
-const ReactN = {
-  ...React,
+const ReactN = function(Component) {
+  class ReactNComponent extends Component {
 
-  Component: class ReactNComponent extends React.Component {
-
-    constructor(props) {
-      super(props);
-      getDerivedGlobalFromProps.bind(this)();
+    constructor(...args) {
+      super(...args);
     }
 
-    componentDidUpdate(props, state) {
-      getDerivedGlobalFromProps.bind(this)();
-      // super.componentDidUpdate(props, state);
-    }
+    static getDerivedStateFromProps = function(props, ...args) {
+
+      if (Object.prototype.hasOwnProperty.call(Component, 'getDerivedGlobalFromProps')) {
+        const newState = Component.getDerivedGlobalFromProps(props, globalStateManager._state, ...args);
+        globalStateManager.set(newState);
+      }
+
+      if (Object.prototype.hasOwnProperty.call(Component, 'getDerivedStateFromProps')) {
+        return Component.getDerivedStateFromProps(props, ...args);
+      }
+      return null;
+    };
 
     componentWillUnmount() {
-      componentWillUnmount.bind(this)();
-      super.componentWillUnmount();
+      removeListeners(this);
+      if (super.componentWillUnmount) {
+        super.componentWillUnmount();
+      }
     }
 
     get global() {
       return globalStateManager.state(this);
     }
 
-    setGlobal = setGlobal.bind(this);
-  },
+    setGlobal = g => {
+      globalStateManager.set(
+        typeof g === 'function' ?
+          g(globalStateManager._state) :
+          g
+      );
+    };
 
-  PureComponent: class ReactNPureComponent extends React.PureComponent {
-
-    constructor(props) {
-      super(props);
-      getDerivedGlobalFromProps.bind(this)(props);
-    }
-
-    componentDidUpdate(props, state) {
-      getDerivedGlobalFromProps.bind(this)(props);
-      // super.componentDidUpdate(props, state);
-    }
-
-    componentWillUnmount() {
-      componentWillUnmount.bind(this)();
-      // super.componentWillUnmount();
-    }
-
-    get global() {
-      return globalStateManager.state(this);
-    }
-
-    setGlobal = setGlobal.bind(this);
   }
+
+  ReactNComponent.displayName = Component.displayName + '-ReactN';
+
+  return ReactNComponent;
 };
 
 export default ReactN;
