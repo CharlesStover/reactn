@@ -1,11 +1,22 @@
 import globalStateManager, { removeListeners } from './global-state-manager';
-export { default as reducers } from './reducers';
+import reducersImport from './reducers';
+
+const setGlobal = g => {
+  globalStateManager.set(
+    typeof g === 'function' ?
+      g(globalStateManager._state) :
+      g
+  );
+};
 
 const ReactN = function(Component) {
   class ReactNComponent extends Component {
 
     constructor(...args) {
       super(...args);
+      if (!Object.prototype.hasOwnProperty.call(this, 'state')) {
+        this.state = Object.create(null);
+      }
     }
 
     static getDerivedStateFromProps = function(props, ...args) {
@@ -32,19 +43,35 @@ const ReactN = function(Component) {
       return globalStateManager.state(this);
     }
 
-    setGlobal = g => {
-      globalStateManager.set(
-        typeof g === 'function' ?
-          g(globalStateManager._state) :
-          g
+    setGlobal(global, callback = null) {
+      setTimeout(
+        () => {
+          setGlobal(global);
+          if (callback) {
+            callback();
+          }
+        },
+        0
       );
-    };
+    }
 
   }
 
-  ReactNComponent.displayName = Component.displayName + '-ReactN';
+  ReactNComponent.displayName = (Component.displayName || Component.name) + '-ReactN';
 
   return ReactNComponent;
 };
 
+Object.defineProperty(reducersImport, 'init', {
+  configurable: true,
+  enumerable: false,
+  value: g => {
+    delete reducersImport.init;
+    setGlobal(g);
+  },
+  writable: false
+});
+
 export default ReactN;
+
+export const reducers = reducersImport;

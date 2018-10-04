@@ -20,7 +20,7 @@ const enqueueForceUpdate = instances => {
 export const removeListeners = instance => {
   for (const [ , instances ] of listeners.entries()) {
     if (instances.has(instance)) {
-      instances.remove(instance);
+      instances.delete(instance);
     }
   }
 };
@@ -32,9 +32,21 @@ class GlobalStateManager {
   get reducers() {
     return Object.entries(reducers).reduce(
       (accumulator, [ key, reducer ]) => {
+
+        // Don't bind init() to components.
+        if (key === 'init') {
+          return accumulator;
+        }
         accumulator[key] = (...args) => {
           const newState = reducer(this._state, ...args);
-          this.set(newState);
+          if (newState instanceof Promise) {
+            newState.then(newStateResolved => {
+              this.set(newStateResolved);
+            });
+          }
+          else {
+            this.set(newState);
+          }
         };
         return accumulator;
       },
