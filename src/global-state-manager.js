@@ -2,21 +2,31 @@ import reducers from './reducers';
 
 const listeners = new Map();
 
+// Map component instance to a state property.
 const addListener = (key, instance) => {
   if (!listeners.has(key)) {
-    listeners.set(key, new Set());
+    listeners.set(key, new Set([ instance ]));
   }
-  listeners.get(key).add(instance);
+  else {
+    listeners.get(key).add(instance);
+  }
 };
 
+// Force update a set of component instances.
 const enqueueForceUpdate = instances => {
-  if (instances) {
-    for (const instance of instances) {
-      instance.updater.enqueueForceUpdate(instance, null, 'forceUpdate');
+  if (
+    instances &&
+    instances.size
+  ) {
+    if (instances) {
+      for (const instance of instances) {
+        instance.updater.enqueueForceUpdate(instance, null, 'forceUpdate');
+      }
     }
   }
 };
 
+// Unmap a component instance from all state properties.
 export const removeListeners = instance => {
   for (const [ , instances ] of listeners.entries()) {
     if (instances.has(instance)) {
@@ -40,9 +50,15 @@ class GlobalStateManager {
         accumulator[key] = (...args) => {
           const newState = reducer(this._state, ...args);
           if (newState instanceof Promise) {
-            newState.then(newStateResolved => {
-              this.set(newStateResolved);
-            });
+            newState
+              .then(newStateResolved => {
+                this.set(
+                  typeof newStateResolved === 'function' ?
+                    newStateResolved(this._state) :
+                    newStateResolved
+                );
+              })
+              .catch(() => {});
           }
           else {
             this.set(newState);
@@ -54,7 +70,7 @@ class GlobalStateManager {
     );
   }
 
-  set(key, value) {
+  set(key, value, forceUpdate = true) {
 
     // No changes, e.g. getDerivedGlobalFromProps.
     if (key === null) {
@@ -65,7 +81,7 @@ class GlobalStateManager {
     if (typeof key === 'object') {
       const instances = new Set();
       for (const [ k, v ] of Object.entries(key)) {
-        this.set(k, v);
+        this.set(k, v, false);
         const keyInstances = listeners.get(k);
         if (keyInstances) {
           for (const keyInstance of keyInstances) {
@@ -79,7 +95,9 @@ class GlobalStateManager {
 
     // Single-key changes.
     this._state[key] = value;
-    enqueueForceUpdate(listeners.get(key));
+    if (forceUpdate) {
+      enqueueForceUpdate(listeners.get(key));
+    }
   }
 
   state(instance) {

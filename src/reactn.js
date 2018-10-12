@@ -1,5 +1,5 @@
 import globalStateManager, { removeListeners } from './global-state-manager';
-import reducersImport from './reducers';
+export { default as reducers } from './reducers';
 
 const setGlobal = g => {
   globalStateManager.set(
@@ -21,11 +21,13 @@ const ReactN = function(Component) {
 
     static getDerivedStateFromProps = function(props, ...args) {
 
+      // getDerivedGlobalFromProps
       if (Object.prototype.hasOwnProperty.call(Component, 'getDerivedGlobalFromProps')) {
         const newState = Component.getDerivedGlobalFromProps(props, globalStateManager._state, ...args);
         globalStateManager.set(newState);
       }
 
+      // getDerivedStateFromProps
       if (Object.prototype.hasOwnProperty.call(Component, 'getDerivedStateFromProps')) {
         return Component.getDerivedStateFromProps(props, ...args);
       }
@@ -33,7 +35,11 @@ const ReactN = function(Component) {
     };
 
     componentWillUnmount() {
+
+      // Do not re-render this component on state change.
       removeListeners(this);
+
+      // componentWillUnmount
       if (super.componentWillUnmount) {
         super.componentWillUnmount();
       }
@@ -62,11 +68,11 @@ const ReactN = function(Component) {
   return ReactNComponent;
 };
 
-Object.defineProperty(reducersImport, 'init', {
+Object.defineProperty(ReactN, 'init', {
   configurable: true,
   enumerable: false,
   value: g => {
-    delete reducersImport.init;
+    delete ReactN.init;
     setGlobal(g);
   },
   writable: false
@@ -74,4 +80,4 @@ Object.defineProperty(reducersImport, 'init', {
 
 export default ReactN;
 
-export const reducers = reducersImport;
+export const init = ReactN.init;
