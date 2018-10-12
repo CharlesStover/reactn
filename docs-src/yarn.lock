@@ -6748,9 +6748,9 @@ react@^16.5.2:
     prop-types "^15.6.2"
     schedule "^0.5.0"
 
-reactn@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/reactn/-/reactn-0.0.4.tgz#28638826adfa80def7fd6bd98ae32603d9b9d7d5"
+reactn@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/reactn/-/reactn-0.0.5.tgz#362e9cc3d85e6a0ddb4639050a1ccc24653c86c2"
 
 read-pkg-up@^1.0.1:
   version "1.0.1"
