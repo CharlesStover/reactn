@@ -1,43 +1,18 @@
-import globalStateManager, { removeListeners } from './global-state-manager';
-export { default as reducers } from './reducers';
+import globalStateManager from './global-state-manager';
 
-const setGlobal = g => {
-  globalStateManager.set(
-    typeof g === 'function' ?
-      g(globalStateManager._state) :
-      g
-  );
-};
+const reducers = Object.create(null);
 
 const ReactN = function(Component) {
   class ReactNComponent extends Component {
 
     constructor(...args) {
       super(...args);
-      if (!Object.prototype.hasOwnProperty.call(this, 'state')) {
-        this.state = Object.create(null);
-      }
     }
-
-    static getDerivedStateFromProps = function(props, ...args) {
-
-      // getDerivedGlobalFromProps
-      if (Object.prototype.hasOwnProperty.call(Component, 'getDerivedGlobalFromProps')) {
-        const newState = Component.getDerivedGlobalFromProps(props, globalStateManager._state, ...args);
-        globalStateManager.set(newState);
-      }
-
-      // getDerivedStateFromProps
-      if (Object.prototype.hasOwnProperty.call(Component, 'getDerivedStateFromProps')) {
-        return Component.getDerivedStateFromProps(props, ...args);
-      }
-      return null;
-    };
 
     componentWillUnmount() {
 
       // Do not re-render this component on state change.
-      removeListeners(this);
+      globalStateManager.removeListeners(this);
 
       // componentWillUnmount
       if (super.componentWillUnmount) {
@@ -46,21 +21,40 @@ const ReactN = function(Component) {
     }
 
     get global() {
-      return globalStateManager.state(this);
-    }
-
-    setGlobal(global, callback = null) {
-      setTimeout(
-        () => {
-          setGlobal(global);
-          if (callback) {
-            callback();
-          }
-        },
-        0
+      return Object.assign(
+        globalStateManager.state(this),
+        reducers
       );
     }
 
+    setGlobal(global, callback = null) {
+      const setGlobal = globalStateManager.setAny(global);
+      if (typeof callback === 'function') {
+        if (setGlobal instanceof Promise) {
+          setGlobal.then(() => {
+            callback(this.global);
+          });
+        }
+        else {
+          callback(this.global);
+        }
+      }
+    }
+
+  }
+
+  // getDerivedGlobalFromProps
+  if (Object.prototype.hasOwnProperty.call(Component, 'getDerivedGlobalFromProps')) {
+    ReactN.getDerivedStateFromProps = (props, ...args) => {
+      const newState = Component.getDerivedGlobalFromProps(props, globalStateManager._state, ...args);
+      globalStateManager.setAny(newState);
+
+      // getDerivedStateFromProps
+      if (Object.prototype.hasOwnProperty.call(Component, 'getDerivedStateFromProps')) {
+        return Component.getDerivedStateFromProps(props, ...args);
+      }
+      return null;
+    };
   }
 
   ReactNComponent.displayName = (Component.displayName || Component.name) + '-ReactN';
@@ -68,16 +62,15 @@ const ReactN = function(Component) {
   return ReactNComponent;
 };
 
-Object.defineProperty(ReactN, 'init', {
-  configurable: true,
-  enumerable: false,
-  value: g => {
-    delete ReactN.init;
-    setGlobal(g);
-  },
-  writable: false
-});
-
 export default ReactN;
 
-export const init = ReactN.init;
+export const addReducer = (name, reducer) => {
+  reducers[name] = (...args) => {
+    globalStateManager.setAny(
+      reducer(globalStateManager._state, ...args)
+    );
+  };
+};
+
+export const setGlobal = g =>
+  globalStateManager.setAny(g);
