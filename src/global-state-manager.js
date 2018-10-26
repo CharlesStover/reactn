@@ -1,35 +1,37 @@
 import objectGetListener from './object-get-listener';
 
+const MAX_SAFE_INTEGER = 9007199254740990;
+
 class GlobalStateManager {
 
+  _keyListeners = new Map();
   _state = Object.create(null);
-  listeners = new Map();
-  transactionId = 0;
-  transactions = new Map();
+  _transactionId = 0;
+  _transactions = new Map();
 
   // Map component instance to a state property.
-  addListener(key, instance) {
-    if (this.listeners.has(key)) {
-      this.listeners.get(key).add(instance);
+  addKeyListener(key, keyListener) {
+    if (this._keyListeners.has(key)) {
+      this._keyListeners.get(key).add(keyListener);
     }
     else {
-      this.listeners.set(key, new Set([ instance ]));
+      this._keyListeners.set(key, new Set([ keyListener ]));
     }
   };
 
   // Begin a transaction.
   beginTransaction() {
-    this.transactionId++;
-    this.transactions.set(this.transactionId, {
-      components: new Set(),
+    this._transactionId = (this._transactionId + 1) % MAX_SAFE_INTEGER;
+    this.transactions.set(this._transactionId, {
+      keyListeners: new Set(),
       state: new Map()
     });
-    return this.transactionId;
+    return this._transactionId;
   }
 
   // Commit a transaction.
   commit(transactionId) {
-    const transaction = this.transactions.get(transactionId);
+    const transaction = this._transactions.get(transactionId);
 
     // Commit all state changes.
     for (const [ key, value ] of transaction.state.entries()) {
@@ -37,18 +39,18 @@ class GlobalStateManager {
     }
 
     // Force update all components that were a part of this transaction.
-    for (const instance of transaction.components) {
-      instance.updater.enqueueForceUpdate(instance, null, 'forceUpdate');
+    for (const keyListener of transaction.keyListeners) {
+      keyListener();
     }
 
     this.transactions.delete(transactionId);
   }
 
   // Unmap a component instance from all state properties.
-  removeListeners(instance) {
-    for (const instances of this.listeners.values()) {
-      if (instances.has(instance)) {
-        instances.delete(instance);
+  removeKeyListeners(keyListeners) {
+    for (const keyListenersStore of this._keyListeners.values()) {
+      for (const keyListener of keyListeners) {
+        keyListenersStore.delete(keyListener);
       }
     }
   }
@@ -59,10 +61,10 @@ class GlobalStateManager {
     const transaction = this.transactions.get(transactionId);
     transaction.state.set(key, value);
 
-    const instances = this.listeners.get(key);
-    if (instances) {
-      for (const instance of instances) {
-        transaction.components.add(instance);
+    const keyListeners = this._keyListeners.get(key);
+    if (keyListeners) {
+      for (const keyListener of keyListeners) {
+        transaction.keyListeners.add(keyListener);
       }
     }
 
@@ -114,13 +116,13 @@ class GlobalStateManager {
   }
 
   // Create a state instance that is unique to the component instance.
-  state(componentInstance) {
+  state(keyListener) {
 
     // When this._state is read, execute the listener.
     return objectGetListener(
       this._state,
       key => {
-        this.addListener(key, componentInstance);
+        this.addKeyListener(key, keyListener);
       }
     );
   }

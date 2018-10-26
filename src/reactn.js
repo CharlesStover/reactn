@@ -8,26 +8,36 @@ const reducers = Object.create(null);
 const componentWillUnmount = _this => {
 
   // No longer re-render this component on global state change.
-  globalStateManager.removeListeners(_this);
+  globalStateManager.removeListeners(_this._globalCallback);
+};
+
+const enqueueForceUpdate = _this => {
+  _this.updater.enqueueForceUpdate(_this, null, 'forceUpdate');
 };
 
 const getGlobal = _this => {
   return Object.assign(
-    globalStateManager.state(_this),
+    globalStateManager.state(_this._globalCallback),
     reducers
   );
 };
 
-const setGlobal = (global, callback, _this) => {
+const setGlobal = (global, callback, _this = null) => {
   const newGlobal = globalStateManager.setAny(global);
   if (typeof callback === 'function') {
-    if (newGlobal instanceof Promise) {
-      newGlobal.then(() => {
+    const final = () => {
+      if (_this) {
         callback(_this.global);
-      });
+      }
+      else {
+        callback();
+      }
+    };
+    if (newGlobal instanceof Promise) {
+      newGlobal.then(final);
     }
     else {
-      callback(_this.global);
+      final();
     }
   }
 };
@@ -38,6 +48,7 @@ const setGlobal = (global, callback, _this) => {
 // React.Component, React.PureComponent
 const createReactNComponentClass = Super =>
   class ReactNComponent extends Super {
+
     constructor(...args) {
       super(...args);
 
@@ -60,6 +71,10 @@ const createReactNComponentClass = Super =>
 
     componentWillUnmount() {
       componentWillUnmount(this);
+    }
+
+    _globalCallback() {
+      enqueueForceUpdate(this);
     }
 
     get global() {
@@ -86,6 +101,10 @@ const ReactN = function(Component) {
       if (super.componentWillUnmount) {
         super.componentWillUnmount(...args);
       }
+    }
+
+    _globalCallback() {
+      enqueueForceUpdate(this);
     }
 
     get global() {
@@ -127,7 +146,12 @@ Object.assign(ReactN, React, {
   Component: createReactNComponentClass(React.Component),
   default: ReactN,
   PureComponent: createReactNComponentClass(React.PureComponent),
-  setGlobal: g => globalStateManager.setAny(g)
+  setGlobal: g => globalStateManager.setAny(g),
+  useGlobal: key => {
+    return [
+
+    ];
+  }
 });
 
 module.exports = ReactN;
