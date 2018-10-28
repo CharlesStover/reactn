@@ -22,11 +22,12 @@
     "@babel/preset-env": "^7.1.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-loader": "^8.0.4",
-    "react": "^16.5.2",
+    "react": "^16.7.0-alpha.0",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2"
   },
-  "peerDependencies": {
-    "react": "^16.5.2"
+  "peerDependencies": {},
+  "dependencies": {
+    "use-force-update": "^1.0.0"
   }
 }

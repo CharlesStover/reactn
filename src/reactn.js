@@ -1,46 +1,17 @@
 const React = require('react');
+
+const useForceUpdate = require('use-force-update').default;
+
+const {
+  classComponentWillUnmount, classEnqueueForceUpdate,
+  classGetGlobal, classSetGlobal
+} = require('./class');
+
 const globalStateManager = require('./global-state-manager').default;
 
-const reducers = Object.create(null);
+const reducers = require('./reducers').default;
 
-
-
-const componentWillUnmount = _this => {
-
-  // No longer re-render this component on global state change.
-  globalStateManager.removeListeners(_this._globalCallback);
-};
-
-const enqueueForceUpdate = _this => {
-  _this.updater.enqueueForceUpdate(_this, null, 'forceUpdate');
-};
-
-const getGlobal = _this => {
-  return Object.assign(
-    globalStateManager.state(_this._globalCallback),
-    reducers
-  );
-};
-
-const setGlobal = (global, callback, _this = null) => {
-  const newGlobal = globalStateManager.setAny(global);
-  if (typeof callback === 'function') {
-    const final = () => {
-      if (_this) {
-        callback(_this.global);
-      }
-      else {
-        callback();
-      }
-    };
-    if (newGlobal instanceof Promise) {
-      newGlobal.then(final);
-    }
-    else {
-      final();
-    }
-  }
-};
+const { sharedGetGlobal, sharedSetGlobal } = require('./shared');
 
 
 
@@ -63,28 +34,30 @@ const createReactNComponentClass = Super =>
             this.componentWillUnmount :
             proto.componentWillUnmount.bind(this);
         this.componentWillUnmount = (...a) => {
-          componentWillUnmount(this);
+          classComponentWillUnmount(this);
           cb(...a);
         };
       }
     }
 
     componentWillUnmount() {
-      componentWillUnmount(this);
+      classComponentWillUnmount(this);
     }
 
-    _globalCallback() {
-      enqueueForceUpdate(this);
-    }
+    _globalCallback = () => {
+      classEnqueueForceUpdate(this);
+    };
 
     get global() {
-      return getGlobal(this);
+      return classGetGlobal(this);
     }
 
     setGlobal(global, callback = null) {
-      setGlobal(global, callback, this);
+      classSetGlobal(this, global, callback);
     }
   };
+
+
 
 // @reactn
 const ReactN = function(Component) {
@@ -95,7 +68,7 @@ const ReactN = function(Component) {
     }
 
     componentWillUnmount(...args) {
-      componentWillUnmount(this);
+      classComponentWillUnmount(this);
 
       // componentWillUnmount
       if (super.componentWillUnmount) {
@@ -104,15 +77,15 @@ const ReactN = function(Component) {
     }
 
     _globalCallback() {
-      enqueueForceUpdate(this);
+      classEnqueueForceUpdate(this);
     }
 
     get global() {
-      return getGlobal(this);
+      return classGetGlobal(this);
     }
 
     setGlobal(global, callback = null) {
-      setGlobal(global, callback, this);
+      classSetGlobal(this, global, callback);
     }
   }
 
@@ -146,10 +119,43 @@ Object.assign(ReactN, React, {
   Component: createReactNComponentClass(React.Component),
   default: ReactN,
   PureComponent: createReactNComponentClass(React.PureComponent),
-  setGlobal: g => globalStateManager.setAny(g),
-  useGlobal: key => {
-    return [
+  setGlobal: (global, callback) => globalStateManager.setAny(global, callback),
+  useGlobal: function useGlobal(key) {
 
+    // Require v16.7
+    if (!React.useState) {
+      throw new Error('React v16.7 or newer is required for useGlobal.');
+    }
+
+    const [ , setState ] = React.useState(null);
+    const forceUpdate = () => {
+      setState();
+    };
+
+    // Use the entire global state.
+    if (typeof key === 'undefined') {
+      return [
+        sharedGetGlobal(forceUpdate),
+        (global, callback = null) => {
+          sharedSetGlobal(
+            global,
+            callback,
+            () => sharedGetGlobal(forceUpdate)
+          );
+        }
+      ];
+    }
+
+    // Use a single key.
+    return [
+      sharedGetGlobal(forceUpdate)[key],
+      (value, callback = null) => {
+        sharedSetGlobal(
+          { [key]: value },
+          callback,
+          () => sharedGetGlobal(forceUpdate)[key]
+        );
+      }
     ];
   }
 });

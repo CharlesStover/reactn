@@ -22,7 +22,7 @@ class GlobalStateManager {
   // Begin a transaction.
   beginTransaction() {
     this._transactionId = (this._transactionId + 1) % MAX_SAFE_INTEGER;
-    this.transactions.set(this._transactionId, {
+    this._transactions.set(this._transactionId, {
       keyListeners: new Set(),
       state: new Map()
     });
@@ -43,22 +43,20 @@ class GlobalStateManager {
       keyListener();
     }
 
-    this.transactions.delete(transactionId);
+    this._transactions.delete(transactionId);
   }
 
   // Unmap a component instance from all state properties.
-  removeKeyListeners(keyListeners) {
-    for (const keyListenersStore of this._keyListeners.values()) {
-      for (const keyListener of keyListeners) {
-        keyListenersStore.delete(keyListener);
-      }
+  removeKeyListener(keyListener) {
+    for (const keyListeners of this._keyListeners.values()) {
+      keyListeners.delete(keyListener);
     }
   }
 
   // Set a key-value pair as a part of a transaction.
   set(key, value, transactionId) {
 
-    const transaction = this.transactions.get(transactionId);
+    const transaction = this._transactions.get(transactionId);
     transaction.state.set(key, value);
 
     const keyListeners = this._keyListeners.get(key);
