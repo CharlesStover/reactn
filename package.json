@@ -15,6 +15,9 @@
     "start-docs": "cd docs-src && npm run start",
     "test": "echo No test exists. && exit 0"
   },
+  "dependencies": {
+    "use-force-update": "^1.0.0"
+  },
   "devDependencies": {
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
@@ -26,8 +29,7 @@
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2"
   },
-  "peerDependencies": {},
-  "dependencies": {
-    "use-force-update": "^1.0.0"
+  "peerDependencies": {
+    "react": "^16.7.0-alpha.0"
   }
 }

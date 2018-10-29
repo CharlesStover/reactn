@@ -14,7 +14,8 @@ module.exports = {
       amd: 'react',
       commonjs: 'react',
       commonjs2: 'react',
-      root: 'React'
+      root: 'React',
+      umd: 'react'
     }
   },
   mode: NODE_ENV,
