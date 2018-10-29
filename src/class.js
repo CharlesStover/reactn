@@ -1,5 +1,4 @@
 const globalStateManager = require('./global-state-manager');
-const { sharedGetGlobal, sharedSetGlobal } = require('./shared');
 
 module.exports = {
 
@@ -14,13 +13,9 @@ module.exports = {
   },
 
   classGetGlobal: _this =>
-    sharedGetGlobal(_this._globalCallback),
+    globalStateManager.spyStateWithReducers(_this._globalCallback),
 
   classSetGlobal: (_this, global, callback) => {
-    sharedSetGlobal(
-      global,
-      callback,
-      () => _this.global
-    );
+    globalStateManager.setAnyCallback(global, callback);
   }
-}
+};

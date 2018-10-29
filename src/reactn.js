@@ -6,7 +6,6 @@ const {
 } = require('./class');
 const globalStateManager = require('./global-state-manager');
 const reducers = require('./reducers');
-const { sharedGetGlobal, sharedSetGlobal } = require('./shared');
 
 
 
@@ -87,7 +86,7 @@ const ReactN = function(Component) {
   // getDerivedGlobalFromProps
   if (Object.prototype.hasOwnProperty.call(Component, 'getDerivedGlobalFromProps')) {
     ReactNComponent.getDerivedStateFromProps = (props, ...args) => {
-      const newState = Component.getDerivedGlobalFromProps(props, globalStateManager._state, ...args);
+      const newState = Component.getDerivedGlobalFromProps(props, globalStateManager.stateWithReducers, ...args);
       globalStateManager.setAny(newState);
 
       // getDerivedStateFromProps
@@ -107,15 +106,15 @@ Object.assign(ReactN, React, {
   addReducer: (name, reducer) => {
     reducers[name] = (...args) => {
       globalStateManager.setAny(
-        reducer(globalStateManager._state, ...args)
+        reducer(globalStateManager.stateWithReducers, ...args)
       );
     };
   },
   Component: createReactNComponentClass(React.Component),
   default: ReactN,
   PureComponent: createReactNComponentClass(React.PureComponent),
-  setGlobal: (global, callback) => globalStateManager.setAny(global, callback),
-  useGlobal: key => {
+  setGlobal: (global, callback = null) => globalStateManager.setAnyCallback(global, callback),
+  useGlobal: (property, setterOnly = false) => {
 
     // Require v16.7
     if (!React.useState) {
@@ -123,34 +122,60 @@ Object.assign(ReactN, React, {
     }
 
     const forceUpdate = useForceUpdate();
+
+    // If this component ever updates or unmounts, remove the force update listener.
     React.useEffect(() => () => {
       globalStateManager.removeKeyListener(forceUpdate);
     });
 
-    // Use the entire global state.
-    if (typeof key === 'undefined') {
+    // Return the entire global state.
+    if (!property) {
+
+      const globalStateSetter = (global, callback = null) => {
+        setGlobal(
+          global,
+          callback,
+          () => globalStateManager.stateWithReducers
+        );
+      };
+
+      if (setterOnly) {
+        return globalStateSetter;
+      }
       return [
-        sharedGetGlobal(forceUpdate),
-        (global, callback = null) => {
-          sharedSetGlobal(
-            global,
-            callback,
-            () => sharedGetGlobal(forceUpdate)
-          );
-        }
+        globalStateManager.spyStateWithReducers(forceUpdate),
+        globalStateSetter
       ];
     }
 
-    // Use a single key.
-    return [
-      sharedGetGlobal(forceUpdate)[key],
-      (value, callback = null) => {
-        sharedSetGlobal(
-          { [key]: value },
-          callback,
-          () => sharedGetGlobal(forceUpdate)[key]
+    // Use a reducer.
+    if (typeof property === 'function') {
+      return function globalReducer(...args) {
+        globalStateManager.setAny(
+          property(globalStateManager.stateWithReducers, ...args)
         );
-      }
+      };
+    }
+    if (Object.prototype.hasOwnProperty.call(reducers, property)) {
+      return reducers[property];
+    }
+
+    const globalPropertySetter = (value, callback = null) => {
+      globalStateManager.setAnyCallback(
+        { [property]: value },
+        callback
+      );
+    };
+
+    // Return only the setter (better performance).
+    if (setterOnly) {
+      return globalPropertySetter;
+    }
+
+    // Return both getter and setter.
+    return [
+      globalStateManager.spyState(forceUpdate)[property],
+      globalPropertySetter
     ];
   }
 });

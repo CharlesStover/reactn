@@ -1,4 +1,5 @@
 const objectGetListener = require('./object-get-listener');
+const reducers = require('./reducers');
 
 const MAX_SAFE_INTEGER = 9007199254740990;
 
@@ -92,8 +93,24 @@ class GlobalStateManager {
     throw new Error('Global state must be a function, null, object, or Promise.');
   }
 
+  setAnyCallback(any, callback = null) {
+    const newGlobal = this.setAny(any);
+
+    // If there is a callback,
+    if (typeof callback === 'function') {
+      if (newGlobal instanceof Promise) {
+        newGlobal.then(() => {
+          callback(this.stateWithReducers);
+        });
+      }
+      else {
+        callback(this.stateWithReducers);
+      }
+    }
+  }
+
   setFunction(f) {
-    return this.setAny(f(this._state));
+    return this.setAny(f(this.stateWithReducers));
   }
 
   // Set the state's key-value pairs via an object.
@@ -113,8 +130,7 @@ class GlobalStateManager {
       });
   }
 
-  // Create a state instance that is unique to the component instance.
-  state(keyListener) {
+  spyState(keyListener) {
 
     // When this._state is read, execute the listener.
     return objectGetListener(
@@ -123,6 +139,18 @@ class GlobalStateManager {
         this.addKeyListener(key, keyListener);
       }
     );
+  }
+
+  spyStateWithReducers(keyListener) {
+    return Object.assign(
+      Object.create(null),
+      this.spyState(keyListener),
+      reducers
+    );
+  }
+
+  get stateWithReducers() {
+    return Object.assign(Object.create(null), this._state, reducers);
   }
 };
 
