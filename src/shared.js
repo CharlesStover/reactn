@@ -1,34 +1,36 @@
-const globalStateManager = require('./global-state-manager').default;
+const globalStateManager = require('./global-state-manager');
+const reducers = require('./reducers');
 
-const reducers = require('./reducers').default;
+module.exports = {
 
-export const sharedGetGlobal = callback =>
-  Object.assign(
-    globalStateManager.state(callback),
-    reducers
-  );
+  sharedGetGlobal: callback =>
+    Object.assign(
+      globalStateManager.state(callback),
+      reducers
+    ),
 
-export const sharedSetGlobal = (global, callback, getCallbackParameter = null) => {
-  const newGlobal = globalStateManager.setAny(global);
+  sharedSetGlobal: (global, callback, getCallbackParameter = null) => {
+    const newGlobal = globalStateManager.setAny(global);
 
-  // If there is a callback,
-  if (typeof callback === 'function') {
+    // If there is a callback,
+    if (typeof callback === 'function') {
 
-    // Execute after the global state has finished setting.
-    const final = () => {
-      if (getCallbackParameter) {
-        callback(getCallbackParameter());
+      // Execute after the global state has finished setting.
+      const final = () => {
+        if (getCallbackParameter) {
+          callback(getCallbackParameter());
+        }
+        else {
+          callback();
+        }
+      };
+
+      if (newGlobal instanceof Promise) {
+        newGlobal.then(final);
       }
       else {
-        callback();
+        final();
       }
-    };
-
-    if (newGlobal instanceof Promise) {
-      newGlobal.then(final);
-    }
-    else {
-      final();
     }
   }
 };

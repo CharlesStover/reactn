@@ -1,4 +1,4 @@
-import objectGetListener from './object-get-listener';
+const objectGetListener = require('./object-get-listener');
 
 const MAX_SAFE_INTEGER = 9007199254740990;
 
@@ -126,4 +126,4 @@ class GlobalStateManager {
   }
 };
 
-export default new GlobalStateManager();
+module.exports = new GlobalStateManager();

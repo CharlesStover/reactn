@@ -16,4 +16,4 @@ const objectGetListener = (obj, listener) =>
     Object.create(null)
   );
 
-export default objectGetListener;
+module.exports = objectGetListener;

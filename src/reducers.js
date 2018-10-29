@@ -1,3 +1,3 @@
 const reducers = Object.create(null);
 
-export default reducers;
+module.exports = reducers;

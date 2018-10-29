@@ -1,6 +1,6 @@
 {
   "name": "reactn",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "author": "Charles Stover <npmjs@charlesstover.com>",
   "description": "React, but with built-in global state management.",
   "license": "MIT",
@@ -23,9 +23,9 @@
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
+    "@babel/preset-react": "^7.0.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-loader": "^8.0.4",
-    "react": "^16.7.0-alpha.0",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2"
   },

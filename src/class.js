@@ -1,24 +1,26 @@
-const globalStateManager = require('./global-state-manager').default;
-
+const globalStateManager = require('./global-state-manager');
 const { sharedGetGlobal, sharedSetGlobal } = require('./shared');
 
-export const classComponentWillUnmount = _this => {
+module.exports = {
 
-  // No longer re-render this component on global state change.
-  globalStateManager.removeKeyListener(_this._globalCallback);
-};
+  classComponentWillUnmount: _this => {
 
-export const classEnqueueForceUpdate = _this => {
-  _this.updater.enqueueForceUpdate(_this, null, 'forceUpdate');
-};
+    // No longer re-render this component on global state change.
+    globalStateManager.removeKeyListener(_this._globalCallback);
+  },
 
-export const classGetGlobal = _this =>
-  sharedGetGlobal(_this._globalCallback);
+  classEnqueueForceUpdate: _this => {
+    _this.updater.enqueueForceUpdate(_this, null, 'forceUpdate');
+  },
 
-export const classSetGlobal = (_this, global, callback) => {
-  sharedSetGlobal(
-    global,
-    callback,
-    () => _this.global
-  );
-};
+  classGetGlobal: _this =>
+    sharedGetGlobal(_this._globalCallback),
+
+  classSetGlobal: (_this, global, callback) => {
+    sharedSetGlobal(
+      global,
+      callback,
+      () => _this.global
+    );
+  }
+}

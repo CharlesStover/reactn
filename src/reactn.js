@@ -1,16 +1,11 @@
 const React = require('react');
-
 const useForceUpdate = require('use-force-update').default;
-
 const {
   classComponentWillUnmount, classEnqueueForceUpdate,
   classGetGlobal, classSetGlobal
 } = require('./class');
-
-const globalStateManager = require('./global-state-manager').default;
-
-const reducers = require('./reducers').default;
-
+const globalStateManager = require('./global-state-manager');
+const reducers = require('./reducers');
 const { sharedGetGlobal, sharedSetGlobal } = require('./shared');
 
 
@@ -120,17 +115,17 @@ Object.assign(ReactN, React, {
   default: ReactN,
   PureComponent: createReactNComponentClass(React.PureComponent),
   setGlobal: (global, callback) => globalStateManager.setAny(global, callback),
-  useGlobal: function useGlobal(key) {
+  useGlobal: key => {
 
     // Require v16.7
     if (!React.useState) {
       throw new Error('React v16.7 or newer is required for useGlobal.');
     }
 
-    const [ , setState ] = React.useState(null);
-    const forceUpdate = () => {
-      setState();
-    };
+    const forceUpdate = useForceUpdate();
+    React.useEffect(() => () => {
+      globalStateManager.removeKeyListener(forceUpdate);
+    });
 
     // Use the entire global state.
     if (typeof key === 'undefined') {
