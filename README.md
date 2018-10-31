@@ -17,7 +17,7 @@ Global state in functional components behaves almost identically to local state.
 
 ## Install
 
-* `npm install reactn` or
+* `npm install reactn --save` or
 * `yarn add reactn`
 
 ## Example (Class Component)
