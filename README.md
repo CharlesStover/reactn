@@ -7,13 +7,15 @@ For class components, simply change `import React from 'react';` to `import Reac
 
 For functional components, `import { useGlobal } from 'reactn';` to harness the power of React Hooks!
 
-If you prefer decorators, you can continue to use the `react` package for your components and instead `import reactn from 'reactn';` and use the `@reactn` decorator!
+If you prefer decorators, you can continue to `import React from 'react';` for your components and additionally `import reactn from 'reactn';` for access to the `@reactn` decorator!
 
 ## Intuitive!
 
 Global state in class components behaves exactly like local state! Instead of `this.state` and `this.setState` to read and write to the local state, you can use `this.global` and `this.setGlobal` to read and write to the global state object.
 
-Global state in functional components behaves almost identically to local state. Instead of `[ value, setValue ] = useState(default)`, you can use `[ value, setValue ] = useGlobal(key)` where the key is the key of the global state to which you want to read and write. You may also use `[ global, setGlobal ] = useGlobal()` to access the entire global object.
+Global state in functional components behaves almost identically to local state. Instead of `[ value, setValue ] = useState(defaultValue)`, you can use `[ value, setValue ] = useGlobal(key)` where `key` is the key of the global state from which you want to read and to which you want write.
+
+You may also use `[ global, setGlobal ] = useGlobal()` to access the entire global object.
 
 ## Install
 
@@ -60,7 +62,7 @@ export default class Cards extends React.PureComponent {
 
 Using React Hooks in React v16.7, you can harness `useGlobal` to access the global state.
 
-The above component re-written as a functional component would look like this:
+The above component is re-written below as a functional component.
 
 ```JavaScript
 import React from 'react';
@@ -90,3 +92,14 @@ const Cards = () => {
 
 export default Cards;
 ```
+
+### Updating the Component (Re-Rendering)
+
+When a component's _local_ state changes, that component "updates" or re-renders.
+
+It would not be performant to update _every_ component when the global state changes.
+Instead, a component only updates if a global state root key that that component has accessed has changed.
+
+If your component accesses `this.global.x`, it _will not_ re-render when `this.global.y` changes.
+
+If your component accesses `this.global.myObject.x`, it _will_ re-render when `this.global.myObject.y` changes, because the root key `myObject` has changed. You should take this into consideration when nesting objects in your global state.
