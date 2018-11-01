@@ -93,7 +93,7 @@ const Cards = () => {
 export default Cards;
 ```
 
-### Updating the Component (Re-Rendering)
+## Updating the Component (Re-Rendering)
 
 When a component's _local_ state changes, that component "updates" or re-renders.
 
