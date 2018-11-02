@@ -7,7 +7,7 @@ const NODE_ENV =
 
 module.exports = {
   entry: {
-    index: './src/reactn.js'
+    index: './src/index.js'
   },
   externals: {
     'react': {

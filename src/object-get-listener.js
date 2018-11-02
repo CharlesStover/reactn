@@ -1,7 +1,7 @@
 // Return an object that executes a read listener.
 
-const objectGetListener = (obj, listener) =>
-  Object.keys(obj).reduce(
+module.exports = function objectGetListener(obj, listener) {
+  return Object.keys(obj).reduce(
     (accumulator, key) => {
       Object.defineProperty(accumulator, key, {
         configurable: false,
@@ -15,5 +15,4 @@ const objectGetListener = (obj, listener) =>
     },
     Object.create(null)
   );
-
-module.exports = objectGetListener;
+};

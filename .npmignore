@@ -1,8 +1,8 @@
-/docs
-/docs-src
 /src
+/tests
 /.babelrc
 /.gitignore
 /.npmignore
 /.travis.yml
 /webpack.config.js
+/yarn-error.lock
