@@ -3,7 +3,7 @@ ReactN is a extension of React that includes global state management.
 
 ## Frequently Asked Questions
 
-### What version of React does ReactN come with?
+### With what version of React is ReactN bundled?
 
 ReactN does _not_ come bundled with React. You must install React alongside it.
 ReactN piggybacks off whatever version of React that you choose to use.
@@ -25,6 +25,15 @@ import React from 'react';
 import ReactN from 'reactn';
 assert(React.Component !== ReactN.Component);
 ```
+
+### When do I import from React and when do I import from ReactN?
+
+The easiest solution is to _always import from `reactn`_, as ReactN exports the entire React package _in addition_ to global state functionality.
+Any time importing from React will work, importing from ReactN will also work.
+
+If your functionality exists on the React package, such as `React.createElement`, you may import that functionality from `react`.
+
+If your functionality involves global state, such as the `setGlobal` helper function, `useGlobal` hook, or ReactN versions of `Component` and `PureCompnent` (which implement the global state member variables and methods), you _must_ import them from `reactn`.
 
 ### Is my `create-react-app` project supported?
 
@@ -55,7 +64,29 @@ If you prefer Redux's `connect` functionality, pure functions, or are dealing wi
 * `npm install reactn --save` or
 * `yarn add reactn`
 
-## Example (Class Component)
+Initialize your global state using the `setGlobal` helper function. In most cases, you do not want to initialize your global state in a component lifecycle method, as the global state should exist before your components attempt to render.
+
+It is recommended that you initialize the global state just prior to mounting with `ReactDOM`, the same way a Redux store would be initialized this way.
+
+```JavaScript
+import React, { setGlobal } from 'reactn';
+import ReactDOM from 'react-dom';
+import App from './App';
+
+// Set an initial global state directly:
+setGlobal({
+  cards: [],
+  disabled: false.
+  initial: 'values'.
+  x: 1
+});
+
+ReactDOM.render(<App />, document.getElementById('root'));
+```
+
+## Examples
+
+### Class Components
 
 The below example reads an array of cards from the global state. The cards are deleted from the global state via the `Card` component and added to the global state via the `AddCard` comonent. Despite this, the `Cards` component can still access them and will re-render whenever either other component updates the cards in the global state.
 
@@ -91,18 +122,16 @@ export default class Cards extends React.PureComponent {
 }
 ```
 
-## Example (Functional Component)
+### Functional Components
 
 Using React Hooks in React v16.7, you can harness `useGlobal` to access the global state.
 
 The above component is re-written below as a functional component.
 
 ```JavaScript
-import React from 'react';
-import { useGlobal } from 'reactn';
+import React, { useGlobal } from 'reactn';
 import AddCard from '../add-card/add-card';
 import Card from '../card/card';
-import './cards.scss';
 
 // Render all cards in the global state, plus an additional Add Card button.
 const Cards = () => {
@@ -140,8 +169,7 @@ If your component accesses `this.global.myObject.x`, it _will_ re-render when `t
 If you strongly desire to circumvent this behavior, you may use the `withGlobal` higher-order component to wrap a `React.memo` functional component or `PureComponent`.
 
 ```JavaScript
-import React, { memo } from React;
-import { withGlobal } from 'reactn';
+import React, { memo, withGlobal } from 'reactn';
 
 const Me = memo(
   ({ age, name }) =
