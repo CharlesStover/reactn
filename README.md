@@ -44,9 +44,9 @@ If you prefer class decorators, you can continue to `import React from 'react';`
 
 Global state in functional components behaves almost identically to local state. Instead of `[ value, setValue ] = useState(defaultValue)`, you can use `[ value, setValue ] = useGlobal(key)` where `key` is the key of the global state from which you want to read and to which you want write.
 
-Global state in class components behaves exactly like local state! Instead of `this.state` and `this.setState` to read and write to the local state, you can use `this.global` and `this.setGlobal` to read from and write to the global state object.
-
 You may alternatively use `[ global, setGlobal ] = useGlobal()` to access the entire global object.
+
+Global state in class components behaves exactly like local state! Instead of `this.state` and `this.setState` to read and write to the local state, you can use `this.global` and `this.setGlobal` to read from and write to the global state object.
 
 If you prefer Redux's `connect` functionality, pure functions, or are dealing with deeply nested objects, a `withGlobal` higher-order component is also available.
 
