@@ -1,25 +1,27 @@
 # ReactN
+
 ReactN is a extension of React that includes global state management.
 
 [![package](https://img.shields.io/github/package-json/v/CharlesStover/reactn.svg)](https://www.npmjs.com/package/reactn/)
 [![minified size](https://img.shields.io/bundlephobia/min/reactn.svg)](https://www.npmjs.com/package/reactn)
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/reactn.svg)](https://www.npmjs.com/package/reactn)
 
-* Table of Contents
-  * [Frequently Asked Questions](#frequently-asked-questions)
-    * [With what version of React is ReactN bundled?](#with-what-version-of-react-is-reactn-bundled)
-    * [What version(s) of React does ReactN support?](#what-versions-of-react-does-reactn-support)
-    * [What if my project requires a clean copy of React also?](#what-if-my-project-requires-a-clean-copy-of-react-also)
-    * [When do I import from React and when do I import from ReactN?](#when-do-i-import-from-react-and-when-do-i-import-from-reactn)
-    * [Is my `create-react-app` project supported?](#is-my-create-react-app-project-supported)
-  * [Features](#features)
-    * [No Boilerplate!](#no-boilerplate)
-    * [Intuitive!](#intuitive)
-  * [Install](#install)
-  * [Examples](#examples)
-    * [Class Components](#class-components)
-    * [Functional Components](#functional-components)
-  * [Updating the Component (Re-Rendering)](#updating-the-component-re-rendering)
+## Table of Contents
+
+* [Frequently Asked Questions](#frequently-asked-questions)
+  * [With what version of React is ReactN bundled?](#with-what-version-of-react-is-reactn-bundled)
+  * [What version(s) of React does ReactN support?](#what-versions-of-react-does-reactn-support)
+  * [What if my project requires a clean copy of React also?](#what-if-my-project-requires-a-clean-copy-of-react-also)
+  * [When do I import from React and when do I import from ReactN?](#when-do-i-import-from-react-and-when-do-i-import-from-reactn)
+  * [Is my `create-react-app` project supported?](#is-my-create-react-app-project-supported)
+* [Features](#features)
+  * [No Boilerplate!](#no-boilerplate)
+  * [Intuitive!](#intuitive)
+* [Install](#install)
+* [Examples](#examples)
+  * [Class Components](#class-components)
+  * [Functional Components](#functional-components)
+* [Updating the Component (Re-Rendering)](#updating-the-component-re-rendering)
 
 ## Frequently Asked Questions
 
