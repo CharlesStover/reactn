@@ -23,11 +23,7 @@ module.exports = function useGlobal(property, setterOnly = false) {
   if (!property) {
 
     const globalStateSetter = (newGlobal, callback = null) => {
-      setGlobal(
-        newGlobal,
-        callback,
-        () => globalStateManager.stateWithReducers
-      );
+      setGlobal(newGlobal, callback);
     };
 
     if (setterOnly) {
