@@ -37,8 +37,8 @@ import App from './App';
 // Set an initial global state directly:
 setGlobal({
   cards: [],
-  disabled: false.
-  initial: 'values'.
+  disabled: false,
+  initial: 'values',
   x: 1
 });
 
