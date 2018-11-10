@@ -16,7 +16,7 @@ hoc(MyComponent);
 
 */
 
-module.exports = function withGlobal(getGlobal) {
+module.exports = function withGlobal(getGlobal = global => global, setGlobal = () => null) {
   return function ReactNWithGlobal(Component) {
     return class ReactNComponent extends ReactNPureComponent {
 
@@ -26,7 +26,8 @@ module.exports = function withGlobal(getGlobal) {
         return createElement(
           Component, {
             ...this.props,
-            ...getGlobal(this.global, this.props)
+            ...getGlobal(this.global, this.props),
+            ...setGlobal(this.setGlobal, this.props)
           }
         );
       }
