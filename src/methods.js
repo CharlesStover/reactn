@@ -42,8 +42,19 @@ function ReactNGlobal(_this) {
 
 
 // this.setGlobal
-function ReactNSetGlobal(_this, global, callback) {
-  globalStateManager.setAnyCallback(global, callback);
+function ReactNSetGlobal(_this, newGlobal, callback, sync) {
+
+  // Update the state synchronously.
+  if (sync) {
+    globalStateManager.setAnyCallback(newGlobal, callback);
+  }
+
+  // Update the state asynchronously.
+  else {
+    setTimeout(() => {
+      ReactNSetGlobal(_this, newGlobal, callback, true);
+    }, 0);
+  }
 }
 
 

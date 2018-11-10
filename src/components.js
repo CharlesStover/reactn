@@ -6,6 +6,11 @@ const {
   ReactNSetGlobal
 } = require('./methods');
 
+// TODO -- https://github.com/CharlesStover/reactn/issues/14
+const isComponentDidMount = false;
+const isComponentDidUpdate = false;
+const isSetGlobalCallback = false;
+
 // import React from 'reactn';
 // React.Component, React.PureComponent
 const createReactNClassComponent = Super =>
@@ -44,7 +49,12 @@ const createReactNClassComponent = Super =>
     }
 
     setGlobal(newGlobal, callback = null) {
-      ReactNSetGlobal(this, newGlobal, callback);
+      ReactNSetGlobal(
+        this, newGlobal, callback,
+        !isComponentDidMount &&
+        !isComponentDidUpdate &&
+        !isSetGlobalCallback
+      );
     }
   };
 

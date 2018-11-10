@@ -5,10 +5,9 @@ const MAX_SAFE_INTEGER = 9007199254740990;
 
 class GlobalStateManager {
 
-  _keyListeners = new Map();
-  _state = Object.create(null);
-  _transactionId = 0;
-  _transactions = new Map();
+  constructor() {
+    this.reset();
+  }
 
   // Map component instance to a state property.
   addKeyListener(key, keyListener) {
@@ -24,6 +23,7 @@ class GlobalStateManager {
   beginTransaction() {
     this._transactionId = (this._transactionId + 1) % MAX_SAFE_INTEGER;
     this._transactions.set(this._transactionId, {
+      delete: new Set(),
       keyListeners: new Set(),
       state: new Map()
     });
@@ -33,6 +33,11 @@ class GlobalStateManager {
   // Commit a transaction.
   commit(transactionId) {
     const transaction = this._transactions.get(transactionId);
+
+    // Delete state properties.
+    for (const key of transaction.delete) {
+      delete this._state[key];
+    }
 
     // Commit all state changes.
     for (const [ key, value ] of transaction.state.entries()) {
@@ -54,11 +59,24 @@ class GlobalStateManager {
     }
   }
 
+  // Reset the global state.
+  reset() {
+    this._keyListeners = new Map();
+    this._state = Object.create(null);
+    this._transactionId = 0;
+    this._transactions = new Map();
+  }
+
   // Set a key-value pair as a part of a transaction.
   set(key, value, transactionId) {
 
     const transaction = this._transactions.get(transactionId);
-    transaction.state.set(key, value);
+    if (typeof value === 'undefined') {
+      transaction.delete.add(key);
+    }
+    else {
+      transaction.state.set(key, value);
+    }
 
     const keyListeners = this._keyListeners.get(key);
     if (keyListeners) {
