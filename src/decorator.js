@@ -6,6 +6,11 @@ const {
   ReactNSetGlobal
 } = require('./methods');
 
+// TODO -- https://github.com/CharlesStover/reactn/issues/14
+const isComponentDidMount = false;
+const isComponentDidUpdate = false;
+const isSetGlobalCallback = false;
+
 // @reactn
 const ReactN = function ReactN(Component) {
   class ReactNComponent extends Component {
@@ -34,7 +39,12 @@ const ReactN = function ReactN(Component) {
     }
 
     setGlobal(global, callback = null) {
-      ReactNSetGlobal(this, global, callback);
+      ReactNSetGlobal(
+        this, global, callback,
+        !isComponentDidMount &&
+        !isComponentDidUpdate &&
+        !isSetGlobalCallback
+      );
     }
   }
 
