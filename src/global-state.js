@@ -1,9 +1,8 @@
 const objectGetListener = require('./object-get-listener');
-const reducers = require('./reducers');
 
 const MAX_SAFE_INTEGER = 9007199254740990;
 
-class GlobalStateManager {
+class GlobalState {
 
   constructor() {
     this.reset();
@@ -62,6 +61,7 @@ class GlobalStateManager {
   // Reset the global state.
   reset() {
     this._keyListeners = new Map();
+    this._reducers = Object.create(null);
     this._state = Object.create(null);
     this._transactionId = 0;
     this._transactions = new Map();
@@ -163,13 +163,17 @@ class GlobalStateManager {
     return Object.assign(
       Object.create(null),
       this.spyState(keyListener),
-      reducers
+      this._reducers
     );
   }
 
   get stateWithReducers() {
-    return Object.assign(Object.create(null), this._state, reducers);
+    return Object.assign(
+      Object.create(null),
+      this._state,
+      this._reducers
+    );
   }
 };
 
-module.exports = new GlobalStateManager();
+module.exports = GlobalState;

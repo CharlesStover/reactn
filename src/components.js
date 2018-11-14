@@ -1,4 +1,5 @@
 const { Component, PureComponent } = require('react');
+const ReactNContext = require('./context');
 const {
   ReactNComponentWillUnmount,
   ReactNGlobal,
@@ -15,6 +16,8 @@ const isSetGlobalCallback = false;
 // React.Component, React.PureComponent
 const createReactNClassComponent = Super =>
   class ReactNComponent extends Super {
+
+    static contextType = ReactNContext;
 
     constructor(...args) {
       super(...args);
