@@ -70,6 +70,13 @@ class GlobalStateManager {
   // Set a key-value pair as a part of a transaction.
   set(key, value, transactionId) {
 
+    // Silently ignore state properties that share names with reducers.
+    // This can occur if you spread global state with reducers.
+    // newGlobal = { ...globalWithReducers, newKey: 'new value' }
+    if (Object.prototype.hasOwnProperty.call(reducers, key)) {
+      return transactionId;
+    }
+
     const transaction = this._transactions.get(transactionId);
     if (typeof value === 'undefined') {
       transaction.delete.add(key);
@@ -166,8 +173,12 @@ class GlobalStateManager {
     );
   }
 
+  get state() {
+    return Object.assign(Object.create(null), this._state);
+  }
+
   get stateWithReducers() {
-    return Object.assign(Object.create(null), this._state, reducers);
+    return Object.assign(this.state, reducers);
   }
 };
 
