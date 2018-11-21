@@ -161,7 +161,6 @@ class GlobalStateManager {
 
   spyStateWithReducers(keyListener) {
     return Object.assign(
-      Object.create(null),
       this.spyState(keyListener),
       reducers
     );

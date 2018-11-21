@@ -1,3 +1,5 @@
+/.git
+/node_modules
 /src
 /tests
 /.babelrc
@@ -5,4 +7,5 @@
 /.npmignore
 /.travis.yml
 /webpack.config.js
+/yarn.lock
 /yarn-error.lock

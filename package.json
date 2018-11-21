@@ -1,19 +1,16 @@
 {
   "name": "reactn",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Charles Stover <npmjs@charlesstover.com>",
   "description": "React, but with built-in global state management.",
   "license": "MIT",
   "main": "index.js",
   "repository": "https://github.com/CharlesStover/reactn.git",
   "scripts": {
-    "add-docs": "cd docs-src && yarn add",
     "build": "webpack",
-    "build-docs": "rm -rf docs && cd docs-src && npm run build && mv build ../docs",
     "dev": "set NODE_ENV=development&& webpack",
     "prepublishOnly": "npm run build",
-    "start-docs": "cd docs-src && npm run start",
-    "test": "echo No test exists. && exit 0"
+    "test": "mocha tests/**/*.spec.js -r chai/register-expect"
   },
   "dependencies": {
     "use-force-update": "^1.0.0"
@@ -26,6 +23,8 @@
     "@babel/preset-react": "^7.0.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-loader": "^8.0.4",
+    "chai": "^4.2.0",
+    "mocha": "^5.2.0",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2"
   },
