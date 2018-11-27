@@ -23,7 +23,7 @@ declare class GlobalPureComponent<P = {}, S = {}> extends React.PureComponent<P,
 
 type GlobalReducer = (state: GlobalState, ...args: any[]) => NewGlobal;
 
-type GlobalPropertySetter = (value: any) => void;
+type GlobalPropertySetter<T> = (value: T) => void;
 
 interface GlobalState {
   [key: string]: any;
@@ -48,8 +48,8 @@ interface ReactN {
   resetGlobal(): void;
   setGlobal(newGlobal: NewGlobal, callback?: GlobalCallback): Promise<void> | void;
   useGlobal(): [ GlobalState, GlobalStateSetter ];
-  useGlobal<T>(property: keyof GlobalState, setterOnly?: false): [ T, GlobalPropertySetter ];
-  useGlobal<T>(property: keyof GlobalState, setterOnly: true): GlobalPropertySetter;
+  useGlobal<T>(property: keyof GlobalState, setterOnly?: false): [ T, GlobalPropertySetter<T> ];
+  useGlobal<T>(property: keyof GlobalState, setterOnly: true): GlobalPropertySetter<T>;
   useGlobal(reducer: GlobalReducer): LocalReducer;
   withGlobal<CP, NP>(getGlobal: MapGlobalToProps<CP, NP>): (Component: React.ComponentType<CP & NP>) => GlobalPureComponent<CP, never>;
 }
