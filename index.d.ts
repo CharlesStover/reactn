@@ -39,7 +39,7 @@ type NewGlobal = NewGlobalFunction | null | Partial<GlobalState> | Promise<NewGl
 
 type NewGlobalFunction = (global: GlobalState) => NewGlobal;
 
-interface ReactN extends React {
+interface ReactN {
   (Component: React.ComponentType): GlobalComponent;
   addReducer(name: string, reducer: GlobalReducer): void;
   Component: GlobalComponent;
