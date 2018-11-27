@@ -6,6 +6,7 @@
   "license": "MIT",
   "main": "index.js",
   "repository": "https://github.com/CharlesStover/reactn.git",
+  "types": "./index.d.ts",
   "scripts": {
     "build": "webpack",
     "dev": "set NODE_ENV=development&& webpack",
@@ -27,8 +28,5 @@
     "mocha": "^5.2.0",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2"
-  },
-  "peerDependencies": {
-    "react": "^16.7.0-alpha.0"
   }
 }
