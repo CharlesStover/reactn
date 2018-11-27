@@ -48,7 +48,8 @@ interface ReactN {
   resetGlobal(): void;
   setGlobal(newGlobal: NewGlobal, callback?: GlobalCallback): Promise<void> | void;
   useGlobal(): [ GlobalState, GlobalStateSetter ];
-  useGlobal<T>(property: keyof GlobalState, setterOnly?: boolean): [ T, GlobalPropertySetter ];
+  useGlobal<T>(property: keyof GlobalState, setterOnly?: false): [ T, GlobalPropertySetter ];
+  useGlobal<T>(property: keyof GlobalState, setterOnly: true): GlobalPropertySetter;
   useGlobal(reducer: GlobalReducer): LocalReducer;
   withGlobal<CP, NP>(getGlobal: MapGlobalToProps<CP, NP>): (Component: React.ComponentType<CP & NP>) => GlobalPureComponent<CP, never>;
 }
