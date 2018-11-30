@@ -1,3 +1,5 @@
+/// <reference types="react" />
+
 import * as React from 'react';
 
 interface AnyObject {
@@ -14,6 +16,7 @@ declare class GlobalComponent<P = {}, S = {}> extends React.Component<P, S> {
   setGlobal(newGlobal: NewGlobal, callback?: GlobalCallback): Promise<void> | void;
 }
 
+// TypeScript does not allow props P to be passed to static methods.
 declare class GlobalPureComponent<P = {}, S = {}> extends React.PureComponent<P, S> {
   static getDerivedGlobalFromProps?: (props: AnyObject, prevGloba: GlobalState, prevState: AnyObject) => NewGlobal;
   private _globalCallback: () => void;
@@ -35,23 +38,27 @@ type LocalReducer = (...args: any[]) => void;
 
 type MapGlobalToProps<ComponentProps, NewProps> = (global: GlobalState, props: ComponentProps) => NewProps;
 
+type MapSetGlobalToProps<ComponentProps, SetGlobalProps> = (setGlobal: GlobalStateSetter, props: ComponentProps) => SetGlobalProps;
+
 type NewGlobal = NewGlobalFunction | null | Partial<GlobalState> | Promise<NewGlobalFunction> | Promise<null> | Promise<Partial<GlobalState>>;
 
 type NewGlobalFunction = (global: GlobalState) => NewGlobal;
 
 interface ReactN {
-  (Component: React.ComponentType): GlobalComponent;
+  (Component: React.ComponentType): typeof GlobalComponent;
   addReducer(name: string, reducer: GlobalReducer): void;
-  Component: GlobalComponent;
+  Component: typeof GlobalComponent;
   default: ReactN;
-  PureComponent: GlobalPureComponent;
+  PureComponent: typeof GlobalPureComponent;
   resetGlobal(): void;
   setGlobal(newGlobal: NewGlobal, callback?: GlobalCallback): Promise<void> | void;
   useGlobal(): [ GlobalState, GlobalStateSetter ];
   useGlobal<T>(property: keyof GlobalState, setterOnly?: false): [ T, GlobalPropertySetter<T> ];
   useGlobal<T>(property: keyof GlobalState, setterOnly: true): GlobalPropertySetter<T>;
   useGlobal(reducer: GlobalReducer): LocalReducer;
-  withGlobal<CP, NP>(getGlobal: MapGlobalToProps<CP, NP>): (Component: React.ComponentType<CP & NP>) => GlobalPureComponent<CP, never>;
+  withGlobal<CP, GP, SGP>(getGlobal: MapGlobalToProps<CP, GP>, setGlobal?: MapSetGlobalToProps<CP, SGP>):
+    (Component: React.ComponentType<CP & GP & SGP>) =>
+      GlobalPureComponent<CP, any>;
 }
 
 declare const _: ReactN;

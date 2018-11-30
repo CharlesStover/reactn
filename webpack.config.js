@@ -9,7 +9,8 @@ module.exports = {
   entry: {
     index: './src/index.js'
   },
-  externals: {
+  externals: [
+    '@types/react', {
     'react': {
       amd: 'react',
       commonjs: 'react',
@@ -17,7 +18,7 @@ module.exports = {
       root: 'React',
       umd: 'react'
     }
-  },
+  }],
   mode: NODE_ENV,
   module: {
     rules: [
@@ -40,6 +41,7 @@ module.exports = {
   },
   resolve: {
     alias: {
+      '@types/react': path.resolve(__dirname, './node_modules/@types/react'),
       'react': path.resolve(__dirname, './node_modules/react')
     }
   },
