@@ -6,6 +6,7 @@
 /.gitignore
 /.npmignore
 /.travis.yml
+/FAQ.md
 /webpack.config.js
 /yarn.lock
 /yarn-error.lock

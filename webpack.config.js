@@ -34,6 +34,7 @@ module.exports = {
   },
   output: {
     filename: '[name].js',
+    globalObject: 'typeof self !== \'undefined\' ? self : this',
     library: 'reactn',
     libraryTarget: 'umd',
     path: path.resolve(__dirname, '.'),
