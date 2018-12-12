@@ -22,7 +22,7 @@ function createReactNGetDerivedStateFromProps(Component) {
 function ReactNComponentWillUnmount(_this) {
 
   // No longer re-render this component on global state change.
-  globalStateManager.removeKeyListener(_this._globalCallback);
+  globalStateManager.removePropertyListener(_this._globalCallback);
 }
 
 

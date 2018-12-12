@@ -10,12 +10,12 @@ class GlobalStateManager {
   }
 
   // Map component instance to a state property.
-  addKeyListener(key, keyListener) {
-    if (this._keyListeners.has(key)) {
-      this._keyListeners.get(key).add(keyListener);
+  addPropertyListener(property, propertyListener) {
+    if (this._propertyListeners.has(property)) {
+      this._propertyListeners.get(property).add(propertyListener);
     }
     else {
-      this._keyListeners.set(key, new Set([ keyListener ]));
+      this._propertyListeners.set(property, new Set([ propertyListener ]));
     }
   };
 
@@ -24,7 +24,7 @@ class GlobalStateManager {
     this._transactionId = (this._transactionId + 1) % MAX_SAFE_INTEGER;
     this._transactions.set(this._transactionId, {
       delete: new Set(),
-      keyListeners: new Set(),
+      propertyListeners: new Set(),
       state: new Map()
     });
     return this._transactionId;
@@ -35,60 +35,60 @@ class GlobalStateManager {
     const transaction = this._transactions.get(transactionId);
 
     // Delete state properties.
-    for (const key of transaction.delete) {
-      delete this._state[key];
+    for (const property of transaction.delete) {
+      delete this._state[property];
     }
 
     // Commit all state changes.
-    for (const [ key, value ] of transaction.state.entries()) {
-      this._state[key] = value;
+    for (const [ property, value ] of transaction.state.entries()) {
+      this._state[property] = value;
     }
 
     // Force update all components that were a part of this transaction.
-    for (const keyListener of transaction.keyListeners) {
-      keyListener();
+    for (const propertyListener of transaction.propertyListeners) {
+      propertyListener();
     }
 
     this._transactions.delete(transactionId);
   }
 
   // Unmap a component instance from all state properties.
-  removeKeyListener(keyListener) {
-    for (const keyListeners of this._keyListeners.values()) {
-      keyListeners.delete(keyListener);
+  removePropertyListener(propertyListener) {
+    for (const propertyListeners of this._propertyListeners.values()) {
+      propertyListeners.delete(propertyListener);
     }
   }
 
   // Reset the global state.
   reset() {
-    this._keyListeners = new Map();
+    this._propertyListeners = new Map();
     this._state = Object.create(null);
     this._transactionId = 0;
     this._transactions = new Map();
   }
 
-  // Set a key-value pair as a part of a transaction.
-  set(key, value, transactionId) {
+  // Set a property-value pair as a part of a transaction.
+  set(property, value, transactionId) {
 
     // Silently ignore state properties that share names with reducers.
     // This can occur if you spread global state with reducers.
-    // newGlobal = { ...globalWithReducers, newKey: 'new value' }
-    if (Object.prototype.hasOwnProperty.call(reducers, key)) {
+    // newGlobal = { ...globalWithReducers, newProperty: 'new value' }
+    if (Object.prototype.hasOwnProperty.call(reducers, property)) {
       return transactionId;
     }
 
     const transaction = this._transactions.get(transactionId);
     if (typeof value === 'undefined') {
-      transaction.delete.add(key);
+      transaction.delete.add(property);
     }
     else {
-      transaction.state.set(key, value);
+      transaction.state.set(property, value);
     }
 
-    const keyListeners = this._keyListeners.get(key);
-    if (keyListeners) {
-      for (const keyListener of keyListeners) {
-        transaction.keyListeners.add(keyListener);
+    const propertyListeners = this._propertyListeners.get(property);
+    if (propertyListeners) {
+      for (const propertyListener of propertyListeners) {
+        transaction.propertyListeners.add(propertyListener);
       }
     }
 
@@ -138,16 +138,16 @@ class GlobalStateManager {
     return this.setAny(f(this.stateWithReducers));
   }
 
-  // Set the state's key-value pairs via an object.
+  // Set the state's property-value pairs via an object.
   setObject(obj) {
     const tran = this.beginTransaction();
-    for (const [ key, value ] of Object.entries(obj)) {
-      this.set(key, value, tran);
+    for (const [ property, value ] of Object.entries(obj)) {
+      this.set(property, value, tran);
     }
     this.commit(tran);
   }
 
-  // Set the state's key-value pairs via a promise.
+  // Set the state's property-value pairs via a promise.
   setPromise(promise) {
     return promise
       .then(result => {
@@ -155,20 +155,20 @@ class GlobalStateManager {
       });
   }
 
-  spyState(keyListener) {
+  spyState(propertyListener) {
 
     // When this._state is read, execute the listener.
     return objectGetListener(
       this._state,
-      key => {
-        this.addKeyListener(key, keyListener);
+      property => {
+        this.addPropertyListener(property, propertyListener);
       }
     );
   }
 
-  spyStateWithReducers(keyListener) {
+  spyStateWithReducers(propertyListener) {
     return Object.assign(
-      this.spyState(keyListener),
+      this.spyState(propertyListener),
       reducers
     );
   }

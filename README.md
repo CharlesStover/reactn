@@ -25,9 +25,13 @@ ReactN is a extension of React that includes global state management.
 * `npm install reactn --save` or
 * `yarn add reactn`
 
-Initialize your global state using the `setGlobal` helper function. In most cases, you do not want to initialize your global state in a component lifecycle method, as the global state should exist before your components attempt to render.
+Initialize your global state using the `setGlobal` helper function. In most
+cases, you do not want to initialize your global state in a component lifecycle
+method, as the global state should exist before your components attempt to
+render.
 
-It is recommended that you initialize the global state just prior to mounting with `ReactDOM`, the same way a Redux store would be initialized this way.
+It is recommended that you initialize the global state just prior to mounting
+with `ReactDOM`, the same way a Redux store would be initialized this way.
 
 ```JavaScript
 import React, { setGlobal } from 'reactn';
@@ -127,18 +131,33 @@ export default Cards;
 
 ### No Boilerplate!
 
-For functional components, `import { useGlobal } from 'reactn';` to harness the power of React Hooks!
+For functional components, `import { useGlobal } from 'reactn';` to harness the
+power of React Hooks!
 
-For class components, simply change `import React from 'react';` to `import React from 'reactn';`, and your React class components will have global state built in!
+For class components, simply change `import React from 'react';` to
+`import React from 'reactn';`, and your React class components will have global
+state built in!
 
-If you prefer class decorators, you can continue to `import React from 'react';` for your components and additionally `import reactn from 'reactn';` for access to the `@reactn` decorator!
+If you prefer class decorators, you can continue to
+`import React from 'react';` for your components and additionally
+`import reactn from 'reactn';` for access to the `@reactn` decorator!
 
 ### Intuitive!
 
-Global state in functional components behaves almost identically to local state. Instead of `[ value, setValue ] = useState(defaultValue)`, you can use `[ value, setValue ] = useGlobal(key)` where `key` is the key of the global state from which you want to read and to which you want write.
+Global state in functional components behaves almost identically to local
+state. Instead of `[ value, setValue ] = useState(defaultValue)`,
+you can use `[ value, setValue ] = useGlobal(property)` where `property` is the
+property of the global state from which you want to read and to which you want
+write.
 
-You may alternatively use `[ global, setGlobal ] = useGlobal()` to access the entire global object.
+You may alternatively use `[ global, setGlobal ] = useGlobal()` to access the
+entire global object.
 
-Global state in class components behaves exactly like local state! Instead of `this.state` and `this.setState` to read and write to the local state, you can use `this.global` and `this.setGlobal` to read from and write to the global state object.
+Global state in class components behaves exactly like local state! Instead of
+`this.state` and `this.setState` to read and write to the local state, you can
+use `this.global` and `this.setGlobal` to read from and write to the global
+state object.
 
-If you prefer Redux's `connect` functionality, pure functions, or are dealing with deeply nested objects, a `withGlobal` higher-order component is also available.
+If you prefer Redux's `connect` functionality, pure functions, or are dealing
+with deeply nested objects, a `withGlobal` higher-order component is also
+available.

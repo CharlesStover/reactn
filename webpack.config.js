@@ -6,6 +6,11 @@ const NODE_ENV =
     'production';
 
 module.exports = {
+  devServer: {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  },
   entry: {
     index: './src/index.js'
   },

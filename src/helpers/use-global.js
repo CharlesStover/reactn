@@ -16,7 +16,7 @@ module.exports = function useGlobal(property, setterOnly = false) {
 
   // If this component ever updates or unmounts, remove the force update listener.
   React.useEffect(() => () => {
-    globalStateManager.removeKeyListener(forceUpdate);
+    globalStateManager.removePropertyListener(forceUpdate);
   });
 
   // Return the entire global state.

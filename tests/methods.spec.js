@@ -8,19 +8,19 @@ describe('Component methods', () => {
 
   describe('componentWillUnmount', () => {
 
-    it('should remove its instance\'s key listeners');
+    it('should remove its instance\'s property listeners');
 
   });
 
   describe('_globalCallback', () => {
 
-    it('should be called as a key listener');
+    it('should be called as a property listener');
 
   });
 
   describe('global', () => {
 
-    it('should return the global state with key listeners');
+    it('should return the global state with property listeners');
 
   });
 

@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 interface AnyObject {
-  [key: string]: any;
+  [property: string]: any;
 }
 
 type GlobalCallback = (global: GlobalState) => void;
@@ -29,7 +29,7 @@ type GlobalReducer = (state: GlobalState, ...args: any[]) => NewGlobal;
 type GlobalPropertySetter<T> = (value: T) => void;
 
 interface GlobalState {
-  [key: string]: any;
+  [property: string]: any;
 }
 
 type GlobalStateSetter = (newGlobal: NewGlobal, callback?: GlobalCallback) => Promise<void> | void;
