@@ -54,8 +54,15 @@ class GlobalStateManager {
 
   // Unmap a component instance from all state properties.
   removePropertyListener(propertyListener) {
+
+    // Remove this property listener from the global state.
     for (const propertyListeners of this._propertyListeners.values()) {
       propertyListeners.delete(propertyListener);
+    }
+
+    // Remove this property listener from currently-executing transactions.
+    for (const transaction of this._transactions.values()) {
+      transaction.propertyListeners.delete(propertyListener);
     }
   }
 
