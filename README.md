@@ -97,8 +97,8 @@ export default class Cards extends React.PureComponent {
 
 #### Functional Components
 
-Using React Hooks in React v16.7,
-you can harness `useGlobal` to access the global state.
+Using React Hooks in React v16.7 alpha, you can harness `useGlobal` to access
+the global state.
 
 ```JavaScript
 import React, { useGlobal } from 'reactn'; // <-- reactn

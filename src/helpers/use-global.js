@@ -7,9 +7,12 @@ const setGlobal = require('./set-global');
 
 module.exports = function useGlobal(property, setterOnly = false) {
 
-  // Require v16.7
+  // Require hooks.
   if (!React.useState) {
-    throw new Error('React v16.7 or newer is required for useGlobal.');
+    throw new Error(
+      'The installed version of React does not support Hooks, ' +
+      'which are required for useGlobal.'
+    );
   }
 
   const forceUpdate = useForceUpdate();

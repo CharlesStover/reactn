@@ -1,6 +1,6 @@
 {
   "name": "reactn",
-  "version": "0.1.8",
+  "version": "0.1.9",
   "author": "Charles Stover <npmjs@charlesstover.com>",
   "description": "React, but with built-in global state management.",
   "license": "MIT",
