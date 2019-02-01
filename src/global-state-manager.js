@@ -9,6 +9,13 @@ class GlobalStateManager {
     this.reset();
   }
 
+  addCallback(callback) {
+    this._callbacks.add(callback);
+    return () => {
+      this.removeCallback(callback);
+    };
+  }
+
   // Map component instance to a state property.
   addPropertyListener(property, propertyListener) {
     if (this._propertyListeners.has(property)) {
@@ -17,7 +24,7 @@ class GlobalStateManager {
     else {
       this._propertyListeners.set(property, new Set([ propertyListener ]));
     }
-  };
+  }
 
   // Begin a transaction.
   beginTransaction() {
@@ -49,7 +56,18 @@ class GlobalStateManager {
       propertyListener();
     }
 
+    // Call each global callback.
+    for (const callback of this._callbacks) {
+
+      // Delay these under after the current transaction has deleted?
+      this.setAny(callback(this.stateWithReducers));
+    }
+
     this._transactions.delete(transactionId);
+  }
+
+  removeCallback(callback) {
+    this._callbacks.remove(callback);
   }
 
   // Unmap a component instance from all state properties.
@@ -68,6 +86,7 @@ class GlobalStateManager {
 
   // Reset the global state.
   reset() {
+    this._callbacks = new Set();
     this._propertyListeners = new Map();
     this._state = Object.create(null);
     this._transactionId = 0;
@@ -106,7 +125,10 @@ class GlobalStateManager {
   setAny(any) {
 
     // No changes, e.g. getDerivedGlobalFromProps.
-    if (any === null) {
+    if (
+      any === null ||
+      typeof any === 'undefined'
+    ) {
       return;
     }
 

@@ -24,6 +24,10 @@ declare class GlobalPureComponent<P = {}, S = {}> extends React.PureComponent<P,
   setGlobal(newGlobal: NewGlobal, callback?: GlobalCallback): Promise<void> | void;
 }
 
+type GlobalCallback = (state: GlobalState) => NewGlobal;
+
+type GlobalCallbackRemover = () => void;
+
 type GlobalReducer = (state: GlobalState, ...args: any[]) => NewGlobal;
 
 type GlobalPropertySetter<T> = (value: T) => void;
@@ -46,10 +50,12 @@ type NewGlobalFunction = (global: GlobalState) => NewGlobal;
 
 interface ReactN {
   (Component: React.ComponentType): typeof GlobalComponent;
+  addCallback(callback: GlobalCallback): GlobalCallbackRemover;
   addReducer(name: string, reducer: GlobalReducer): void;
   Component: typeof GlobalComponent;
   default: ReactN;
   PureComponent: typeof GlobalPureComponent;
+  removeCallback(callback: GlobalCallback): void;
   resetGlobal(): void;
   setGlobal(newGlobal: NewGlobal, callback?: GlobalCallback): Promise<void> | void;
   useGlobal(): [ GlobalState, GlobalStateSetter ];
