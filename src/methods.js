@@ -1,12 +1,12 @@
-const globalStateManager = require('./global-state-manager');
+const defaultGlobalState = require('./default-global-state');
 
 
 
 // static getDerivedStateFromProps
 function createReactNGetDerivedStateFromProps(Component) {
   return function ReactNGetDerivedStateFromProps(props, ...args) {
-    const newGlobal = Component.getDerivedGlobalFromProps(props, globalStateManager.stateWithReducers, ...args);
-    globalStateManager.setAny(newGlobal);
+    const newGlobal = Component.getDerivedGlobalFromProps(props, defaultGlobalState.stateWithReducers, ...args);
+    defaultGlobalState.setAny(newGlobal);
 
     // getDerivedStateFromProps
     if (Object.prototype.hasOwnProperty.call(Component, 'getDerivedStateFromProps')) {
@@ -22,7 +22,7 @@ function createReactNGetDerivedStateFromProps(Component) {
 function ReactNComponentWillUnmount(_this) {
 
   // No longer re-render this component on global state change.
-  globalStateManager.removePropertyListener(_this._globalCallback);
+  defaultGlobalState.removePropertyListener(_this._globalCallback);
 }
 
 
@@ -36,7 +36,7 @@ function ReactNGlobalCallback(_this) {
 
 // this.global
 function ReactNGlobal(_this) {
-  return globalStateManager.spyStateWithReducers(_this._globalCallback);
+  return defaultGlobalState.spyStateWithReducers(_this._globalCallback);
 }
 
 
@@ -46,7 +46,7 @@ function ReactNSetGlobal(_this, newGlobal, callback, sync) {
 
   // Update the state synchronously.
   if (sync) {
-    globalStateManager.setAnyCallback(newGlobal, callback);
+    defaultGlobalState.setAnyCallback(newGlobal, callback);
   }
 
   // Update the state asynchronously.

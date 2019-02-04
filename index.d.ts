@@ -6,7 +6,9 @@ interface AnyObject {
   [property: string]: any;
 }
 
-type GlobalCallback = (global: GlobalState) => void;
+type GlobalCallback = (global: GlobalState) => NewGlobal | void;
+
+type GlobalCallbackRemover = () => void;
 
 // TypeScript does not allow props P to be passed to static methods.
 declare class GlobalComponent<P = {}, S = {}> extends React.Component<P, S> {
@@ -23,10 +25,6 @@ declare class GlobalPureComponent<P = {}, S = {}> extends React.PureComponent<P,
   readonly global: Readonly<GlobalState>;
   setGlobal(newGlobal: NewGlobal, callback?: GlobalCallback): Promise<void> | void;
 }
-
-type GlobalCallback = (state: GlobalState) => NewGlobal;
-
-type GlobalCallbackRemover = () => void;
 
 type GlobalReducer = (state: GlobalState, ...args: any[]) => NewGlobal;
 
@@ -54,6 +52,7 @@ interface ReactN {
   addReducer(name: string, reducer: GlobalReducer): void;
   Component: typeof GlobalComponent;
   default: ReactN;
+  getGlobal(): GlobalState;
   PureComponent: typeof GlobalPureComponent;
   removeCallback(callback: GlobalCallback): void;
   resetGlobal(): void;

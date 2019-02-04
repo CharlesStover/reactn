@@ -1,9 +1,7 @@
 const objectGetListener = require('./object-get-listener');
-const reducers = require('./reducers');
-
 const MAX_SAFE_INTEGER = 9007199254740990;
 
-class GlobalStateManager {
+class GlobalState {
 
   constructor() {
     this.reset();
@@ -24,6 +22,19 @@ class GlobalStateManager {
     else {
       this._propertyListeners.set(property, new Set([ propertyListener ]));
     }
+  }
+
+  addReducer(name, reducer) {
+    if (this.hasReducer(name)) {
+      if (this.getReducer(name) === reducer) {
+        return;
+      }
+      throw new Error(`A reducer named ${name} already exists.`);
+    }
+    this._reducers.set(name, reducer);
+    return () => {
+      this.removeReducer(name);
+    };
   }
 
   // Begin a transaction.
@@ -56,18 +67,35 @@ class GlobalStateManager {
       propertyListener();
     }
 
+    // Clean up this transaction.
+    this._transactions.delete(transactionId);
+
     // Call each global callback.
     for (const callback of this._callbacks) {
 
       // Delay these under after the current transaction has deleted?
       this.setAny(callback(this.stateWithReducers));
     }
+  }
 
-    this._transactions.delete(transactionId);
+  getReducer(reducer) {
+    return this._reducers.get(reducer);
+  }
+
+  getReducers() {
+    const reducers = Object.create(null);
+    for (const [ name, reducer ] of this._reducers.entries()) {
+      reducers[name] = reducer;
+    }
+    return reducers;
+  }
+
+  hasReducer(reducer) {
+    return this._reducers.has(reducer);
   }
 
   removeCallback(callback) {
-    this._callbacks.remove(callback);
+    this._callbacks.delete(callback);
   }
 
   // Unmap a component instance from all state properties.
@@ -84,10 +112,15 @@ class GlobalStateManager {
     }
   }
 
+  removeReducer(reducer) {
+    this._reducers.remove(reducer);
+  }
+
   // Reset the global state.
   reset() {
     this._callbacks = new Set();
     this._propertyListeners = new Map();
+    this._reducers = new Map();
     this._state = Object.create(null);
     this._transactionId = 0;
     this._transactions = new Map();
@@ -99,7 +132,7 @@ class GlobalStateManager {
     // Silently ignore state properties that share names with reducers.
     // This can occur if you spread global state with reducers.
     // newGlobal = { ...globalWithReducers, newProperty: 'new value' }
-    if (Object.prototype.hasOwnProperty.call(reducers, property)) {
+    if (this.hasReducer(property)) {
       return transactionId;
     }
 
@@ -198,17 +231,23 @@ class GlobalStateManager {
   spyStateWithReducers(propertyListener) {
     return Object.assign(
       this.spyState(propertyListener),
-      reducers
+      this.getReducers()
     );
   }
 
   get state() {
-    return Object.assign(Object.create(null), this._state);
+    return Object.assign(
+      Object.create(null),
+      this._state
+    );
   }
 
   get stateWithReducers() {
-    return Object.assign(this.state, reducers);
+    return Object.assign(
+      this.state,
+      this.getReducers()
+    );
   }
 };
 
-module.exports = new GlobalStateManager();
+module.exports = GlobalState;

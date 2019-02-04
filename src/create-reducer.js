@@ -13,12 +13,12 @@ Example after:
 
 */
 
-const globalStateManager = require('./global-state-manager');
+const defaultGlobalState = require('./default-global-state');
 
 module.exports = function createReducer(reducer) {
   return function globalReducer(...args) {
-    return globalStateManager.setAny(
-      reducer(globalStateManager.stateWithReducers, ...args)
+    return defaultGlobalState.setAny(
+      reducer(defaultGlobalState.stateWithReducers, ...args)
     );
   };
 };

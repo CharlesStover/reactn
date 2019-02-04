@@ -1,6 +1,6 @@
 const createReducer = require('../create-reducer');
-const reducers = require('../reducers');
+const defaultGlobalState = require('../default-global-state');
 
 module.exports = function addReducer(name, reducer) {
-  reducers[name] = createReducer(reducer);
+  defaultGlobalState.addReducer(name, createReducer(reducer));
 };

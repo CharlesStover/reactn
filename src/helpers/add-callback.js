@@ -1,5 +1,5 @@
-const globalStateManager = require('../global-state-manager');
+const defaultGlobalState = require('../default-global-state');
 
 module.exports = function addCallback(f) {
-  return globalStateManager.addCallback(f);
+  return defaultGlobalState.addCallback(f);
 };

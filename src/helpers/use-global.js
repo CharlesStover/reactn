@@ -1,8 +1,7 @@
 const React = require('react');
 const useForceUpdate = require('use-force-update').default;
 const createReducer = require('../create-reducer');
-const globalStateManager = require('../global-state-manager');
-const reducers = require('../reducers');
+const defaultGlobalState = require('../default-global-state');
 const setGlobal = require('./set-global');
 
 module.exports = function useGlobal(property, setterOnly = false) {
@@ -19,7 +18,7 @@ module.exports = function useGlobal(property, setterOnly = false) {
 
   // If this component ever updates or unmounts, remove the force update listener.
   React.useEffect(() => () => {
-    globalStateManager.removePropertyListener(forceUpdate);
+    defaultGlobalState.removePropertyListener(forceUpdate);
   });
 
   // Return the entire global state.
@@ -33,7 +32,7 @@ module.exports = function useGlobal(property, setterOnly = false) {
       return globalStateSetter;
     }
     return [
-      globalStateManager.spyStateWithReducers(forceUpdate),
+      defaultGlobalState.spyStateWithReducers(forceUpdate),
       globalStateSetter
     ];
   }
@@ -44,12 +43,12 @@ module.exports = function useGlobal(property, setterOnly = false) {
   }
 
   // Use a global reducer.
-  if (Object.prototype.hasOwnProperty.call(reducers, property)) {
-    return reducers[property];
+  if (defaultGlobalState.hasReducer(property)) {
+    return defaultGlobalState.getReducer(property);
   }
 
   const globalPropertySetter = (value, callback = null) =>
-    globalStateManager.setAnyCallback(
+    defaultGlobalState.setAnyCallback(
       { [property]: value },
       callback
     );
@@ -61,7 +60,7 @@ module.exports = function useGlobal(property, setterOnly = false) {
 
   // Return both getter and setter.
   return [
-    globalStateManager.spyState(forceUpdate)[property],
+    defaultGlobalState.spyState(forceUpdate)[property],
     globalPropertySetter
   ];
 };

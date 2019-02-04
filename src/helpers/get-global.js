@@ -1,5 +1,5 @@
-const globalStateManager = require('../global-state-manager');
+const defaultGlobalState = require('../default-global-state');
 
 module.exports = function getGlobal() {
-  return globalStateManager.stateWithReducers;
+  return defaultGlobalState.stateWithReducers;
 };

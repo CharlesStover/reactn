@@ -1,6 +1,6 @@
 {
   "name": "reactn",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "author": "Charles Stover <npmjs@charlesstover.com>",
   "description": "React, but with built-in global state management.",
   "license": "MIT",
@@ -11,7 +11,7 @@
     "build": "webpack",
     "dev": "set NODE_ENV=development&& webpack",
     "prepublishOnly": "npm run build",
-    "test": "mocha tests/**/*.spec.js -r chai/register-expect"
+    "test": "mocha -r chai/register-expect -r ts-node/register tests/**/*.spec.ts"
   },
   "dependencies": {
     "use-force-update": "^1.0.0"
@@ -22,12 +22,17 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "@types/node": "^10.12.21",
     "@types/react": "^16.7.13",
     "babel-core": "7.0.0-bridge.0",
     "babel-loader": "^8.0.4",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "react": "^16.7.0-alpha.2",
+    "ts-node": "^8.0.2",
+    "typescript": "^3.3.1",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2"
   }
