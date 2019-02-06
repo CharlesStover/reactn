@@ -2,7 +2,7 @@
 
 ReactN is a extension of React that includes global state management.
 
-[![package](https://img.shields.io/github/package-json/v/CharlesStover/reactn.svg)](https://www.npmjs.com/package/reactn)
+[![package](https://img.shields.io/npm/v/reactn.svg)](https://www.npmjs.com/package/reactn)
 [![minified size](https://img.shields.io/bundlephobia/min/reactn.svg)](https://www.npmjs.com/package/reactn)
 [![minzipped size](https://img.shields.io/bundlephobia/minzip/reactn.svg)](https://www.npmjs.com/package/reactn)
 
