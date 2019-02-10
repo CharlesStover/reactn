@@ -1,7 +1,8 @@
-const objectGetListener = require('./object-get-listener');
+import objectGetListener from './object-get-listener';
+
 const MAX_SAFE_INTEGER = 9007199254740990;
 
-class GlobalState {
+export default class GlobalState {
 
   constructor() {
     this.reset();
@@ -249,5 +250,3 @@ class GlobalState {
     );
   }
 };
-
-module.exports = GlobalState;

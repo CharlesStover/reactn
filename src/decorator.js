@@ -1,10 +1,10 @@
-const {
+import {
   createReactNGetDerivedStateFromProps,
   ReactNComponentWillUnmount,
   ReactNGlobal,
   ReactNGlobalCallback,
   ReactNSetGlobal
-} = require('./methods');
+} from './methods';
 
 // TODO -- https://github.com/CharlesStover/reactn/issues/14
 const isComponentDidMount = false;
@@ -12,7 +12,7 @@ const isComponentDidUpdate = false;
 const isSetGlobalCallback = false;
 
 // @reactn
-const ReactN = function ReactN(Component) {
+export default function ReactN(Component) {
   class ReactNComponent extends Component {
 
     static displayName = (Component.displayName || Component.name) + '-ReactN';
@@ -55,5 +55,3 @@ const ReactN = function ReactN(Component) {
 
   return ReactNComponent;
 };
-
-module.exports = ReactN;

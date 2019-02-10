@@ -1,5 +1,5 @@
-const defaultGlobalState = require('../default-global-state');
+import defaultGlobalState from '../default-global-state';
 
-module.exports = function resetGlobal() {
+export default function resetGlobal() {
   return defaultGlobalState.reset();
 };

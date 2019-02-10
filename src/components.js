@@ -1,10 +1,10 @@
-const { Component, PureComponent } = require('react');
-const {
+import { Component, PureComponent } from 'react';
+import {
   ReactNComponentWillUnmount,
   ReactNGlobal,
   ReactNGlobalCallback,
   ReactNSetGlobal
-} = require('./methods');
+} from './methods';
 
 // TODO -- https://github.com/CharlesStover/reactn/issues/14
 const isComponentDidMount = false;
@@ -58,7 +58,5 @@ const createReactNClassComponent = Super =>
     }
   };
 
-module.exports = {
-  ReactNComponent: createReactNClassComponent(Component),
-  ReactNPureComponent: createReactNClassComponent(PureComponent)
-};
+export const ReactNComponent = createReactNClassComponent(Component);
+export const ReactNPureComponent = createReactNClassComponent(PureComponent);

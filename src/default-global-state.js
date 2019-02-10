@@ -1,3 +1,3 @@
-const GlobalState = require('./global-state');
+import GlobalState from './global-state';
 
-module.exports = new GlobalState();
+export default new GlobalState();

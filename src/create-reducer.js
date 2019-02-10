@@ -13,9 +13,9 @@ Example after:
 
 */
 
-const defaultGlobalState = require('./default-global-state');
+import defaultGlobalState from './default-global-state';
 
-module.exports = function createReducer(reducer) {
+export default function createReducer(reducer) {
   return function globalReducer(...args) {
     return defaultGlobalState.setAny(
       reducer(defaultGlobalState.stateWithReducers, ...args)

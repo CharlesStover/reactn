@@ -1,5 +1,5 @@
-const { createElement } = require('react');
-const { ReactNPureComponent } = require('../components');
+import { createElement } from 'react';
+import { ReactNPureComponent } from '../components';
 
 /*
 Creates a Higher-Order Component that passes the global state
@@ -16,7 +16,7 @@ hoc(MyComponent);
 
 */
 
-module.exports = function withGlobal(getGlobal = global => global, setGlobal = () => null) {
+export default function withGlobal(getGlobal = global => global, setGlobal = () => null) {
   return function ReactNWithGlobal(Component) {
     return class ReactNComponent extends ReactNPureComponent {
 

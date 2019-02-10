@@ -1,6 +1,6 @@
 const React = require('react');
 const { ReactNComponent, ReactNPureComponent } = require('./components');
-const ReactN = require('./decorator');
+const { default: ReactN } = require('./decorator');
 const {
   addCallback, addReducer, getGlobal, removeCallback, resetGlobal, setGlobal,
   useGlobal, withGlobal

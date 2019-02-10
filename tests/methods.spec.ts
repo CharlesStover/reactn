@@ -1,4 +1,15 @@
+// import defaultGlobalState from '../src/default-global-state';
+import resetGlobal from '../src/helpers/reset-global';
+/*
+import {
+  ReactNComponentWillUnmount, ReactNGlobalCallback, ReactNGlobal,
+  ReactNSetGlobal
+} from '../src/methods';
+*/
+
 describe('Component methods', () => {
+
+  afterEach(resetGlobal);
 
   describe('static getDerivedStateFromProps', () => {
 

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
-const createReducer = require('../src/create-reducer');
-const getGlobal = require('../src/helpers/get-global');
-const resetGlobal = require('../src/helpers/reset-global');
+import createReducer from '../src/create-reducer';
+import getGlobal from '../src/helpers/get-global';
+import resetGlobal from '../src/helpers/reset-global';
 
 describe('createReducer', () => {
 

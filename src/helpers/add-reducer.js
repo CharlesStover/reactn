@@ -1,6 +1,6 @@
-const createReducer = require('../create-reducer');
-const defaultGlobalState = require('../default-global-state');
+import createReducer from '../create-reducer';
+import defaultGlobalState from '../default-global-state';
 
-module.exports = function addReducer(name, reducer) {
+export default function addReducer(name, reducer) {
   defaultGlobalState.addReducer(name, createReducer(reducer));
 };

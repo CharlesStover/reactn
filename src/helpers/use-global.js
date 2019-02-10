@@ -1,10 +1,10 @@
-const React = require('react');
-const useForceUpdate = require('use-force-update').default;
-const createReducer = require('../create-reducer');
-const defaultGlobalState = require('../default-global-state');
-const setGlobal = require('./set-global');
+import React from 'react';
+import useForceUpdate from 'use-force-update';
+import createReducer from '../create-reducer';
+import defaultGlobalState from '../default-global-state';
+import setGlobal from './set-global';
 
-module.exports = function useGlobal(property, setterOnly = false) {
+export default function useGlobal(property, setterOnly = false) {
 
   // Require hooks.
   if (!React.useState) {

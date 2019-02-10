@@ -1,19 +1,8 @@
-const addCallback = require('./add-callback');
-const addReducer = require('./add-reducer');
-const getGlobal = require('./get-global');
-const removeCallback = require('./remove-callback');
-const resetGlobal = require('./reset-global');
-const setGlobal = require('./set-global');
-const useGlobal = require('./use-global');
-const withGlobal = require('./with-global');
-
-module.exports = {
-  addCallback,
-  addReducer,
-  getGlobal,
-  removeCallback,
-  resetGlobal,
-  setGlobal,
-  useGlobal,
-  withGlobal
-};
+export { default as addCallback } from './add-callback';
+export { default as addReducer } from './add-reducer';
+export { default as getGlobal } from './get-global';
+export { default as removeCallback } from './remove-callback';
+export { default as resetGlobal } from './reset-global';
+export { default as setGlobal } from './set-global';
+export { default as useGlobal } from './use-global';
+export { default as withGlobal } from './with-global';

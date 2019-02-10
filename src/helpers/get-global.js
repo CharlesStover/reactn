@@ -1,5 +1,5 @@
-const defaultGlobalState = require('../default-global-state');
+import defaultGlobalState from '../default-global-state';
 
-module.exports = function getGlobal() {
+export default function getGlobal() {
   return defaultGlobalState.stateWithReducers;
 };

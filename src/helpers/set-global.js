@@ -1,5 +1,5 @@
-const defaultGlobalState = require('../default-global-state');
+import defaultGlobalState from '../default-global-state';
 
-module.exports = function setGlobal(newGlobal, callback = null) {
+export default function setGlobal(newGlobal, callback = null) {
   return defaultGlobalState.setAnyCallback(newGlobal, callback);
 };
