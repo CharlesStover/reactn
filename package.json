@@ -23,7 +23,7 @@
   "scripts": {
     "build": "webpack",
     "dev": "set NODE_ENV=development&& webpack",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "webpack",
     "test": "nyc mocha -r chai/register-expect -r @babel/register -r ts-node/register tests/**/*.spec.ts"
   },
   "types": "./index.d.ts",
