@@ -154,7 +154,7 @@ unchanged. You can inject ReactN's global functionality into your vanilla React
 component by using the `@reactn` decorator imported from the `reactn` package.
 
 ```JavaScript
-import React from 'reactn';
+import React from 'react';
 import reactn from 'reactn'; // <-- reactn
 import Card from '../card/card';
 
@@ -199,7 +199,7 @@ export default class Cards extends React.PureComponent {
 
 #### Functional Components
 
-Using React Hooks in React v16.7 alpha, you can harness `useGlobal` to access
+Using [React Hooks](https://reactjs.org/docs/hooks-intro.html) in version 16.8 (or above), you can harness `useGlobal` to access
 the global state.
 
 ```JavaScript
