@@ -1,10 +1,10 @@
 {
   "name": "reactn",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "author": "Charles Stover <reactn@charlesstover.com>",
   "bugs": {
     "email" : "reactn@charlesstover.com",
-    "url" : "https://github.com/CharlesStover/reactn/issues"
+    "url": "https://github.com/CharlesStover/reactn/issues"
   },
   "description": "React, but with built-in global state management.",
   "directories": {
@@ -16,6 +16,7 @@
     "index.js",
     "package.json"
   ],
+  "homepage": "https://github.com/CharlesStover/reactn#readme",
   "license": "MIT",
   "main": "index.js",
   "repository": "github:CharlesStover/reactn",
