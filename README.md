@@ -199,7 +199,7 @@ export default class Cards extends React.PureComponent {
 
 #### Functional Components
 
-Using [React Hooks](https://reactjs.org/docs/hooks-intro.html) in version 16.8.1 (or above), you can harness `useGlobal` to access
+Using [React Hooks](https://reactjs.org/docs/hooks-intro.html) in version 16.8 (or above), you can harness `useGlobal` to access
 the global state.
 
 ```JavaScript
