@@ -22,11 +22,10 @@
   "repository": "github:CharlesStover/reactn",
   "scripts": {
     "build": "webpack",
+    "coverage": "nyc mocha -r chai/register-expect -r @babel/register -r ts-node/register tests/**/*.spec.ts?(x)",
     "dev": "set NODE_ENV=development&& webpack",
-    "dev-test": "nyc mocha -r chai/register-expect -r @babel/register -r ts-node/register -w tests/**/*.spec.ts?(x)",
     "prepublishOnly": "webpack",
-    "test": "nyc mocha -r chai/register-expect -r @babel/register -r ts-node/register tests/**/*.spec.ts?(x)",
-    "travis": "webpack && mocha -r chai/register-expect -r @babel/register -r ts-node/register tests/**/*.spec.ts?(x)"
+    "test": "mocha -r chai/register-expect -r @babel/register -r ts-node/register tests/**/*.spec.ts?(x)"
   },
   "types": "./index.d.ts",
   "dependencies": {
