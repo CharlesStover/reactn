@@ -1,5 +1,3 @@
-import defaultGlobalState from '../default-global-state';
-
-export default function setGlobal(newGlobal, callback = null) {
-  return defaultGlobalState.setAnyCallback(newGlobal, callback);
+export default function setGlobal(globalState, newGlobal, callback = null) {
+  return globalState.setAnyCallback(newGlobal, callback);
 };

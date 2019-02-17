@@ -1,5 +1,7 @@
 import { expect } from 'chai';
-const { addCallback, removeCallback, resetGlobal, setGlobal } = require('../../');
+import {
+  addCallback, removeCallback, resetGlobal, setGlobal
+} from '../../index';
 
 describe('removeCallback', () => {
 

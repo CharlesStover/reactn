@@ -17,10 +17,6 @@ export default function ReactN(Component) {
 
     static displayName = (Component.displayName || Component.name) + '-ReactN';
 
-    constructor(...args) {
-      super(...args);
-    }
-
     componentWillUnmount(...args) {
       ReactNComponentWillUnmount(this);
 
@@ -38,9 +34,9 @@ export default function ReactN(Component) {
       return ReactNGlobal(this);
     }
 
-    setGlobal(global, callback = null) {
-      ReactNSetGlobal(
-        this, global, callback,
+    setGlobal(newGlobal, callback = null) {
+      return ReactNSetGlobal(
+        this, newGlobal, callback,
         !isComponentDidMount &&
         !isComponentDidUpdate &&
         !isSetGlobalCallback

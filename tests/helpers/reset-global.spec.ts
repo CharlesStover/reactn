@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-const { getGlobal, resetGlobal, setGlobal } = require('../../index');
+import { getGlobal, resetGlobal, setGlobal } from '../../index';
 
 const empty = Object.create(null);
 

@@ -91,6 +91,13 @@ export default class GlobalState {
     return reducers;
   }
 
+  // Share whether the global state has a property listener.
+  // Used in unit testing to prove whether component unmounting has occurred
+  //   successfully.
+  hasPropertyListener(propertyListener) {
+    return this._propertyListeners.has(propertyListener);
+  }
+
   hasReducer(reducer) {
     return this._reducers.has(reducer);
   }

@@ -1,6 +1,5 @@
 import createReducer from '../create-reducer';
-import defaultGlobalState from '../default-global-state';
 
-export default function addReducer(name, reducer) {
-  defaultGlobalState.addReducer(name, createReducer(reducer));
+export default function addReducer(globalState, name, reducer) {
+  globalState.addReducer(name, createReducer(reducer));
 };

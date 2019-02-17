@@ -11,6 +11,30 @@ const isComponentDidMount = false;
 const isComponentDidUpdate = false;
 const isSetGlobalCallback = false;
 
+// this.componentWillUnmount on instance
+const componentWillMountInstance = _this => {
+  if (Object.prototype.hasOwnProperty.call(_this, 'componentWillUnmount')) {
+    const instanceCwu = _this.componentWillUnmount;
+    _this.componentWillUnmount = (...a) => {
+      ReactNComponentWillUnmount(_this);
+      instanceCwu(...a);
+    };
+    return true;
+  }
+  return false;
+};
+
+// this.componentWillUnmount on prototype
+const componentWillMountPrototype = _this => {
+  const proto = Object.getPrototypeOf(_this);
+  if (Object.prototype.hasOwnProperty.call(proto, 'componentWillUnmount')) {
+    _this.componentWillUnmount = (...a) => {
+      ReactNComponentWillUnmount(_this);
+      proto.componentWillUnmount.bind(_this)(...a);
+    };
+  }
+};
+
 // import React from 'reactn';
 // React.Component, React.PureComponent
 const createReactNClassComponent = Super =>
@@ -19,20 +43,22 @@ const createReactNClassComponent = Super =>
     constructor(...args) {
       super(...args);
 
-      const proto = Object.getPrototypeOf(this);
+      // this.componentWillUnmount on instance
+      if (
+        !componentWillMountInstance(this) &&
+        !componentWillMountPrototype(this)
+      ) {
 
-      // this.componentWillUnmount
-      const hasInstanceCWU = Object.prototype.hasOwnProperty.call(this, 'componentWillUnmount');
-      const hasProtoCWU = Object.prototype.hasOwnProperty.call(proto, 'componentWillUnmount');
-      if (hasInstanceCWU || hasProtoCWU) {
-        const cb =
-          hasInstanceCWU ?
-            this.componentWillUnmount :
-            proto.componentWillUnmount.bind(this);
-        this.componentWillUnmount = (...a) => {
-          ReactNComponentWillUnmount(this);
-          cb(...a);
-        };
+        // Hack:
+        // If we didn't find componentWillMount on the instance, attempt to
+        //   find it again after the sub class finishes its constructor.
+        // Disabled because it makes me uncomfortable and doesn't pass
+        //   synchronous unit tests anyway.
+        /*
+        setTimeout(() => {
+          componentWillMountInstance(this);
+        }, 0);
+        */
       }
     }
 
@@ -49,7 +75,7 @@ const createReactNClassComponent = Super =>
     }
 
     setGlobal(newGlobal, callback = null) {
-      ReactNSetGlobal(
+      return ReactNSetGlobal(
         this, newGlobal, callback,
         !isComponentDidMount &&
         !isComponentDidUpdate &&

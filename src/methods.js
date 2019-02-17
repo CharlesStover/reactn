@@ -1,12 +1,15 @@
+import Context from './context';
 import defaultGlobalState from './default-global-state';
 
-
+const getGlobalState = () =>
+  Context._currentValue2 || defaultGlobalState;
 
 // static getDerivedStateFromProps
 export function createReactNGetDerivedStateFromProps(Component) {
   return function ReactNGetDerivedStateFromProps(props, ...args) {
-    const newGlobal = Component.getDerivedGlobalFromProps(props, defaultGlobalState.stateWithReducers, ...args);
-    defaultGlobalState.setAny(newGlobal);
+    const globalState = getGlobalState();
+    const newGlobal = Component.getDerivedGlobalFromProps(props, globalState.stateWithReducers, ...args);
+    globalState.setAny(newGlobal);
 
     // getDerivedStateFromProps
     if (Object.prototype.hasOwnProperty.call(Component, 'getDerivedStateFromProps')) {
@@ -22,7 +25,7 @@ export function createReactNGetDerivedStateFromProps(Component) {
 export function ReactNComponentWillUnmount(_this) {
 
   // No longer re-render this component on global state change.
-  defaultGlobalState.removePropertyListener(_this._globalCallback);
+  getGlobalState().removePropertyListener(_this._globalCallback);
 }
 
 
@@ -35,24 +38,25 @@ export function ReactNGlobalCallback(_this) {
 
 
 // this.global
-export function ReactNGlobal(_this) {
-  return defaultGlobalState.spyStateWithReducers(_this._globalCallback);
+// Provider.withGlobal passes its own global state instance.
+export function ReactNGlobal(_this, globalState = getGlobalState()) {
+  return globalState.spyStateWithReducers(_this._globalCallback);
 }
 
 
 
 // this.setGlobal
-export function ReactNSetGlobal(_this, newGlobal, callback, sync) {
+export function ReactNSetGlobal(_this, newGlobal, callback, sync, globalState = getGlobalState()) {
 
   // Update the state synchronously.
   if (sync) {
-    defaultGlobalState.setAnyCallback(newGlobal, callback);
+    globalState.setAnyCallback(newGlobal, callback);
   }
 
   // Update the state asynchronously.
   else {
     setTimeout(() => {
-      ReactNSetGlobal(_this, newGlobal, callback, true);
+      ReactNSetGlobal(_this, newGlobal, callback, true, globalState);
     }, 0);
   }
 }

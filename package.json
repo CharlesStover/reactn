@@ -3,7 +3,7 @@
   "version": "0.2.2",
   "author": "Charles Stover <reactn@charlesstover.com>",
   "bugs": {
-    "email" : "reactn@charlesstover.com",
+    "email": "reactn@charlesstover.com",
     "url": "https://github.com/CharlesStover/reactn/issues"
   },
   "description": "React, but with built-in global state management.",
@@ -23,8 +23,10 @@
   "scripts": {
     "build": "webpack",
     "dev": "set NODE_ENV=development&& webpack",
+    "dev-test": "nyc mocha -r chai/register-expect -r @babel/register -r ts-node/register -w tests/**/*.spec.ts?(x)",
     "prepublishOnly": "webpack",
-    "test": "nyc mocha -r chai/register-expect -r @babel/register -r ts-node/register tests/**/*.spec.ts"
+    "test": "nyc mocha -r chai/register-expect -r @babel/register -r ts-node/register tests/**/*.spec.ts?(x)",
+    "travis": "webpack && mocha -r chai/register-expect -r @babel/register -r ts-node/register tests/**/*.spec.ts?(x)"
   },
   "types": "./index.d.ts",
   "dependencies": {
@@ -41,12 +43,16 @@
     "@types/mocha": "^5.2.5",
     "@types/node": "^10.12.21",
     "@types/react": "^16.7.13",
+    "@types/react-test-renderer": "^16.8.1",
+    "@types/sinon": "^7.0.6",
     "babel-core": "7.0.0-bridge.0",
     "babel-loader": "^8.0.4",
     "chai": "^4.2.0",
     "mocha": "^5.2.0",
     "nyc": "^13.2.0",
     "react": "^16.7.0-alpha.2",
+    "react-test-renderer": "^16.8.2",
+    "sinon": "^7.2.3",
     "ts-node": "^8.0.2",
     "typescript": "^3.3.1",
     "webpack": "^4.20.2",
