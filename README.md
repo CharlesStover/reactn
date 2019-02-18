@@ -8,13 +8,66 @@ ReactN is a extension of React that includes global state management.
 [![downloads](https://img.shields.io/npm/dt/reactn.svg)](https://www.npmjs.com/package/reactn)
 [![build](https://api.travis-ci.com/CharlesStover/reactn.svg)](https://travis-ci.com/CharlesStover/reactn/)
 
+## Install
+
+* `npm install reactn --save` or
+* `yarn add reactn`
+
+## Features
+
+### No Boilerplate!
+
+For function components, `import { useGlobal } from 'reactn';` to harness the
+power of React Hooks!
+
+For class components, simply change `import React from 'react';` to
+`import React from 'reactn';`, and your React class components will have global
+state built in!
+
+If you prefer class decorators, you can continue to
+`import React from 'react';` for your components and additionally
+`import reactn from 'reactn';` for access to the `@reactn` decorator!
+
+### Intuitive!
+
+#### Function Components
+
+Global state in function components behaves almost identically to local state.
+Instead of `[ value, setValue ] = useState(defaultValue)`, you can use
+`[ value, setValue ] = useGlobal(property)` where `property` is the property of
+the global state you want to get and set.
+
+You may also use `[ global, setGlobal ] = useGlobal()` to access the entire
+global object.
+
+You may also use `[ state, dispatch ] = useGlobal(reducerFunction)` to mimic
+the behavior of `useReducer`, where instead of providing an initial state, the
+state of the reducer is the ReactN global state object.
+
+#### Class Components
+
+Global state in class components behaves exactly like local state! Instead of
+`this.state` and `this.setState` to get and set the local state, you can use
+`this.global` and `this.setGlobal` to get and set the global state.
+
+Alternatively, the `@reactn` decorator allows you to convert classes that
+extend `React.Component` to ReactN global state components.
+
+#### Map State to Props
+
+If you prefer Redux's `connect` functionality, pure functions, or are dealing
+with deeply nested objects, a
+[`withGlobal` higher-order component](#withglobal) is also an available option.
+
 ## Table of Contents
 
+* [Install](#install)
+* [Features](#features)
+  * [No Boilerplate!](#no-boilerplate)
+  * [Intuitive!](#intuitive)
 * [Getting Started](#getting-started)
-  * [Install](#install)
-  * [Features](#features)
-    * [No Boilerplate!](#no-boilerplate)
-    * [Intuitive!](#intuitive)
+  * [Managing Multiple States](#managing-multiple-states)
+  * [Initializing Your State](#initializing-your-state)
   * [Examples](#examples)
     * [Class Components](#class-components)
     * [Class Components (with Decorator)](#class-components-with-decorator)
@@ -30,15 +83,23 @@ ReactN is a extension of React that includes global state management.
 
 ## Getting Started
 
-### Install
+### Managing Multiple States
 
-* `npm install reactn --save` or
-* `yarn add reactn`
+**This README is for managing a single global state.** This is ideal for most
+applications. If you are using concurrent server-side rendering or otherwise
+want to work with multiple global states, follow the README for the
+[Provider](https://github.com/CharlesStover/reactn/blob/master/Provider.md)
+component, which allows you to limit a ReactN state to a React Context.
 
-Initialize your global state using the `setGlobal` helper function. In most
-cases, you do not want to initialize your global state in a component lifecycle
-method, as the global state should exist before your components attempt to
-render.
+If you are unsure whether or not you need multiple global states, then you do
+not need multiple global states.
+
+### Initializing Your State
+
+You can initialize your global state using the `setGlobal` helper function. In
+most cases, you do not want to initialize your global state in a component
+lifecycle method, as the global state should exist before your components
+attempt to render.
 
 It is recommended that you initialize the global state just prior to mounting
 with `ReactDOM`, the same way a Redux store would be initialized this way.
@@ -62,41 +123,6 @@ ReactDOM.render(
 );
 ```
 
-### Features
-
-#### No Boilerplate!
-
-For functional components, `import { useGlobal } from 'reactn';` to harness the
-power of React Hooks!
-
-For class components, simply change `import React from 'react';` to
-`import React from 'reactn';`, and your React class components will have global
-state built in!
-
-If you prefer class decorators, you can continue to
-`import React from 'react';` for your components and additionally
-`import reactn from 'reactn';` for access to the `@reactn` decorator!
-
-#### Intuitive!
-
-Global state in functional components behaves almost identically to local
-state. Instead of `[ value, setValue ] = useState(defaultValue)`,
-you can use `[ value, setValue ] = useGlobal(property)` where `property` is the
-property of the global state from which you want to read and to which you want
-write.
-
-You may alternatively use `[ global, setGlobal ] = useGlobal()` to access the
-entire global object.
-
-Global state in class components behaves exactly like local state! Instead of
-`this.state` and `this.setState` to read and write to the local state, you can
-use `this.global` and `this.setGlobal` to read from and write to the global
-state object.
-
-If you prefer Redux's `connect` functionality, pure functions, or are dealing
-with deeply nested objects, a `withGlobal` higher-order component is also
-available.
-
 ### Examples
 
 #### Class Components
@@ -116,6 +142,8 @@ export default class Cards extends React.PureComponent {
 
     // Hydrate the global state with the response from /api/cards.
     this.setGlobal(
+
+      // Despite fetch returning a Promise, ReactN can handle it.
       fetch('/api/cards')
         .then(response => response.json())
 
@@ -166,6 +194,8 @@ export default class Cards extends React.PureComponent {
 
     // Hydrate the global state with the response from /api/cards.
     this.setGlobal(
+
+      // Despite fetch returning a Promise, ReactN can handle it.
       fetch('/api/cards')
         .then(response => response.json())
 
@@ -199,8 +229,8 @@ export default class Cards extends React.PureComponent {
 
 #### Functional Components
 
-Using [React Hooks](https://reactjs.org/docs/hooks-intro.html) in version 16.8 (or above), you can harness `useGlobal` to access
-the global state.
+Using [React Hooks](https://reactjs.org/docs/hooks-intro.html) in version 16.8
+(or above), you can harness `useGlobal` to access the global state.
 
 ```JavaScript
 import React, { useGlobal } from 'reactn'; // <-- reactn
@@ -227,6 +257,42 @@ const Cards = () => {
 };
 
 export default Cards;
+```
+
+You may also use the `useGlobal` hook analogously to the `useReducer` hook by
+providing a function to `useGlobal`.
+
+```JavaScript
+import React, { useGlobal } from 'reactn'; // <-- reactn
+
+const incrementReducer = (global, action) => ({
+  count: global.count + action.amount
+});
+
+const decrementReducer = (global, action) => ({
+  count: global.count - action.amount
+});
+
+const MyComponent = () => {
+
+  // In most cases, you only want the dispatch function and not a copy of the
+  //   global state.
+  const dispatch1 = useGlobal(incrementReducer);
+
+  // You may use [ state, dispatch ] to match useReducer, where state is the
+  //   global state.
+  const [ state, dispatch2 ] = useGlobal(decrementReducer);
+
+  return (
+    <div>
+      <button onClick={() => dispatch1({ amount: 1 })}>Add 1</button>
+      <button onClick={() => dispatch1({ amount: 3 })}>Add 3</button>
+      <button onClick={() => dispatch2({ amount: 5 })}>Subtract 5</button>
+    </div>
+  );
+};
+
+export default MyComponent;
 ```
 
 #### Helper Functions

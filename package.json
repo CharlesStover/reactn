@@ -1,6 +1,6 @@
 {
   "name": "reactn",
-  "version": "0.2.2",
+  "version": "1.0.0",
   "author": "Charles Stover <reactn@charlesstover.com>",
   "bugs": {
     "email": "reactn@charlesstover.com",
@@ -22,10 +22,10 @@
   "repository": "github:CharlesStover/reactn",
   "scripts": {
     "build": "webpack",
-    "coverage": "nyc mocha -r chai/register-expect -r @babel/register -r ts-node/register tests/**/*.spec.ts?(x)",
+    "coverage": "nyc mocha -r chai/register-expect -r @babel/register -r ts-node/register \"tests/**/*.spec.ts?(x)\"",
     "dev": "set NODE_ENV=development&& webpack",
     "prepublishOnly": "webpack",
-    "test": "mocha -r chai/register-expect -r @babel/register -r ts-node/register tests/**/*.spec.ts?(x)"
+    "test": "mocha -r chai/register-expect -r @babel/register -r ts-node/register \"tests/**/*.spec.ts?(x)\""
   },
   "types": "./index.d.ts",
   "dependencies": {
