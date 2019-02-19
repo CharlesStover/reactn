@@ -8,6 +8,7 @@
 /.npmignore
 /.travis.yml
 /FAQ.md
+/Provider.md
 /tsconfig.json
 /webpack.config.js
 /yarn.lock
