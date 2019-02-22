@@ -1,12 +1,8 @@
-# ReactN [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=ReactN%20offers%20global%20state%20management%20baked%20into%20React!&url=https://github.com/CharlesStover/reactn&via=CharlesStover&hashtags=react,reactjs,javascript,typescript,webdev,webdevelopment)
+# ReactN [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=ReactN%20offers%20global%20state%20management%20baked%20into%20React!&url=https://github.com/CharlesStover/reactn&via=CharlesStover&hashtags=react,reactjs,javascript,typescript,webdev,webdevelopment) [![version](https://img.shields.io/npm/v/reactn.svg)](https://www.npmjs.com/package/reactn) [![minified size](https://img.shields.io/bundlephobia/min/reactn.svg)](https://www.npmjs.com/package/reactn) [![minzipped size](https://img.shields.io/bundlephobia/minzip/reactn.svg)](https://www.npmjs.com/package/reactn) [![downloads](https://img.shields.io/npm/dt/reactn.svg)](https://www.npmjs.com/package/reactn) [![build](https://api.travis-ci.com/CharlesStover/reactn.svg)](https://travis-ci.com/CharlesStover/reactn/)
 
 ReactN is a extension of React that includes global state management.
 
-[![version](https://img.shields.io/npm/v/reactn.svg)](https://www.npmjs.com/package/reactn)
-[![minified size](https://img.shields.io/bundlephobia/min/reactn.svg)](https://www.npmjs.com/package/reactn)
-[![minzipped size](https://img.shields.io/bundlephobia/minzip/reactn.svg)](https://www.npmjs.com/package/reactn)
-[![downloads](https://img.shields.io/npm/dt/reactn.svg)](https://www.npmjs.com/package/reactn)
-[![build](https://api.travis-ci.com/CharlesStover/reactn.svg)](https://travis-ci.com/CharlesStover/reactn/)
+[![banner](https://user-images.githubusercontent.com/343837/53267742-fe3f4900-3698-11e9-82fd-3c3a1decb7fd.png)](https://www.npmjs.com/package/reactn)
 
 ## Install
 
