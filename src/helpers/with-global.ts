@@ -1,7 +1,11 @@
-import { createElement } from 'react';
+import { ComponentClass, createElement, FunctionComponent } from 'react';
 import { ReactNPureComponent } from '../components';
 import Context from '../context';
+import defaultGlobalStateManager from '../default-global-state-manager';
+import GlobalStateManager, { NewGlobalState } from '../global-state-manager';
 import { ReactNGlobal, ReactNSetGlobal } from '../methods';
+import Callback from '../typings/callback';
+import ReactNPromise from '../utils/reactn-promise';
 
 // TODO -- https://github.com/CharlesStover/reactn/issues/14
 const isComponentDidMount = false;
@@ -23,47 +27,73 @@ hoc(MyComponent);
 
 */
 
-export default function withGlobal(
-  overrideGlobalState = null,
-  getter = global => global,
-  setter = () => null
+type Getter<GS, HP, LP> = (globalState: GS, props: HP) =>
+  null | Partial<LP> | void;
+
+type LowerOrderComponent<P = {}> = ComponentClass<P> | FunctionComponent<P> | string;
+
+type SetGlobal<GS> = (
+  newGlobal: NewGlobalState<GS>,
+  callback?: Callback<GS>,
+) => ReactNPromise<GS>;
+
+type Setter<GS, HP, LP> = (setGlobal: SetGlobal<GS>, props: HP) =>
+  null | Partial<LP> | void;
+
+// Get the name of a Component.
+const componentName = (Component: LowerOrderComponent) =>
+  typeof Component === 'string' ?
+    Component :
+    Component.displayName ||
+    Component.name;
+
+export default function withGlobal<GS, HP, LP>(
+  globalStateManager: GlobalStateManager<GS> | null = null,
+  getter: Getter<GS, HP, LP> = (globalState: GS): GS => globalState,
+  setter: Setter<GS, HP, LP> = (): null => null,
 ) {
-  return function ReactNWithGlobal(Component) {
-    return class ReactNComponent extends ReactNPureComponent {
+  return function ReactNWithGlobal(
+    Component: LowerOrderComponent<LP>,
+  ): ComponentClass<HP> {
+
+    // If a Global State was provided, use it.
+    // Otherwise, if a Provider was mounted, use its global state.
+    // Otherwise, use the default global state.
+
+    return class ReactNComponent extends ReactNPureComponent<HP, {}, GS> {
 
       static contextType = Context;
 
-      static displayName =
-        (Component.displayName || Component.name) + '-ReactN';
+      static displayName = `${componentName(Component)}-ReactN`;
 
-      get global() {
+      get global(): GS {
         return ReactNGlobal(
           this,
-          overrideGlobalState || this.context || defaultGlobalState
+          globalStateManager || this.context || defaultGlobalStateManager
         );
       }
 
-      setGlobal = (newGlobal, callback = null) =>
+      setGlobal = (
+        newGlobal: NewGlobalState<GS>,
+        callback: Callback<GS> = null,
+      ): ReactNPromise<GS> =>
         ReactNSetGlobal(
           this, newGlobal, callback,
           !isComponentDidMount &&
           !isComponentDidUpdate &&
           !isSetGlobalCallback,
-          overrideGlobalState || this.context || defaultGlobalState
+          globalStateManager || this.context || defaultGlobalStateManager
         );
 
       render() {
 
-        // If a Global State was provided, use it.
-        // Otherwise, if a Provider was mounted, use its global state.
-        // Otherwise, use the default global state.
-        return createElement(
-          Component, {
-            ...this.props,
-            ...getter(this.global, this.props),
-            ...setter(this.setGlobal, this.props)
-          }
-        );
+        // @ts-ignore: LP doesn't match HP
+        const lowerOrderProps: LP = {
+          ...this.props,
+          ...getter(this.global, this.props),
+          ...setter(this.setGlobal, this.props),
+        };
+        return createElement(Component, lowerOrderProps);
       }
     };
   };

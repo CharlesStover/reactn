@@ -1,10 +1,12 @@
 import { Component, PureComponent } from 'react';
+import { NewGlobalState, PropertyListener } from './global-state-manager';
 import {
   ReactNComponentWillUnmount,
   ReactNGlobal,
   ReactNGlobalCallback,
   ReactNSetGlobal
 } from './methods';
+import Callback from './typings/callback';
 import ReactNPromise from './utils/reactn-promise';
 
 type ComponentWillUnmount = (..._: any[]) => void;
@@ -59,8 +61,12 @@ const componentWillMountPrototype = (
   return false;
 };
 
-export class ReactNComponent<P = {}, S = {}, GS = Object, SS = any>
-       extends TrueComponent<P, S, SS> {
+export class ReactNComponent<
+  P = {},
+  S = {},
+  GS = Record<string, any>,
+  SS = any,
+> extends TrueComponent<P, S, SS> {
 
   constructor(props: Readonly<P>, context?: any) {
     super(props, context);
@@ -105,8 +111,12 @@ export class ReactNComponent<P = {}, S = {}, GS = Object, SS = any>
   }
 }
 
-export class ReactNPureComponent<P = {}, S = {}, GS = Object, SS = any>
-       extends TruePureComponent<P, S, SS> {
+export class ReactNPureComponent<
+  P = {},
+  S = {},
+  GS = Record<string, any>,
+  SS = any,
+> extends TruePureComponent<P, S, SS> {
 
   constructor(props: Readonly<P>, context?: any) {
     super(props, context);
