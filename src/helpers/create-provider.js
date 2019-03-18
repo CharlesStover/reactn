@@ -41,7 +41,7 @@ export default function createProvider(newGlobal = null) {
     }
 
     static useGlobal(property, setterOnly = false) {
-      return useGlobal(property, setterOnly, globalState);
+      return useGlobal(globalState, property, setterOnly);
     }
 
     static withGlobal(getter = global => global, setter = () => null) {
