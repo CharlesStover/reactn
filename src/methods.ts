@@ -1,13 +1,22 @@
-import { Component } from 'react';
 import { ReactNComponent, ReactNPureComponent } from './components';
 import Context from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
-import GlobalStateManager from './global-state-manager';
+import GlobalStateManager, { NewGlobalState } from './global-state-manager';
+import Callback from './typings/callback';
+import ReactNPromise from './utils/reactn-promise';
 
 const getGlobalStateManager = <GS = Object>(): GlobalStateManager<GS> => (
   Context._currentValue2 ||
   defaultGlobalStateManager
 ) as GlobalStateManager<GS>;
+
+// Accurately define React components as having an updater member variable.
+interface TrueComponent extends ReactNComponent {
+  updater: {
+    enqueueForceUpdate:
+      (component: ReactNComponent, _: null, action: 'forceUpdate') => void;
+  }
+}
 
 
 
@@ -47,7 +56,7 @@ export function ReactNComponentWillUnmount(
 export function ReactNGlobalCallback(
   _this: ReactNComponent | ReactNPureComponent
 ): void {
-  _this.updater.enqueueForceUpdate(_this, null, 'forceUpdate');
+  (_this as TrueComponent).updater.enqueueForceUpdate(_this, null, 'forceUpdate');
 }
 
 

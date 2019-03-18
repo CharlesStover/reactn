@@ -11,20 +11,6 @@ import ReactNPromise from './utils/reactn-promise';
 
 type ComponentWillUnmount = (..._: any[]) => void;
 
-// Accurately define React components as having an updater member variable.
-declare class TrueComponent<P, S, SS> extends Component<P, S, SS> {
-  updater: {
-    enqueueForceUpdate:
-      (component: Component, _: null, action: 'forceUpdate') => void;
-  }
-}
-declare class TruePureComponent<P, S, SS> extends PureComponent<P, S, SS> {
-  updater: {
-    enqueueForceUpdate:
-      (component: Component, _: null, action: 'forceUpdate') => void;
-  }
-}
-
 // TODO -- https://github.com/CharlesStover/reactn/issues/14
 const isComponentDidMount = false;
 const isComponentDidUpdate = false;
@@ -66,7 +52,7 @@ export class ReactNComponent<
   S = {},
   GS = Record<string, any>,
   SS = any,
-> extends TrueComponent<P, S, SS> {
+> extends Component<P, S, SS> {
 
   constructor(props: Readonly<P>, context?: any) {
     super(props, context);
@@ -116,7 +102,7 @@ export class ReactNPureComponent<
   S = {},
   GS = Record<string, any>,
   SS = any,
-> extends TruePureComponent<P, S, SS> {
+> extends PureComponent<P, S, SS> {
 
   constructor(props: Readonly<P>, context?: any) {
     super(props, context);
