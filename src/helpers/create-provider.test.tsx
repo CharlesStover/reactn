@@ -1,17 +1,28 @@
+import { expect } from 'chai';
+import { Component } from 'react';
+import createProvider from './create-provider';
+
+describe('createProvider', () => {
+  it('should create a React Component', () => {
+    const Provider = createProvider();
+    expect(Provider).to.be.instanceOf(Component);
+  });
+});
+
+/*
 import React from 'react';
 import Context from '../context';
-import GlobalStateManager, { NewGlobalState } from '../global-state-manager';
+import GlobalStateManager from '../global-state-manager';
 import addReducer from './add-reducer';
 import setGlobal from './set-global';
 import useGlobal from './use-global';
 import withGlobal from './with-global';
 
-export default function createProvider<GS>(
-  initialState: NewGlobalState<GS> = null,
-): typeof React.Component {
-  const globalStateManager = new GlobalStateManager(initialState);
+export default function createProvider(newGlobal = null) {
+  const globalStateManager = new GlobalStateManager();
+  const result = globalStateManager.set(newGlobal);
 
-  return class ReactNProvider extends React.Component<{}, {}> {
+  class ReactNProvider extends React.Component {
 
     static addCallback(f) {
       return globalStateManager.addCallback(f);
@@ -57,4 +68,13 @@ export default function createProvider<GS>(
       );
     }
   }
+
+  // If the state was set asynchronously, return the Provider asynchronously.
+  if (result instanceof Promise) {
+    return result.then(() => ReactNProvider);
+  }
+
+  // Return the Provider synchronously.
+  return ReactNProvider;
 }
+*/

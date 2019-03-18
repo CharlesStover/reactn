@@ -1,4 +1,4 @@
-import { Callback } from './typings/callback';
+import Callback from './typings/callback';
 import {
   LocalReducer, GlobalReducer, Reducers, RemoveAddedReducer
 } from './typings/reducer';
@@ -16,7 +16,7 @@ interface AsynchronousNewGlobalState<Shape>
 export type NewGlobalState<Shape> =
   AsynchronousNewGlobalState<Shape> | SynchronousNewGlobalState<Shape>;
 
-type PartialState<Shape> = Shape extends Object ? Partial<Shape> : Shape;
+type PartialState<Shape> = Shape extends Record<string, any> ? Partial<Shape> : Shape;
 
 export type PropertyListener = () => void;
 
@@ -34,7 +34,7 @@ const MAX_SAFE_INTEGER: number = 9007199254740990;
 
 
 
-export default class GlobalStateManager<GS = Object> {
+export default class GlobalStateManager<GS = Record<string, any>> {
 
   _callbacks: Set<Callback<GS>> = new Set();
   _initialState: GS;
