@@ -195,14 +195,14 @@ export default class GlobalStateManager<GS = Object> {
   }
 
   // Set any type of state change.
-  set(any: any): ReactNPromise<GS> {
+  set(any: any) {
 
     // No changes, e.g. getDerivedGlobalFromProps.
     if (
       any === null ||
       typeof any === 'undefined'
     ) {
-      return new ReactNPromise(this);
+      return; // new ReactNPromise(this);
     }
 
     if (any instanceof Promise) {
@@ -236,12 +236,12 @@ export default class GlobalStateManager<GS = Object> {
     }
   }
 
-  setFunction(f: Function): NewGlobalState<GS> {
+  setFunction(f: Function) {
     return this.set(f(this.state));
   }
 
   // Set the state's property-value pairs via an object.
-  setObject(obj: PartialState<GS>): NewGlobalState<GS> {
+  setObject(obj: PartialState<GS>) {
     const transactionId = this.beginTransaction();
     for (const [ property, value ] of Object.entries(obj)) {
       this.setProperty(property as keyof GS, value, transactionId);
@@ -252,7 +252,7 @@ export default class GlobalStateManager<GS = Object> {
   // Set the state's property-value pairs via a promise.
   setPromise(
     promise: Promise<NewGlobalState<GS>>
-  ): ReactNPromise<GS> {
+  ) {
     return promise
       .then((result: NewGlobalState<GS>) => {
         return this.set(result);
