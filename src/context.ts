@@ -7,4 +7,4 @@ interface TrueContext<T> extends Context<T> {
   _currentValue2: T;
 }
 
-export default createContext(defaultGlobalStateManager) as TrueContext<GlobalStateManager>;
+export default createContext<GlobalStateManager>(defaultGlobalStateManager) as TrueContext<GlobalStateManager>;
