@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
     "allowSyntheticDefaultImports": true,
+    "downlevelIteration": true,
     "experimentalDecorators": true,
     "jsx": "react",
-    "lib": [ "es2015" ],
+    "lib": [ "es2015", "es2017.object" ],
+    "target": "es5"
   }
 }
