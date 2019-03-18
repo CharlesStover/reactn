@@ -1,4 +1,8 @@
+<<<<<<< 08956a06597e1f2d22551e95a99379bfd1a3c669
 import React, { Component } from 'react';
+=======
+import React from 'react';
+>>>>>>> eslint
 import Context from '../context';
 import GlobalStateManager from '../global-state-manager';
 import addReducer from './add-reducer';
@@ -10,7 +14,7 @@ export default function createProvider(newGlobal = null) {
   const globalStateManager = new GlobalStateManager();
   const result = globalStateManager.set(newGlobal);
 
-  class ReactNProvider extends Component {
+  class ReactNProvider extends React.Component {
 
     static addCallback(f) {
       return globalStateManager.addCallback(f);
@@ -21,11 +25,11 @@ export default function createProvider(newGlobal = null) {
     }
 
     static getGlobal() {
-      return globalStateManager.stateWithReducers;
+      return globalStateManager.state;
     }
 
     static get global() {
-      return globalStateManager.stateWithReducers;
+      return globalStateManager.state;
     }
 
     static removeCallback(callback) {
@@ -41,11 +45,15 @@ export default function createProvider(newGlobal = null) {
     }
 
     static useGlobal(property, setterOnly = false) {
+<<<<<<< 08956a06597e1f2d22551e95a99379bfd1a3c669
 <<<<<<< b16e52c8c0d92df1ff373ff870909a4034de9572:src/helpers/create-provider.js
       return useGlobal(globalState, property, setterOnly);
 =======
       return useGlobal(property, setterOnly, globalStateManager);
 >>>>>>> init:src/helpers/create-provider.tsx
+=======
+      return useGlobal(globalStateManager, property, setterOnly);
+>>>>>>> eslint
     }
 
     static withGlobal(getter = global => global, setter = () => null) {
