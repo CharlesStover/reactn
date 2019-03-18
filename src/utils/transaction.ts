@@ -1,18 +1,48 @@
-export default class Transaction<GS> {
+import { PropertyListener } from '../global-state-manager';
 
-  _delete: Set<keyof GS> = new Set();
-  _propertyListeners: Set<PropertyListener> = new Set();
-  _state: Map<keyof GS, any> = new Map();
+export default class Transaction<GS extends Record<string, any>> {
 
-  get delete() {
-    return this._delete;
+  private _properties: Map<keyof GS, any> = new Map();
+  private _propertyListeners: Set<PropertyListener> = new Set();
+  private _voidProperties: Set<keyof GS> = new Set();
+
+  public addPropertyListener(propertyListener: PropertyListener): boolean {
+    if (this._propertyListeners.has(propertyListener)) {
+      return false;
+    }
+    this._propertyListeners.add(propertyListener);
+    return true;
   }
 
-  get propertyListeners() {
+  public deleteProperty(property: keyof GS): boolean {
+    if (this._voidProperties.has(property)) {
+      return false;
+    }
+    this._voidProperties.add(property);
+    return true;
+  }
+
+  public deletePropertyListener(propertyListener: PropertyListener): boolean {
+    return this._propertyListeners.delete(propertyListener);
+  }
+
+  public get properties(): Map<keyof GS, any> {
+    return this._properties;
+  }
+
+  public get propertyListeners(): Set<PropertyListener> {
     return this._propertyListeners;
   }
 
-  get state() {
-    return this._state;
+  public setProperty<Property extends keyof GS>(
+    property: Property,
+    value: GS[Property],
+  ): boolean {
+    this._properties.set(property, value);
+    return true;
+  }
+
+  public get voidProperties(): Set<keyof GS> {
+    return this._voidProperties;
   }
 }

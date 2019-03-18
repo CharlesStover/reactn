@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React from 'react';
 import Context from '../context';
 import GlobalStateManager from '../global-state-manager';
 import addReducer from './add-reducer';
@@ -10,7 +10,7 @@ export default function createProvider(newGlobal = null) {
   const globalStateManager = new GlobalStateManager();
   const result = globalStateManager.set(newGlobal);
 
-  class ReactNProvider extends Component {
+  class ReactNProvider extends React.Component {
 
     static addCallback(f) {
       return globalStateManager.addCallback(f);
@@ -21,11 +21,11 @@ export default function createProvider(newGlobal = null) {
     }
 
     static getGlobal() {
-      return globalStateManager.stateWithReducers;
+      return globalStateManager.state;
     }
 
     static get global() {
-      return globalStateManager.stateWithReducers;
+      return globalStateManager.state;
     }
 
     static removeCallback(callback) {
@@ -41,7 +41,7 @@ export default function createProvider(newGlobal = null) {
     }
 
     static useGlobal(property, setterOnly = false) {
-      return useGlobal(property, setterOnly, globalStateManager);
+      return useGlobal(globalStateManager, property, setterOnly);
     }
 
     static withGlobal(getter = global => global, setter = () => null) {

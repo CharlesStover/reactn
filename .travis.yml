@@ -6,6 +6,7 @@ cache: yarn
 install: yarn
 script:
 - yarn build
+- yarn lint
 - yarn test
 deploy:
   api_key:
