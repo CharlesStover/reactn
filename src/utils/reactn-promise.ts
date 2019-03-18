@@ -1,14 +1,14 @@
-import GlobalStateManager from '../global-state-manager';
+import GlobalStateManager, { NewGlobalState } from '../global-state-manager';
 
 type ReactNPromiseCatchHandler<GS> = (err: Error) => NewGlobalState<GS>;
 
 type ReactNPromiseThenHandler<GS> = (globalState: GS) => NewGlobalState<GS>;
 
 export default class ReactNPromise<GS> {
-  _globalStateManager: GlobalStateManager<GS>;
-  _promise: Promise<NewGlobalState<GS>>;
+  private _globalStateManager: GlobalStateManager<GS>;
+  private _promise: Promise<NewGlobalState<GS>>;
 
-  constructor(
+  public constructor(
     globalStateManager: GlobalStateManager<GS>,
     promise: Promise<NewGlobalState<GS>>,
   ) {
@@ -16,11 +16,11 @@ export default class ReactNPromise<GS> {
     this._promise = promise;
   }
 
-  catch(listener: ReactNPromiseCatchHandler<GS>): ReactNPromise<GS> {
+  public catch(listener: ReactNPromiseCatchHandler<GS>): ReactNPromise<GS> {
     return this._globalStateManager.setFunction(listener);
   }
 
-  then(listener: ReactNPromiseThenHandler<GS>): ReactNPromise<GS> {
+  public then(listener: ReactNPromiseThenHandler<GS>): ReactNPromise<GS> {
     return this._globalStateManager.setFunction(listener);
   }
 }

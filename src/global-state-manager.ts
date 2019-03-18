@@ -1,8 +1,8 @@
-import objectGetListener from './object-get-listener';
 import { Callback } from './typings/callback';
 import {
   LocalReducer, GlobalReducer, Reducers, RemoveAddedReducer
 } from './typings/reducer';
+import objectGetListener from './utils/object-get-listener';
 import ReactNPromise from './utils/reactn-promise';
 import Transaction from './utils/transaction';
 
@@ -18,7 +18,7 @@ export type NewGlobalState<Shape> =
 
 type PartialState<Shape> = Shape extends Object ? Partial<Shape> : Shape;
 
-type PropertyListener = (property: string) => void;
+export type PropertyListener = () => void;
 
 type RemoveAddedCallback = () => boolean;
 
@@ -92,12 +92,12 @@ export default class GlobalStateManager<GS = Object> {
     const transaction: Transaction<GS> = this._transactions.get(transactionId);
 
     // Delete state properties.
-    for (const property of transaction.delete) {
+    for (const property of transaction.voidProperties) {
       delete this._state[property];
     }
 
     // Commit all state changes.
-    for (const [ property, value ] of transaction.state.entries()) {
+    for (const [ property, value ] of transaction.properties.entries()) {
       this._state[property] = value;
     }
 
@@ -174,7 +174,7 @@ export default class GlobalStateManager<GS = Object> {
 
     // Remove this property listener from currently-executing transactions.
     for (const transaction of this._transactions.values()) {
-      transaction.propertyListeners.delete(propertyListener);
+      transaction.deletePropertyListener(propertyListener);
     }
 
     return removed;
@@ -278,17 +278,17 @@ export default class GlobalStateManager<GS = Object> {
 
     const transaction: Transaction<GS> = this._transactions.get(transactionId);
     if (typeof value === 'undefined') {
-      transaction.delete.add(property);
+      transaction.deleteProperty(property);
     }
     else {
-      transaction.state.set(property, value);
+      transaction.setProperty(property, value);
     }
 
     const propertyListeners: Set<PropertyListener> =
       this._propertyListeners.get(property);
     if (propertyListeners) {
       for (const propertyListener of propertyListeners) {
-        transaction.propertyListeners.add(propertyListener);
+        transaction.addPropertyListener(propertyListener);
       }
     }
 

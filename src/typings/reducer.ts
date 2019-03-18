@@ -5,7 +5,7 @@ export type GlobalReducer<GS> = (...args: any[]) => ReactNPromise<GS>;
 
 export type LocalReducer<GS> = (globalState: GS, ...args: any[]) => NewGlobalState<GS>;
 
-export type Reducers<GS> = {
+export interface Reducers<GS> {
   [reducer: string]: GlobalReducer<GS>;
 };
 

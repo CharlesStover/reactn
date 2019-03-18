@@ -5,21 +5,19 @@ interface Shape {
   [key: string]: number;
 }
 
+const sortEntriesByKey = (
+  [ key1 ]: [ string, number ],
+  [ key2 ]: [ string, number ]
+): -1 | 0 | 1 =>
+  key1 < key2 ?
+    -1 :
+    key1 > key2 ?
+      1 :
+      0;
+
 describe('objectGetListener', () => {
 
-
-
   it('should return the same keys and values', () => {
-
-    const sortEntriesByKey = (
-      [ key1 ]: [ string, number ],
-      [ key2 ]: [ string, number ]
-    ): -1 | 0 | 1 =>
-      key1 < key2 ?
-        -1 :
-        key1 > key2 ?
-          1 :
-          0;
 
     // Original object.
     const obj: Shape = {
@@ -39,13 +37,11 @@ describe('objectGetListener', () => {
     expect(entries).to.deep.equal(entries2);
   });
 
-
-
   it('should subscribe to the object properties\' get', () => {
 
     // Listener records which properties were read.
     const read = new Set();
-    const listener = (key: string) => {
+    const listener = (key: string): void => {
       read.add(key);
     };
 
