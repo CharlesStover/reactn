@@ -2,11 +2,15 @@
   "name": "reactn",
   "version": "1.0.0",
   "author": "Charles Stover <reactn@charlesstover.com>",
+  "description": "React, but with built-in global state management.",
+  "homepage": "https://github.com/CharlesStover/reactn#readme",
+  "license": "MIT",
+  "main": "index.js",
+  "repository": "github:CharlesStover/reactn",
   "bugs": {
     "email": "reactn@charlesstover.com",
     "url": "https://github.com/CharlesStover/reactn/issues"
   },
-  "description": "React, but with built-in global state management.",
   "directories": {
     "lib": "src",
     "test": "tests"
@@ -16,16 +20,13 @@
     "index.js",
     "package.json"
   ],
-  "homepage": "https://github.com/CharlesStover/reactn#readme",
-  "license": "MIT",
-  "main": "index.js",
-  "repository": "github:CharlesStover/reactn",
   "scripts": {
     "build": "webpack",
-    "coverage": "nyc mocha -r chai/register-expect -r @babel/register -r ts-node/register \"tests/**/*.spec.ts?(x)\"",
+    "coverage": "nyc mocha  src/**/*.test.ts",
     "dev": "set NODE_ENV=development&& webpack",
     "prepublishOnly": "webpack",
-    "test": "mocha -r chai/register-expect -r @babel/register -r ts-node/register \"tests/**/*.spec.ts?(x)\""
+    "test": "mocha  src/**/*.test.ts",
+    "test-watch": "mocha --watch src/**/*.test.ts"
   },
   "types": "./index.d.ts",
   "dependencies": {
@@ -47,7 +48,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-loader": "^8.0.4",
     "chai": "^4.2.0",
-    "mocha": "^5.2.0",
+    "mocha": "^6.0.2",
     "nyc": "^13.2.0",
     "react": "^16.7.0-alpha.2",
     "react-test-renderer": "^16.8.2",
