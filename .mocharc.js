@@ -5,7 +5,7 @@ module.exports = {
   diff: true,
   extension: "ts",
   forbidOnly: true,
-  forbidPending: true,
+  forbidPending: false,
   fullTrace: false,
   inlineDiff: true,
   recursive: true,
