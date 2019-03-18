@@ -1,14 +1,14 @@
-export default function makeIterable(obj, ...values) {
+export default function makeIterable(f, ...values) {
   const valuesLength = values.length;
 
   for (let i = 0; i < valuesLength; i++) {
-    obj[i] = values[i];
+    f[i] = values[i];
   }
 
-  obj.slice = values.slice.bind(values);
+  f['slice'] = values.slice.bind(values);
 
   // Mutate object by adding a Symbol.iterator property.
-  obj[Symbol.iterator] = function ReactNIterator() {
+  f[Symbol.iterator] = function ReactNIterator() {
     let index = 0;
     return {
       next: function ReactNIteratorNext() {
@@ -27,4 +27,6 @@ export default function makeIterable(obj, ...values) {
       },
     };
   };
+
+  return f;
 }

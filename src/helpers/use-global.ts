@@ -1,8 +1,7 @@
 import React from 'react';
 import useForceUpdate from 'use-force-update';
 import Context from '../context';
-import createReducer from '../create-reducer';
-import defaultGlobalState from '../default-global-state';
+import defaultGlobalStateManager from '../default-global-state-manager';
 import setGlobal from './set-global';
 import makeIterable from './utils/make-iterable';
 
@@ -19,7 +18,7 @@ export default function useGlobal(
   }
 
   const globalState =
-    overrideGlobalState || React.useContext(Context) || defaultGlobalState;
+    overrideGlobalState || React.useContext(Context) || defaultGlobalStateManager;
 
   const forceUpdate = useForceUpdate();
 
@@ -47,10 +46,14 @@ export default function useGlobal(
 
   // Use a custom reducer.
   if (typeof property === 'function') {
-    const reducer = createReducer(property);
+    const reducer = globalState.createReducer(property);
 
     // Support [ state, dispatch ] syntax.
-    makeIterable(reducer, globalState.spyStateWithReducers(forceUpdate), reducer);
+    makeIterable(
+      reducer,
+      globalState.spyStateWithReducers(forceUpdate),
+      reducer
+    );
     return reducer;
   }
 

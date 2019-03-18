@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import makeIterable from '../../../src/helpers/utils/make-iterable';
+import makeIterable from './make-iterable';
 
 describe('makeIterable', () => {
   it('should make a function iterable', () => {
