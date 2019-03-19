@@ -5,8 +5,16 @@ import Callback from '../typings/callback';
 import { LocalReducer } from '../typings/reducer';
 import addReducer from './add-reducer';
 import setGlobal from './set-global';
-import useGlobal, { StateTuple } from './use-global';
-import withGlobal, { Getter, Setter, WithGlobal } from './with-global';
+import useGlobal, {
+  GlobalTuple,
+  Setter as UseGlobalSetter,
+  StateTuple,
+} from './use-global';
+import withGlobal, {
+  Getter,
+  Setter as WithGlobalSetter,
+  WithGlobal,
+} from './with-global';
 
 export interface ReactNProvider<GS> {
   addCallback(callback: Callback<GS>): RemoveAddedCallback;
@@ -20,13 +28,18 @@ export interface ReactNProvider<GS> {
     newGlobal: NewGlobalState<GS>,
     callback?: Callback<GS>,
   ): Promise<GS>;
+  useGlobal(): GlobalTuple<GS>;
   useGlobal<Property extends keyof GS>(
     property: Property,
-    setterOnly?: boolean,
+    setterOnly?: false,
   ): StateTuple<GS, Property>;
+  useGlobal<Property extends keyof GS>(
+    property: Property,
+    setterOnly: true,
+  ): UseGlobalSetter<GS, Property>;
   withGlobal<HP, LP>(
     getter: Getter<GS, HP, LP>,
-    setter: Setter<GS, HP, LP>,
+    setter: WithGlobalSetter<GS, HP, LP>,
   ): WithGlobal<HP, LP>;
   new (props: {}, context?: any): React.Component<{}, {}>;
 }
@@ -54,7 +67,7 @@ export default function createProvider<GS = {}>(
       name: string,
       reducer: LocalReducer<GS>,
     ): RemoveAddedReducer {
-      return addReducer(globalStateManager, name, reducer);
+      return addReducer<GS>(globalStateManager, name, reducer);
     }
 
     public static getGlobal(): GS {
@@ -81,19 +94,33 @@ export default function createProvider<GS = {}>(
       newGlobal: NewGlobalState<GS>,
       callback: Callback<GS> | null = null,
     ): Promise<GS> {
-      return setGlobal(globalStateManager, newGlobal, callback);
+      return setGlobal<GS>(globalStateManager, newGlobal, callback);
     }
 
+    public static useGlobal(): GlobalTuple<GS>;
     public static useGlobal<Property extends keyof GS>(
       property: Property,
+      setterOnly?: false,
+    ): StateTuple<GS, Property>;
+    public static useGlobal<Property extends keyof GS>(
+      property: Property,
+      setterOnly: true,
+    ): UseGlobalSetter<GS, Property>;
+    public static useGlobal<Property extends keyof GS>(
+      property?: Property,
       setterOnly: boolean = false,
-    ): StateTuple<GS, Property> {
-      return useGlobal(globalStateManager, property, setterOnly);
+    ): GlobalTuple<GS> | StateTuple<GS, Property> | UseGlobalSetter<GS, Property> {
+      return useGlobal(
+        globalStateManager,
+        property,
+        // @ts-ignore-next-line: Argument of type 'boolean' is not assignable to parameter of type 'true'.
+        setterOnly,
+      );
     }
 
     public static withGlobal<HP, LP>(
       getter: Getter<GS, HP, LP> = (globalState: GS): GS => globalState,
-      setter: Setter<GS, HP, LP> = (): null => null,
+      setter: WithGlobalSetter<GS, HP, LP> = (): null => null,
     ): WithGlobal<HP, LP> {
       return withGlobal<GS, HP, LP>(globalStateManager, getter, setter);
     }

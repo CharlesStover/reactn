@@ -1,7 +1,10 @@
 import { ReactNComponent, ReactNPureComponent } from './components';
 import Context from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
-import GlobalStateManager, { NewGlobalState } from './global-state-manager';
+import GlobalStateManager, {
+  NewGlobalState,
+  PropertyListener,
+} from './global-state-manager';
 import Callback from './typings/callback';
 
 type RSA = Record<string, any>;
@@ -48,20 +51,21 @@ export function createReactNGetDerivedStateFromProps<P>(
 
 // this.componentWillUnmount
 export function ReactNComponentWillUnmount(
-  _this: ReactNComponent | ReactNPureComponent
+  propertyListener: PropertyListener,
 ): void {
 
   // No longer re-render this component on global state change.
-  getGlobalStateManager().removePropertyListener(_this._globalCallback);
+  getGlobalStateManager().removePropertyListener(propertyListener);
 }
 
 
 
 // this._globalCallback
 export function ReactNGlobalCallback(
-  _this: ReactNComponent | ReactNPureComponent
+  _this: ReactNComponent | ReactNPureComponent,
 ): void {
-  (_this as TrueComponent).updater.enqueueForceUpdate(_this, null, 'forceUpdate');
+  const that: TrueComponent = _this as TrueComponent;
+  that.updater.enqueueForceUpdate(that, null, 'forceUpdate');
 }
 
 
@@ -69,10 +73,10 @@ export function ReactNGlobalCallback(
 // this.global
 // Provider.withGlobal passes its own global state instance.
 export function ReactNGlobal<GS>(
-  _this: ReactNComponent<{}, {}, GS> | ReactNPureComponent<{}, {}, GS>,
+  propertyListener: PropertyListener,
   globalStateManager: GlobalStateManager<GS> = getGlobalStateManager<GS>(),
 ): Readonly<GS> {
-  return globalStateManager.spyState(_this._globalCallback);
+  return globalStateManager.spyState(propertyListener);
 }
 
 
@@ -85,9 +89,15 @@ export function ReactNSetGlobal<GS>(
   _sync: boolean,
   globalStateManager: GlobalStateManager<GS> = getGlobalStateManager<GS>(),
 ): Promise<GS> {
-  if (callback) {
-    return globalStateManager.set(newGlobal)
-      .then(callback);
+  if (!callback) {
+    return globalStateManager.set(newGlobal);
   }
-  return globalStateManager.set(newGlobal);
+  let globalState: GS;
+  return globalStateManager.set(newGlobal)
+    .then(gs => {
+      globalState = gs;
+      return gs;
+    })
+    .then(callback)
+    .then(() => globalState);
 }
