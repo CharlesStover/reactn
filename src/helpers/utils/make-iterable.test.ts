@@ -3,7 +3,7 @@ import makeIterable from './make-iterable';
 
 describe('makeIterable', () => {
   it('should make a function iterable', () => {
-    function x() { }
+    function x(): void { }
     makeIterable(x, 1, 'ABC', true, x);
     // @ts-ignore: () => {} is not an array
     const [ num, str, bool, f ] = x;

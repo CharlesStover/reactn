@@ -87,7 +87,7 @@ export default function createProvider<GS = {}>(
     public static useGlobal<Property extends keyof GS>(
       property: Property,
       setterOnly: boolean = false,
-    ): StateTuple<GS[Property]> {
+    ): StateTuple<GS, Property> {
       return useGlobal(globalStateManager, property, setterOnly);
     }
 
