@@ -26,7 +26,18 @@ module.exports = {
   ],
   rules: {
     '@typescript-eslint/explicit-function-return-type': 'error',
-    '@typescript-eslint/indent': [ 'error', 2 ],
+    '@typescript-eslint/indent': [
+      'warn', 2, {
+      SwitchCase: 1,
+    } ],
+    '@typescript-eslint/no-unused-vars': [
+      'error', {
+        args: 'all',
+        argsIgnorePattern: '^_',
+        caughtErrors: 'all',
+        vars: 'all',
+    } ],
     indent: 'off',
+    'no-unused-vars': 'off',
   },
 };

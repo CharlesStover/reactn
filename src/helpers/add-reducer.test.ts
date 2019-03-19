@@ -2,7 +2,7 @@ import { expect } from 'chai';
 import GlobalStateManager from '../global-state-manager';
 import addReducer from './add-reducer';
 
-const REDUCER = (_globalState, _one, _two, _three) => { };
+const REDUCER = (_globalState, _one, _two, _three): void => { };
 const REDUCER_NAME = 'reducerName';
 
 describe('addReducer', () => {

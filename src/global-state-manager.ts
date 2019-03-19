@@ -9,6 +9,7 @@ import Transaction from './utils/transaction';
 
 // AsynchronousNewGlobalState is an interface so that NewGlobalState does not
 //   circularly reference itself.
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface AsynchronousNewGlobalState<Shape>
   extends Promise<NewGlobalState<Shape>> { }
 
@@ -35,21 +36,21 @@ const INVALID_NEW_GLOBAL_STATE: Error = new Error(
   'Global state must be a function, null, object, or Promise.'
 );
 
-const MAX_SAFE_INTEGER: number = 9007199254740990;
+const MAX_SAFE_INTEGER = 9007199254740990;
 
 
 
 export default class GlobalStateManager<GS extends {} = Record<string, any>> {
 
-  _callbacks: Set<Callback<GS>> = new Set();
-  _initialState: GS;
-  _propertyListeners: Map<keyof GS, Set<PropertyListener>> = new Map();
-  _reducers: Map<string, GlobalReducer<GS>> = new Map();
-  _state: GS;
-  _transactionId: number = 0;
-  _transactions: Map<number, Transaction<GS>> = new Map();
+  private _callbacks: Set<Callback<GS>> = new Set();
+  private _initialState: GS;
+  private _propertyListeners: Map<keyof GS, Set<PropertyListener>> = new Map();
+  private _reducers: Map<string, GlobalReducer<GS>> = new Map();
+  private _state: GS;
+  private _transactionId: number = 0;
+  private _transactions: Map<number, Transaction<GS>> = new Map();
 
-  constructor(initialState: GS = Object.create(null)) {
+  public constructor(initialState: GS = Object.create(null)) {
     this._initialState = Object.assign(
       Object.create(null),
       initialState,
@@ -57,14 +58,14 @@ export default class GlobalStateManager<GS extends {} = Record<string, any>> {
     this.reset();
   }
 
-  addCallback(callback: Callback<GS>): RemoveAddedCallback {
+  public addCallback(callback: Callback<GS>): RemoveAddedCallback {
     this._callbacks.add(callback);
     return (): boolean =>
       this.removeCallback(callback);
   }
 
   // Map component instance to a state property.
-  addPropertyListener(
+  public addPropertyListener(
     property: keyof GS,
     propertyListener: PropertyListener,
   ): void {
@@ -82,21 +83,21 @@ export default class GlobalStateManager<GS extends {} = Record<string, any>> {
     }
   }
 
-  addReducer(name: string, localReducer: LocalReducer<GS>): RemoveAddedReducer {
+  public addReducer(name: string, localReducer: LocalReducer<GS>): RemoveAddedReducer {
     this._reducers.set(name, this.createReducer(localReducer));
     return (): boolean =>
       this.removeReducer(name);
   }
 
   // Begin a transaction.
-  beginTransaction(): number {
+  public beginTransaction(): number {
     this._transactionId = (this._transactionId + 1) % MAX_SAFE_INTEGER;
     this._transactions.set(this._transactionId, new Transaction());
     return this._transactionId;
   }
 
   // Commit a transaction.
-  commit(transactionId: number): void {
+  public commit(transactionId: number): void {
     const transaction: Transaction<GS> = this._transactions.get(transactionId);
 
     // Delete state properties.
@@ -125,18 +126,18 @@ export default class GlobalStateManager<GS extends {} = Record<string, any>> {
     }
   }
 
-  createReducer(localReducer: LocalReducer<GS>): GlobalReducer<GS> {
+  public createReducer(localReducer: LocalReducer<GS>): GlobalReducer<GS> {
     return (...args: any[]): Promise<GS> =>
       this.set(
         localReducer(this.state, ...args),
       );
   }
 
-  getReducer(reducer: string): GlobalReducer<GS> {
+  public getReducer(reducer: string): GlobalReducer<GS> {
     return this._reducers.get(reducer);
   }
 
-  get reducers(): Reducers<GS> {
+  public get reducers(): Reducers<GS> {
     const reducers = Object.create(null);
     for (const [ name, reducer ] of this._reducers.entries()) {
       reducers[name] = reducer;
@@ -163,17 +164,17 @@ export default class GlobalStateManager<GS extends {} = Record<string, any>> {
   }
   */
 
-  hasReducer(reducer: string): boolean {
+  public hasReducer(reducer: string): boolean {
     return this._reducers.has(reducer);
   }
 
-  removeCallback(callback: Callback<GS>): boolean {
+  public removeCallback(callback: Callback<GS>): boolean {
     return this._callbacks.delete(callback);
   }
 
   // Unmap a component instance from all state properties.
-  removePropertyListener(propertyListener: PropertyListener): boolean {
-    let removed: boolean = false;
+  public removePropertyListener(propertyListener: PropertyListener): boolean {
+    let removed = false;
 
     // Remove this property listener from the global state.
     for (const propertyListeners of this._propertyListeners.values()) {
@@ -188,12 +189,12 @@ export default class GlobalStateManager<GS extends {} = Record<string, any>> {
     return removed;
   }
 
-  removeReducer(reducer: string): boolean {
+  public removeReducer(reducer: string): boolean {
     return this._reducers.delete(reducer);
   }
 
   // Reset the global state.
-  reset(): void {
+  public reset(): void {
     this._callbacks.clear();
     this._propertyListeners.clear();
     this._reducers.clear();
@@ -206,7 +207,7 @@ export default class GlobalStateManager<GS extends {} = Record<string, any>> {
   }
 
   // Set any type of state change.
-  set(any: any) {
+  public set(any: NewGlobalState<GS>): Promise<GS> {
 
     // No changes, e.g. getDerivedGlobalFromProps.
     if (
@@ -231,39 +232,26 @@ export default class GlobalStateManager<GS extends {} = Record<string, any>> {
     throw INVALID_NEW_GLOBAL_STATE;
   }
 
-  setCallback(any: any, callback: Callback<GS> = null): NewGlobalState<GS> {
-    const newGlobal = this.set(any);
-
-    // If there is a callback,
-    if (typeof callback === 'function') {
-      if (newGlobal instanceof Promise) {
-        newGlobal.then(() => {
-          callback(this.state);
-        });
-      }
-      else {
-        callback(this.state);
-      }
-    }
-  }
-
-  setFunction(f: Function) {
+  public setFunction(f: Function): Promise<GS> {
     return this.set(f(this.state));
   }
 
   // Set the state's property-value pairs via an object.
-  setObject(obj: PartialState<GS>) {
+  public setObject(obj: Partial<GS>): Promise<GS> {
     const transactionId = this.beginTransaction();
-    for (const [ property, value ] of Object.entries(obj)) {
-      this.setProperty(property as keyof GS, value, transactionId);
+    const properties: (keyof GS)[] = Object.keys(obj) as (keyof GS)[];
+    for (const property of properties) {
+      const value = obj[property];
+      this.setProperty(property, value, transactionId);
     }
     this.commit(transactionId);
+    return Promise.resolve(this.state);
   }
 
   // Set the state's property-value pairs via a promise.
-  setPromise(
+  public setPromise(
     promise: Promise<NewGlobalState<GS>>
-  ) {
+  ): Promise<GS> {
     return promise
       .then((result: NewGlobalState<GS>) => {
         return this.set(result);
@@ -271,7 +259,7 @@ export default class GlobalStateManager<GS extends {} = Record<string, any>> {
   }
 
   // Set a property-value pair as a part of a transaction.
-  setProperty<Property extends keyof GS>(
+  public setProperty<Property extends keyof GS>(
     property: Property,
     value: GS[Property],
     transactionId: number,
@@ -283,7 +271,7 @@ export default class GlobalStateManager<GS extends {} = Record<string, any>> {
     if (
       typeof property === 'string' &&
       this.hasReducer(property)
-     ) {
+    ) {
       return transactionId;
     }
 
@@ -306,7 +294,7 @@ export default class GlobalStateManager<GS extends {} = Record<string, any>> {
     return transactionId;
   }
 
-  spyState(propertyListener: PropertyListener): GS {
+  public spyState(propertyListener: PropertyListener): GS {
 
     // When this._state is read, execute the listener.
     return objectGetListener(
@@ -317,7 +305,7 @@ export default class GlobalStateManager<GS extends {} = Record<string, any>> {
     );
   }
 
-  get state() {
+  public get state(): GS {
     return Object.assign(
       Object.create(null),
       this._state

@@ -53,7 +53,7 @@ export class ReactNComponent<
   SS = any,
 > extends Component<P, S, SS> {
 
-  constructor(props: Readonly<P>, context?: any) {
+  public constructor(props: Readonly<P>, context?: any) {
     super(props, context);
 
     // this.componentWillUnmount on instance
@@ -75,18 +75,18 @@ export class ReactNComponent<
     }
   }
 
-  componentWillUnmount(): void {
+  public componentWillUnmount(): void {
     return ReactNComponentWillUnmount(this);
   }
 
-  _globalCallback: PropertyListener = (): void =>
+  private _globalCallback: PropertyListener = (): void =>
     ReactNGlobalCallback(this);
 
-  get global(): Readonly<GS> {
+  public get global(): Readonly<GS> {
     return ReactNGlobal<GS>(this);
   }
 
-  setGlobal(
+  public setGlobal(
     newGlobal: NewGlobalState<GS>,
     callback: Callback<GS> | null = null
   ): Promise<GS> {
@@ -106,7 +106,7 @@ export class ReactNPureComponent<
   SS = any,
 > extends PureComponent<P, S, SS> {
 
-  constructor(props: Readonly<P>, context?: any) {
+  public constructor(props: Readonly<P>, context?: any) {
     super(props, context);
 
     // this.componentWillUnmount on instance
@@ -128,18 +128,18 @@ export class ReactNPureComponent<
     }
   }
 
-  componentWillUnmount(): void {
+  public componentWillUnmount(): void {
     return ReactNComponentWillUnmount(this);
   }
 
-  _globalCallback: PropertyListener = (): void =>
+  private _globalCallback: PropertyListener = (): void =>
     ReactNGlobalCallback(this);
 
-  get global(): Readonly<GS> {
+  public get global(): Readonly<GS> {
     return ReactNGlobal<GS>(this);
   }
 
-  setGlobal(
+  public setGlobal(
     newGlobal: NewGlobalState<GS>,
     callback: Callback<GS> | null = null
   ): Promise<GS> {

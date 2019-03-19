@@ -1,14 +1,21 @@
 import GlobalStateManager, { NewGlobalState } from '../global-state-manager';
-import Callback from '../typings/callback';
+
+type VoidFunction<GS> = (globalState: GS) => void;
 
 export default function setGlobal<GS>(
   globalStateManager: GlobalStateManager<GS>,
   newGlobal: NewGlobalState<GS>,
-  callback: Callback<GS> = null
+  callback: VoidFunction<GS> = null
 ): Promise<GS> {
-  if (callback) {
-    return globalStateManager.set(newGlobal)
-      .then(callback);
+  if (callback === null) {
+    return globalStateManager.set(newGlobal);
   }
-  return globalStateManager.set(newGlobal);
+  let globalState: GS;
+  return globalStateManager.set(newGlobal)
+    .then(gs => {
+      globalState = gs;
+      return gs;
+    })
+    .then(callback)
+    .then(() => globalState);
 };

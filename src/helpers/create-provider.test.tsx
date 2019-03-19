@@ -5,6 +5,7 @@ import createProvider, { ReactNProvider } from './create-provider';
 
 type RemoveAddedCallback = () => boolean;
 type RemoveAddedReducer = () => boolean;
+type VoidFunction = () => void;
 
 interface GlobalState {
   x: boolean;
@@ -50,8 +51,8 @@ describe('createProvider', () => {
 
   describe('static methods', () => {
 
-    const resetTest = (method: 'reset' | 'resetGlobal') =>
-      () => {
+    const resetTest = (method: 'reset' | 'resetGlobal'): VoidFunction =>
+      (): void => {
     
         const spy = spyOn('reset');
       
@@ -94,14 +95,15 @@ describe('createProvider', () => {
       });
 
       it('should call GlobalStateManager addCallback', () => {
-        const callback = () => {};
+        const callback = (): void => {};
         Provider.addCallback(callback);
         expect(spy.addCallback.calledOnceWithExactly(callback)).to.equal(true);
       });
 
       it('should return a remove callback function', () => {
+        const callback = (): void => {};
         const removeCallback: RemoveAddedCallback =
-          Provider.addCallback(() => {});
+          Provider.addCallback(callback);
         expect(removeCallback).to.be.a('function');
         expect(removeCallback.length).to.equal(0);
         expect(removeCallback()).to.equal(true);
@@ -121,14 +123,14 @@ describe('createProvider', () => {
 
       it('should call GlobalStateManager addReducer', () => {
         const name = 'REDUCER_NAME';
-        const reducer = () => {};
+        const reducer = (): void => {};
         Provider.addReducer(name, reducer);
         expect(spy.addReducer.calledOnceWithExactly(name, reducer)).to.equal(true);
       });
 
       it('should return a remove reducer function', () => {
         const name = 'REDUCER_NAME';
-        const reducer = () => {};
+        const reducer = (): void => {};
         const removeReducer: RemoveAddedReducer =
           Provider.addReducer(name, reducer);
         expect(removeReducer).to.be.a('function');
@@ -176,19 +178,19 @@ describe('createProvider', () => {
       });
 
       it('should call GlobalStateManager removeCallback', () => {
-        const callback = () => {};
+        const callback = (): void => {};
         Provider.removeCallback(callback);
         expect(spy.removeCallback.calledOnceWithExactly(callback)).to.equal(true);
       });
 
       it('should remove a valid callback', () => {
-        const callback = () => {};
+        const callback = (): void => {};
         Provider.addCallback(callback);
         expect(Provider.removeCallback(callback)).to.equal(true);
       });
 
       it('should fail to remove an invalid callback', () => {
-        const callback = () => {};
+        const callback = (): void => {};
         expect(Provider.removeCallback(callback)).to.equal(false);
       });
     });
