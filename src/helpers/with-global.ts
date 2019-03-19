@@ -75,8 +75,10 @@ export default function withGlobal<
       public static displayName = `${componentName(Component)}-ReactN`;
 
       public get global(): GS {
-        return ReactNGlobal(
-          this,
+        return ReactNGlobal<GS>(
+
+          // @ts-ignore-next-line: _globalCallback is private.
+          this._globalCallback,
           globalStateManager || this.context || defaultGlobalStateManager
         );
       }
@@ -85,7 +87,7 @@ export default function withGlobal<
         newGlobal: NewGlobalState<GS>,
         callback: Callback<GS> = null,
       ): Promise<GS> =>
-        ReactNSetGlobal(
+        ReactNSetGlobal<GS>(
           this, newGlobal, callback,
           !isComponentDidMount &&
           !isComponentDidUpdate &&

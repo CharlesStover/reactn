@@ -34,7 +34,7 @@ export default function ReactN<
     public static displayName: string = `${componentName(DecoratedComponent)}-ReactN`;
 
     public componentWillUnmount(): void {
-      ReactNComponentWillUnmount(this);
+      ReactNComponentWillUnmount(this._globalCallback);
 
       // componentWillUnmount
       if (super.componentWillUnmount) {
@@ -42,12 +42,11 @@ export default function ReactN<
       }
     }
 
-    private _globalCallback = (): void => {
+    private _globalCallback = (): void =>
       ReactNGlobalCallback(this);
-    };
 
     public get global(): GS {
-      return ReactNGlobal(this);
+      return ReactNGlobal(this._globalCallback);
     }
 
     public setGlobal(

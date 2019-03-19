@@ -22,13 +22,13 @@ export type NewGlobalState<Shape> =
   FunctionalNewGlobalState<Shape> |
   SynchronousNewGlobalState<Shape>;
 
-type PartialState<Shape> = Shape extends Record<string, any> ? Partial<Shape> : Shape;
+// type PartialState<Shape> = Shape extends Record<string, any> ? Partial<Shape> : Shape;
 
 export type PropertyListener = () => void;
 
 type RemoveAddedCallback = () => boolean;
 
-type SynchronousNewGlobalState<Shape> = null | PartialState<Shape> | void;
+type SynchronousNewGlobalState<Shape> = null | Partial<Shape> | void;
 
 
 
