@@ -4,7 +4,10 @@ import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager, { NewGlobalState } from './global-state-manager';
 import Callback from './typings/callback';
 
-const getGlobalStateManager = <GS = Object>(): GlobalStateManager<GS> => (
+type RSA = Record<string, any>;
+
+const getGlobalStateManager = <GS extends RSA = RSA>(
+): GlobalStateManager<GS> => (
   Context._currentValue2 ||
   defaultGlobalStateManager
 ) as GlobalStateManager<GS>;
@@ -12,9 +15,12 @@ const getGlobalStateManager = <GS = Object>(): GlobalStateManager<GS> => (
 // Accurately define React components as having an updater member variable.
 interface TrueComponent extends ReactNComponent {
   updater: {
-    enqueueForceUpdate:
-      (component: ReactNComponent, _: null, action: 'forceUpdate') => void;
-  }
+    enqueueForceUpdate: (
+      component: ReactNComponent,
+      _: null,
+      action: 'forceUpdate',
+    ) => void;
+  };
 }
 
 
