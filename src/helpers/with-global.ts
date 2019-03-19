@@ -5,7 +5,6 @@ import defaultGlobalStateManager from '../default-global-state-manager';
 import GlobalStateManager, { NewGlobalState } from '../global-state-manager';
 import { ReactNGlobal, ReactNSetGlobal } from '../methods';
 import Callback from '../typings/callback';
-import ReactNPromise from '../utils/reactn-promise';
 
 // TODO -- https://github.com/CharlesStover/reactn/issues/14
 const isComponentDidMount = false;
@@ -27,7 +26,7 @@ hoc(MyComponent);
 
 */
 
-type Getter<GS, HP, LP> = (globalState: GS, props: HP) =>
+export type Getter<GS, HP, LP> = (globalState: GS, props: HP) =>
   null | Partial<LP> | void;
 
 type LowerOrderComponent<P = {}> = ComponentClass<P> | FunctionComponent<P> | string;
@@ -35,10 +34,12 @@ type LowerOrderComponent<P = {}> = ComponentClass<P> | FunctionComponent<P> | st
 type SetGlobal<GS> = (
   newGlobal: NewGlobalState<GS>,
   callback?: Callback<GS>,
-) => ReactNPromise<GS>;
+) => Promise<GS>;
 
-type Setter<GS, HP, LP> = (setGlobal: SetGlobal<GS>, props: HP) =>
+export type Setter<GS, HP, LP> = (setGlobal: SetGlobal<GS>, props: HP) =>
   null | Partial<LP> | void;
+
+export type WithGlobal<HP, LP> = (Component: LowerOrderComponent<LP>) => ComponentClass<HP>;
 
 // Get the name of a Component.
 const componentName = (Component: LowerOrderComponent) =>
@@ -51,7 +52,7 @@ export default function withGlobal<GS, HP, LP>(
   globalStateManager: GlobalStateManager<GS> | null = null,
   getter: Getter<GS, HP, LP> = (globalState: GS): GS => globalState,
   setter: Setter<GS, HP, LP> = (): null => null,
-) {
+): WithGlobal<HP, LP> {
   return function ReactNWithGlobal(
     Component: LowerOrderComponent<LP>,
   ): ComponentClass<HP> {
@@ -76,7 +77,7 @@ export default function withGlobal<GS, HP, LP>(
       setGlobal = (
         newGlobal: NewGlobalState<GS>,
         callback: Callback<GS> = null,
-      ): ReactNPromise<GS> =>
+      ): Promise<GS> =>
         ReactNSetGlobal(
           this, newGlobal, callback,
           !isComponentDidMount &&

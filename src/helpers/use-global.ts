@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import useForceUpdate from 'use-force-update';
 import Context from '../context';
 import defaultGlobalStateManager from '../default-global-state-manager';

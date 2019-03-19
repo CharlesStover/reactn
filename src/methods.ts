@@ -3,7 +3,6 @@ import Context from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager, { NewGlobalState } from './global-state-manager';
 import Callback from './typings/callback';
-import ReactNPromise from './utils/reactn-promise';
 
 const getGlobalStateManager = <GS = Object>(): GlobalStateManager<GS> => (
   Context._currentValue2 ||
@@ -79,7 +78,7 @@ export function ReactNSetGlobal<GS>(
   callback: Callback<GS> | null,
   _sync: boolean,
   globalStateManager: GlobalStateManager<GS> = getGlobalStateManager<GS>(),
-): ReactNPromise<GS> {
+): Promise<GS> {
   if (callback) {
     return globalStateManager.set(newGlobal)
       .then(callback);
