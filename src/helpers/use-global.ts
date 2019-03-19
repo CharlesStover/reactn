@@ -5,6 +5,12 @@ import defaultGlobalStateManager from '../default-global-state-manager';
 import setGlobal from './set-global';
 import makeIterable from './utils/make-iterable';
 
+type RSA = Record<string, any>;
+export type StateTuple<GS extends RSA, P extends keyof GS> = [
+  GS[P],
+  (newValue: GS[P]) => Promise<GS>,
+];
+
 export default function useGlobal(
   overrideGlobalState, property, setterOnly = false
 ) {

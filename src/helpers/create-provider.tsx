@@ -5,7 +5,7 @@ import Callback from '../typings/callback';
 import { LocalReducer } from '../typings/reducer';
 import addReducer from './add-reducer';
 import setGlobal from './set-global';
-import useGlobal from './use-global';
+import useGlobal, { StateTuple } from './use-global';
 import withGlobal, { Getter, Setter, WithGlobal } from './with-global';
 
 export interface ReactNProvider<GS> {
@@ -23,7 +23,7 @@ export interface ReactNProvider<GS> {
   useGlobal<Property extends keyof GS>(
     property: Property,
     setterOnly?: boolean,
-  ): StateTuple<GS[Property]>;
+  ): StateTuple<GS, Property>;
   withGlobal<HP, LP>(
     getter: Getter<GS, HP, LP>,
     setter: Setter<GS, HP, LP>,
@@ -34,8 +34,6 @@ export interface ReactNProvider<GS> {
 type RemoveAddedCallback = () => boolean;
 
 type RemoveAddedReducer = () => boolean;
-
-type StateTuple<T> = [ T, (newValue: T) => void ];
 
 export default function createProvider<GS = {}>(
   initialState?: GS,
