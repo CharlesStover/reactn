@@ -7,7 +7,6 @@ import {
   ReactNSetGlobal
 } from './methods';
 import Callback from './typings/callback';
-import ReactNPromise from './utils/reactn-promise';
 
 type ComponentWillUnmount = (..._: any[]) => void;
 
@@ -87,7 +86,10 @@ export class ReactNComponent<
     return ReactNGlobal<GS>(this);
   }
 
-  setGlobal(newGlobal, callback = null) {
+  setGlobal(
+    newGlobal: NewGlobalState<GS>,
+    callback: Callback<GS> | null = null
+  ): Promise<GS> {
     return ReactNSetGlobal(
       this, newGlobal, callback,
       !isComponentDidMount &&
@@ -140,7 +142,7 @@ export class ReactNPureComponent<
   setGlobal(
     newGlobal: NewGlobalState<GS>,
     callback: Callback<GS> | null = null
-  ): ReactNPromise<GS> {
+  ): Promise<GS> {
     return ReactNSetGlobal<GS>(
       this, newGlobal, callback,
       !isComponentDidMount &&

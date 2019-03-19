@@ -3,7 +3,7 @@ module.exports = {
   checkLeaks: true,
   color: true,
   diff: true,
-  extension: "ts",
+  extension: [ "ts", "tsx" ],
   forbidOnly: true,
   forbidPending: false,
   fullTrace: false,
@@ -15,5 +15,5 @@ module.exports = {
     'ts-node/register'
   ],
   sort: true,
-  watchExtensions: "ts",
+  watchExtensions: [ "ts", "tsx" ],
 };

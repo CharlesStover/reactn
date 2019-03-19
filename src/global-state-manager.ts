@@ -3,7 +3,6 @@ import {
   LocalReducer, GlobalReducer, Reducers, RemoveAddedReducer
 } from './typings/reducer';
 import objectGetListener from './utils/object-get-listener';
-import ReactNPromise from './utils/reactn-promise';
 import Transaction from './utils/transaction';
 
 
@@ -13,8 +12,14 @@ import Transaction from './utils/transaction';
 interface AsynchronousNewGlobalState<Shape>
   extends Promise<NewGlobalState<Shape>> { }
 
+interface FunctionalNewGlobalState<Shape> {
+  (globalState: Shape): NewGlobalState<Shape>;
+}
+
 export type NewGlobalState<Shape> =
-  AsynchronousNewGlobalState<Shape> | SynchronousNewGlobalState<Shape>;
+  AsynchronousNewGlobalState<Shape> |
+  FunctionalNewGlobalState<Shape> |
+  SynchronousNewGlobalState<Shape>;
 
 type PartialState<Shape> = Shape extends Record<string, any> ? Partial<Shape> : Shape;
 
@@ -45,7 +50,10 @@ export default class GlobalStateManager<GS = Record<string, any>> {
   _transactions: Map<number, Transaction<GS>> = new Map();
 
   constructor(initialState: GS = Object.create(null)) {
-    this._initialState = initialState;
+    this._initialState = Object.assign(
+      Object.create(null),
+      initialState,
+    );
     this.reset();
   }
 
@@ -118,7 +126,7 @@ export default class GlobalStateManager<GS = Record<string, any>> {
   }
 
   createReducer(localReducer: LocalReducer<GS>): GlobalReducer<GS> {
-    return (...args: any[]): ReactNPromise<GS> =>
+    return (...args: any[]): Promise<GS> =>
       this.set(
         localReducer(this.state, ...args),
       );
@@ -189,7 +197,10 @@ export default class GlobalStateManager<GS = Record<string, any>> {
     this._callbacks.clear();
     this._propertyListeners.clear();
     this._reducers.clear();
-    this._state = this._initialState;
+    this._state = Object.assign(
+      Object.create(null),
+      this._initialState,
+    );
     this._transactionId = 0;
     this._transactions.clear();
   }
@@ -202,7 +213,7 @@ export default class GlobalStateManager<GS = Record<string, any>> {
       any === null ||
       typeof any === 'undefined'
     ) {
-      return; // new ReactNPromise(this);
+      return Promise.resolve(this.state);
     }
 
     if (any instanceof Promise) {
