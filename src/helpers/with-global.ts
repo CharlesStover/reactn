@@ -1,6 +1,6 @@
-import { ComponentClass, createElement, FunctionComponent } from 'react';
+import { ComponentClass, Context, createElement, FunctionComponent } from 'react';
 import { ReactNPureComponent } from '../components';
-import Context from '../context';
+import ReactNContext from '../context';
 import defaultGlobalStateManager from '../default-global-state-manager';
 import GlobalStateManager, { NewGlobalState } from '../global-state-manager';
 import { ReactNGlobal, ReactNSetGlobal } from '../methods';
@@ -42,13 +42,17 @@ export type Setter<GS, HP, LP> = (setGlobal: SetGlobal<GS>, props: HP) =>
 export type WithGlobal<HP, LP> = (Component: LowerOrderComponent<LP>) => ComponentClass<HP>;
 
 // Get the name of a Component.
-const componentName = (Component: LowerOrderComponent) =>
+const componentName = (Component: LowerOrderComponent): string =>
   typeof Component === 'string' ?
     Component :
     Component.displayName ||
     Component.name;
 
-export default function withGlobal<GS, HP, LP>(
+export default function withGlobal<
+  GS extends {} = Record<string, any>,
+  HP extends {} = Record<string, any>,
+  LP extends {} = Record<string, any>,
+>(
   globalStateManager: GlobalStateManager<GS> | null = null,
   getter: Getter<GS, HP, LP> = (globalState: GS): GS => globalState,
   setter: Setter<GS, HP, LP> = (): null => null,
@@ -63,7 +67,7 @@ export default function withGlobal<GS, HP, LP>(
 
     return class ReactNComponent extends ReactNPureComponent<HP, {}, GS> {
 
-      static contextType = Context;
+      static contextType: Context<GlobalStateManager<GS>> = ReactNContext;
 
       static displayName = `${componentName(Component)}-ReactN`;
 

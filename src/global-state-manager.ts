@@ -39,7 +39,7 @@ const MAX_SAFE_INTEGER: number = 9007199254740990;
 
 
 
-export default class GlobalStateManager<GS = Record<string, any>> {
+export default class GlobalStateManager<GS extends {} = Record<string, any>> {
 
   _callbacks: Set<Callback<GS>> = new Set();
   _initialState: GS;
