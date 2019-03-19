@@ -1,40 +1,59 @@
+import { Component } from 'react';
+import { ReactNComponent } from './components';
 import {
-  createReactNGetDerivedStateFromProps,
+  // createReactNGetDerivedStateFromProps,
   ReactNComponentWillUnmount,
   ReactNGlobal,
   ReactNGlobalCallback,
-  ReactNSetGlobal
+  ReactNSetGlobal,
 } from './methods';
+import { NewGlobalState } from './global-state-manager';
+import Callback from './typings/callback';
 
 // TODO -- https://github.com/CharlesStover/reactn/issues/14
 const isComponentDidMount = false;
 const isComponentDidUpdate = false;
 const isSetGlobalCallback = false;
 
+// Get the name of a Component.
+const componentName = (DecoratedComponent: typeof Component): string =>
+  typeof DecoratedComponent === 'string' ?
+    DecoratedComponent :
+    // DecoratedComponent.displayName || // displayName is not static?
+    DecoratedComponent.name;
+
 // @reactn
-export default function ReactN(Component) {
-  class ReactNComponent extends Component {
+export default function ReactN<
+  GS extends {} = Record<string, any>,
+  P extends {} = {},
+  S extends {} = {},
+  SS extends {} = {},
+>(DecoratedComponent: Component<P, S, SS>): ReactNComponent<P, S, GS, SS> {
+  class ReactNComponent extends DecoratedComponent<P, S, SS> {
 
-    static displayName = (Component.displayName || Component.name) + '-ReactN';
+    public static displayName: string = `${componentName(DecoratedComponent)}-ReactN`;
 
-    componentWillUnmount(...args) {
+    public componentWillUnmount(): void {
       ReactNComponentWillUnmount(this);
 
       // componentWillUnmount
       if (super.componentWillUnmount) {
-        super.componentWillUnmount(...args);
+        super.componentWillUnmount();
       }
     }
 
-    _globalCallback = () => {
+    private _globalCallback = (): void => {
       ReactNGlobalCallback(this);
     };
 
-    get global() {
+    public get global(): GS {
       return ReactNGlobal(this);
     }
 
-    setGlobal(newGlobal, callback = null) {
+    public setGlobal(
+      newGlobal: NewGlobalState<GS>,
+      callback: Callback<GS> | null = null,
+    ): Promise<GS> {
       return ReactNSetGlobal(
         this, newGlobal, callback,
         !isComponentDidMount &&
@@ -45,9 +64,11 @@ export default function ReactN(Component) {
   }
 
   // getDerivedGlobalFromProps
+  /*
   if (Object.prototype.hasOwnProperty.call(Component, 'getDerivedGlobalFromProps')) {
     ReactNComponent.getDerivedStateFromProps = createReactNGetDerivedStateFromProps(Component);
   }
+  */
 
   return ReactNComponent;
 };

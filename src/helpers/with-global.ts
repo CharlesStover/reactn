@@ -67,18 +67,21 @@ export default function withGlobal<
 
     return class ReactNComponent extends ReactNPureComponent<HP, {}, GS> {
 
-      static contextType: Context<GlobalStateManager<GS>> = ReactNContext;
+      // Context knows it provides a GlobalStateManager,
+      //   but not the shape <GS> of the GlobalState that it holds.
+      public static contextType: Context<GlobalStateManager<GS>> =
+        ReactNContext as Context<GlobalStateManager<GS>>;
 
-      static displayName = `${componentName(Component)}-ReactN`;
+      public static displayName = `${componentName(Component)}-ReactN`;
 
-      get global(): GS {
+      public get global(): GS {
         return ReactNGlobal(
           this,
           globalStateManager || this.context || defaultGlobalStateManager
         );
       }
 
-      setGlobal = (
+      public setGlobal = (
         newGlobal: NewGlobalState<GS>,
         callback: Callback<GS> = null,
       ): Promise<GS> =>
@@ -90,7 +93,7 @@ export default function withGlobal<
           globalStateManager || this.context || defaultGlobalStateManager
         );
 
-      render() {
+      public render(): JSX.Element {
 
         // @ts-ignore: LP doesn't match HP
         const lowerOrderProps: LP = {
