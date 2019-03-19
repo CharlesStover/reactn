@@ -1,7 +1,6 @@
 import { NewGlobalState } from '../global-state-manager';
-import ReactNPromise from '../utils/reactn-promise';
 
-export type GlobalReducer<GS> = (...args: any[]) => ReactNPromise<GS>;
+export type GlobalReducer<GS> = (...args: any[]) => Promise<GS>;
 
 export type LocalReducer<GS> = (globalState: GS, ...args: any[]) => NewGlobalState<GS>;
 

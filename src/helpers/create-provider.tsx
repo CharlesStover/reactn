@@ -1,17 +1,12 @@
-<<<<<<< 08956a06597e1f2d22551e95a99379bfd1a3c669
-import React, { Component } from 'react';
-=======
 import React from 'react';
->>>>>>> eslint
 import Context from '../context';
 import GlobalStateManager, { NewGlobalState } from '../global-state-manager';
 import Callback from '../typings/callback';
 import { LocalReducer } from '../typings/reducer';
-import ReactNPromise from '../utils/reactn-promise';
 import addReducer from './add-reducer';
 import setGlobal from './set-global';
 import useGlobal from './use-global';
-import withGlobal from './with-global';
+import withGlobal, { Getter, Setter, WithGlobal } from './with-global';
 
 export interface ReactNProvider<GS> {
   addCallback(callback: Callback<GS>): RemoveAddedCallback;
@@ -19,7 +14,20 @@ export interface ReactNProvider<GS> {
   getGlobal(): GS;
   global: GS;
   removeCallback(callback: Callback<GS>): boolean;
+  reset(): void;
   resetGlobal(): void;
+  setGlobal(
+    newGlobal: NewGlobalState<GS>,
+    callback?: Callback<GS>,
+  ): Promise<GS>;
+  useGlobal<Property extends keyof GS>(
+    property: Property,
+    setterOnly?: boolean,
+  ): StateTuple<GS[Property]>;
+  withGlobal<HP, LP>(
+    getter: Getter<GS, HP, LP>,
+    setter: Setter<GS, HP, LP>,
+  ): WithGlobal<HP, LP>;
   new (props: {}, context?: any): React.Component<{}, {}>;
 }
 
@@ -63,6 +71,10 @@ export default function createProvider<GS = {}>(
       return globalStateManager.removeCallback(callback);
     }
 
+    public static reset(): void {
+      return globalStateManager.reset();
+    }
+
     public static resetGlobal(): void {
       return globalStateManager.reset();
     }
@@ -70,34 +82,22 @@ export default function createProvider<GS = {}>(
     public static setGlobal(
       newGlobal: NewGlobalState<GS>,
       callback: Callback<GS> | null = null,
-    ): ReactNPromise<GS> {
+    ): Promise<GS> {
       return setGlobal(globalStateManager, newGlobal, callback);
     }
 
-<<<<<<< 1ee12ca565298091986330d22232bcbd07fa5248
-    static useGlobal(property, setterOnly = false) {
-<<<<<<< 08956a06597e1f2d22551e95a99379bfd1a3c669
-<<<<<<< b16e52c8c0d92df1ff373ff870909a4034de9572:src/helpers/create-provider.js
-      return useGlobal(globalState, property, setterOnly);
-=======
-      return useGlobal(property, setterOnly, globalStateManager);
->>>>>>> init:src/helpers/create-provider.tsx
-=======
-=======
     public static useGlobal<Property extends keyof GS>(
       property: Property,
       setterOnly: boolean = false,
     ): StateTuple<GS[Property]> {
->>>>>>> create-provider
       return useGlobal(globalStateManager, property, setterOnly);
->>>>>>> eslint
     }
 
-    public static withGlobal(
-      getter = global => global,
-      setter = () => null,
-    ) {
-      return withGlobal(globalStateManager, getter, setter);
+    public static withGlobal<HP, LP>(
+      getter: Getter<GS, HP, LP> = (globalState: GS): GS => globalState,
+      setter: Setter<GS, HP, LP> = (): null => null,
+    ): WithGlobal<HP, LP> {
+      return withGlobal<GS, HP, LP>(globalStateManager, getter, setter);
     }
 
     public render(): JSX.Element {
