@@ -17,12 +17,13 @@ const isSetGlobalCallback = false;
 
 // this.componentWillUnmount on instance
 const componentWillMountInstance = (
-  _this: ReactNComponent | ReactNPureComponent
+  _this: ReactNComponent | ReactNPureComponent,
+  propertyListener: PropertyListener,
 ): boolean => {
   if (Object.prototype.hasOwnProperty.call(_this, 'componentWillUnmount')) {
     const instanceCwu: ComponentWillUnmount = _this.componentWillUnmount;
     _this.componentWillUnmount = (...a: any[]): void => {
-      ReactNComponentWillUnmount(_this);
+      ReactNComponentWillUnmount(propertyListener);
       instanceCwu(...a);
     };
     return true;
@@ -32,13 +33,14 @@ const componentWillMountInstance = (
 
 // this.componentWillUnmount on prototype
 const componentWillMountPrototype = (
-  _this: ReactNComponent | ReactNPureComponent
+  _this: ReactNComponent | ReactNPureComponent,
+  propertyListener: PropertyListener,
 ): boolean => {
   const proto: ReactNComponent | ReactNPureComponent =
     Object.getPrototypeOf(_this);
   if (Object.prototype.hasOwnProperty.call(proto, 'componentWillUnmount')) {
     _this.componentWillUnmount = (...a: any[]): void => {
-      ReactNComponentWillUnmount(_this);
+      ReactNComponentWillUnmount(propertyListener);
       proto.componentWillUnmount.bind(_this)(...a);
     };
     return true;
@@ -58,8 +60,8 @@ export class ReactNComponent<
 
     // this.componentWillUnmount on instance
     if (
-      !componentWillMountInstance(this) &&
-      !componentWillMountPrototype(this)
+      !componentWillMountInstance(this, this._globalCallback) &&
+      !componentWillMountPrototype(this, this._globalCallback)
     ) {
 
       /**
@@ -76,14 +78,14 @@ export class ReactNComponent<
   }
 
   public componentWillUnmount(): void {
-    return ReactNComponentWillUnmount(this);
+    return ReactNComponentWillUnmount(this._globalCallback);
   }
 
   private _globalCallback: PropertyListener = (): void =>
     ReactNGlobalCallback(this);
 
   public get global(): Readonly<GS> {
-    return ReactNGlobal<GS>(this);
+    return ReactNGlobal<GS>(this._globalCallback);
   }
 
   public setGlobal(
@@ -111,8 +113,8 @@ export class ReactNPureComponent<
 
     // this.componentWillUnmount on instance
     if (
-      !componentWillMountInstance(this) &&
-      !componentWillMountPrototype(this)
+      !componentWillMountInstance(this, this._globalCallback) &&
+      !componentWillMountPrototype(this, this._globalCallback)
     ) {
 
       /**
@@ -129,14 +131,14 @@ export class ReactNPureComponent<
   }
 
   public componentWillUnmount(): void {
-    return ReactNComponentWillUnmount(this);
+    return ReactNComponentWillUnmount(this._globalCallback);
   }
 
   private _globalCallback: PropertyListener = (): void =>
     ReactNGlobalCallback(this);
 
   public get global(): Readonly<GS> {
-    return ReactNGlobal<GS>(this);
+    return ReactNGlobal<GS>(this._globalCallback);
   }
 
   public setGlobal(

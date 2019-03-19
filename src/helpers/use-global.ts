@@ -7,11 +7,44 @@ import Callback from '../typings/callback';
 import setGlobal from './set-global';
 import makeIterable from './utils/make-iterable';
 
+export type GlobalTuple<GS> = [ GS, (newGlobal: NewGlobalState<GS>) => Promise<GS> ];
+
 type RSA = Record<string, any>;
+
+export type Setter<GS extends {}, P extends keyof GS> =
+  (newValue: GS[P]) => Promise<GS>;
+
 export type StateTuple<GS extends RSA, P extends keyof GS> = [
   GS[P],
-  (newValue: GS[P]) => Promise<GS>,
+  Setter<GS, P>,
 ];
+
+// useGlobal()
+export default function useGlobal<
+  GS extends {} = Record<string, any>,
+>(
+  overrideGlobalStateManager: GlobalStateManager<GS> | null,
+): GlobalTuple<GS>;
+
+// useGlobal('property')
+export default function useGlobal<
+  GS extends {}, // = Record<string, any>
+  Property extends keyof GS,
+>(
+  overrideGlobalStateManager: GlobalStateManager<GS> | null,
+  property: Property,
+  setterOnly?: false,
+): StateTuple<GS, Property>;
+
+// useGlobal('property', true)
+export default function useGlobal<
+  GS extends {}, // = Record<string, any>
+  Property extends keyof GS,
+>(
+  overrideGlobalStateManager: GlobalStateManager<GS> | null,
+  property: Property,
+  setterOnly: true,
+): Setter<GS, Property>;
 
 export default function useGlobal<
   GS extends {}, // = Record<string, any>,
@@ -20,7 +53,7 @@ export default function useGlobal<
   overrideGlobalStateManager: GlobalStateManager<GS> | null,
   property?: Property,
   setterOnly: boolean = false,
-): StateTuple<GS, Property> {
+): GlobalTuple<GS> | Setter<GS, Property> | StateTuple<GS, Property> {
 
   // Require hooks.
   if (!React.useContext) {
@@ -52,9 +85,12 @@ export default function useGlobal<
     ): Promise<GS> =>
       setGlobal(globalStateManager, newGlobal, callback);
 
+    /*
+    // useGlobal(undefined, true) is just setGlobal...
     if (setterOnly) {
       return globalStateSetter;
     }
+    */
     return [
       globalStateManager.spyState(forceUpdate),
       globalStateSetter,
@@ -75,18 +111,31 @@ export default function useGlobal<
   }
 
   // Use a global reducer.
+  /*
+  // TODO: useGlobalReducer('reducerName')
   if (globalStateManager.hasReducer(property)) {
     return globalStateManager.getReducer(property);
   }
+  */
 
   const globalPropertySetter = (
     value: GS[Property],
     callback: Callback<GS> | null = null,
-  ): Promise<GS> =>
-    callback ?
-      globalStateManager.set({ [property]: value })
-        .then(callback) :
-        globalStateManager.set({ [property]: value });
+  ): Promise<GS> => {
+    const newGlobal: Partial<GS> = Object.create(null);
+    newGlobal[property] = value;
+    if (!callback) {
+      return globalStateManager.set(newGlobal);
+    }
+    let globalState: GS;
+    return globalStateManager.set(newGlobal)
+      .then(gs => {
+        globalState = gs;
+        return gs;
+      })
+      .then(callback)
+      .then(() => globalState);
+  };
 
   // Return only the setter (better performance).
   if (setterOnly) {
