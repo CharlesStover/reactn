@@ -49,9 +49,9 @@ const componentWillMountPrototype = (
 };
 
 export class ReactNComponent<
-  P = {},
-  S = {},
-  GS = Record<string, any>,
+  P extends {} = {},
+  S extends {} = {},
+  GS extends {} = {},
   SS = any,
 > extends Component<P, S, SS> {
 
@@ -102,9 +102,9 @@ export class ReactNComponent<
 }
 
 export class ReactNPureComponent<
-  P = {},
-  S = {},
-  GS = Record<string, any>,
+  P extends {} = {},
+  S extends {} = {},
+  GS extends {} = {},
   SS = any,
 > extends PureComponent<P, S, SS> {
 

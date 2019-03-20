@@ -9,26 +9,24 @@ import makeIterable from './utils/make-iterable';
 
 export type GlobalTuple<GS> = [ GS, (newGlobal: NewGlobalState<GS>) => Promise<GS> ];
 
-type RSA = Record<string, any>;
-
 export type Setter<GS extends {}, P extends keyof GS> =
   (newValue: GS[P]) => Promise<GS>;
 
-export type StateTuple<GS extends RSA, P extends keyof GS> = [
+export type StateTuple<GS extends {}, P extends keyof GS> = [
   GS[P],
   Setter<GS, P>,
 ];
 
 // useGlobal()
 export default function useGlobal<
-  GS extends {} = Record<string, any>,
+  GS extends {} = {},
 >(
   overrideGlobalStateManager: GlobalStateManager<GS> | null,
 ): GlobalTuple<GS>;
 
 // useGlobal('property')
 export default function useGlobal<
-  GS extends {}, // = Record<string, any>
+  GS extends {}, // = {}
   Property extends keyof GS,
 >(
   overrideGlobalStateManager: GlobalStateManager<GS> | null,
@@ -38,7 +36,7 @@ export default function useGlobal<
 
 // useGlobal('property', true)
 export default function useGlobal<
-  GS extends {}, // = Record<string, any>
+  GS extends {}, // = {}
   Property extends keyof GS,
 >(
   overrideGlobalStateManager: GlobalStateManager<GS> | null,
@@ -47,7 +45,7 @@ export default function useGlobal<
 ): Setter<GS, Property>;
 
 export default function useGlobal<
-  GS extends {}, // = Record<string, any>,
+  GS extends {}, // = {}
   Property extends keyof GS,
 >(
   overrideGlobalStateManager: GlobalStateManager<GS> | null,

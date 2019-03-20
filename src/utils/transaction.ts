@@ -1,6 +1,6 @@
 import { PropertyListener } from '../global-state-manager';
 
-export default class Transaction<GS extends Record<string, any>> {
+export default class Transaction<GS extends {} = {}> {
 
   private _properties: Map<keyof GS, any> = new Map();
   private _propertyListeners: Set<PropertyListener> = new Set();
