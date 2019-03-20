@@ -13,16 +13,15 @@ import { LocalReducer } from './typings/reducer';
 
 type RemoveAddedCallback = () => boolean;
 type RemoveAddedReducer = () => boolean;
-type RSA = Record<string, any>;
 
 const helperFunctions = {
 
-  addCallback: <GS extends RSA = RSA>(
+  addCallback: <GS extends {} = {}>(
     callback: Callback<GS>
   ): RemoveAddedCallback =>
     defaultGlobalStateManager.addCallback(callback),
 
-  addReducer: <GS extends RSA = RSA>(
+  addReducer: <GS extends {} = {}>(
     name: string,
     reducer: LocalReducer<GS>,
   ): RemoveAddedReducer =>
@@ -34,18 +33,18 @@ const helperFunctions = {
 
   default: ReactN,
 
-  getGlobal: <GS extends RSA = RSA>(): GS =>
-    defaultGlobalStateManager.state,
+  getGlobal: <GS extends {} = {}>(): GS =>
+    defaultGlobalStateManager.state as GS,
 
   PureComponent: ReactNPureComponent,
 
-  removeCallback: <GS extends RSA = RSA>(callback: Callback<GS>): boolean =>
+  removeCallback: <GS extends {} = {}>(callback: Callback<GS>): boolean =>
     defaultGlobalStateManager.removeCallback(callback),
 
   resetGlobal: (): void =>
     defaultGlobalStateManager.reset(),
 
-  setGlobal: <GS extends RSA = RSA>(
+  setGlobal: <GS extends {} = {}>(
     newGlobal: NewGlobalState<GS>,
     callback: Callback<GS> | null = null,
   ): Promise<GS> =>
@@ -55,7 +54,7 @@ const helperFunctions = {
       callback
     ),
 
-  useGlobal: <GS extends RSA, Property extends keyof GS>(
+  useGlobal: <GS extends {}, Property extends keyof GS>(
     property: Property,
     setterOnly: boolean = false,
   ): StateTuple<GS, Property> =>

@@ -22,7 +22,7 @@ export type NewGlobalState<Shape> =
   FunctionalNewGlobalState<Shape> |
   SynchronousNewGlobalState<Shape>;
 
-// type PartialState<Shape> = Shape extends Record<string, any> ? Partial<Shape> : Shape;
+// type PartialState<Shape> = Shape extends {} ? Partial<Shape> : Shape;
 
 export type PropertyListener = () => void;
 
@@ -40,7 +40,7 @@ const MAX_SAFE_INTEGER = 9007199254740990;
 
 
 
-export default class GlobalStateManager<GS extends {} = Record<string, any>> {
+export default class GlobalStateManager<GS extends {} = {}> {
 
   private _callbacks: Set<Callback<GS>> = new Set();
   private _initialState: GS;
@@ -207,32 +207,32 @@ export default class GlobalStateManager<GS extends {} = Record<string, any>> {
   }
 
   // Set any type of state change.
-  public set(any: NewGlobalState<GS>): Promise<GS> {
+  public set(newGlobal: NewGlobalState<GS>): Promise<GS> {
 
     // No changes, e.g. getDerivedGlobalFromProps.
     if (
-      any === null ||
-      typeof any === 'undefined'
+      newGlobal === null ||
+      typeof newGlobal === 'undefined'
     ) {
       return Promise.resolve(this.state);
     }
 
-    if (any instanceof Promise) {
-      return this.setPromise(any);
+    if (newGlobal instanceof Promise) {
+      return this.setPromise(newGlobal);
     }
 
-    if (typeof any === 'function') {
-      return this.setFunction(any);
+    if (typeof newGlobal === 'function') {
+      return this.setFunction(newGlobal);
     }
 
-    if (typeof any === 'object') {
-      return this.setObject(any);
+    if (typeof newGlobal === 'object') {
+      return this.setObject(newGlobal);
     }
 
     throw INVALID_NEW_GLOBAL_STATE;
   }
 
-  public setFunction(f: Function): Promise<GS> {
+  public setFunction(f: FunctionalNewGlobalState<GS>): Promise<GS> {
     return this.set(f(this.state));
   }
 

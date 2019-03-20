@@ -49,9 +49,9 @@ const componentName = (Component: LowerOrderComponent): string =>
     Component.name;
 
 export default function withGlobal<
-  GS extends {} = Record<string, any>,
-  HP extends {} = Record<string, any>,
-  LP extends {} = Record<string, any>,
+  GS extends {} = {},
+  HP extends {} = {},
+  LP extends {} = {},
 >(
   globalStateManager: GlobalStateManager<GS> | null = null,
   getter: Getter<GS, HP, LP> = (globalState: GS): GS => globalState,

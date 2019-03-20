@@ -7,4 +7,8 @@ interface TrueContext<T> extends Context<T> {
   _currentValue2: T;
 }
 
-export default createContext<GlobalStateManager>(defaultGlobalStateManager) as TrueContext<GlobalStateManager>;
+type RSA = Record<number | string, any>;
+
+export default (
+  createContext<GlobalStateManager<RSA>>(defaultGlobalStateManager)
+) as TrueContext<GlobalStateManager<RSA>>;

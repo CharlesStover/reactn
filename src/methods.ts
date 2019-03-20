@@ -7,13 +7,10 @@ import GlobalStateManager, {
 } from './global-state-manager';
 import Callback from './typings/callback';
 
-type RSA = Record<string, any>;
-
-const getGlobalStateManager = <GS extends RSA = RSA>(
-): GlobalStateManager<GS> => (
-  Context._currentValue2 ||
-  defaultGlobalStateManager
-) as GlobalStateManager<GS>;
+const getGlobalStateManager = <GS extends {} = {}>(
+): GlobalStateManager<GS> =>
+  (Context._currentValue2 as GlobalStateManager<GS>) ||
+  (defaultGlobalStateManager as GlobalStateManager<GS>);
 
 // Accurately define React components as having an updater member variable.
 interface TrueComponent extends ReactNComponent {

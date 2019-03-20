@@ -24,7 +24,7 @@ const componentName = (DecoratedComponent: typeof Component): string =>
 
 // @reactn
 export default function ReactN<
-  GS extends {} = Record<string, any>,
+  GS extends {} = {},
   P extends {} = {},
   S extends {} = {},
   SS extends {} = {},
