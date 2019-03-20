@@ -1,3 +1,5 @@
 import GlobalStateManager from './global-state-manager';
 
-export default new GlobalStateManager();
+type RSA = Record<string, any>;
+
+export default new GlobalStateManager<RSA>();
