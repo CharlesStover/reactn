@@ -1,5 +1,5 @@
-import { Component } from 'react';
-import { ReactNComponent } from './components';
+import { ComponentClass } from 'react';
+import { ReactNComponentClass } from './components';
 import {
   // createReactNGetDerivedStateFromProps,
   ReactNComponentWillUnmount,
@@ -16,20 +16,19 @@ const isComponentDidUpdate = false;
 const isSetGlobalCallback = false;
 
 // Get the name of a Component.
-const componentName = (DecoratedComponent: typeof Component): string =>
+const componentName = (DecoratedComponent: ComponentClass): string =>
   typeof DecoratedComponent === 'string' ?
     DecoratedComponent :
-    // DecoratedComponent.displayName || // displayName is not static?
+    DecoratedComponent.displayName ||
     DecoratedComponent.name;
 
 // @reactn
 export default function ReactN<
-  GS extends {} = {},
   P extends {} = {},
   S extends {} = {},
-  SS extends {} = {},
->(DecoratedComponent: Component<P, S, SS>): ReactNComponent<P, S, GS, SS> {
-  class ReactNComponent extends DecoratedComponent<P, S, SS> {
+  GS extends {} = {},
+>(DecoratedComponent: ComponentClass<P, S>): ReactNComponentClass<P, S, GS> {
+  class ReactNComponent extends DecoratedComponent {
 
     public static displayName: string = `${componentName(DecoratedComponent)}-ReactN`;
 
@@ -43,21 +42,22 @@ export default function ReactN<
     }
 
     private _globalCallback = (): void =>
+      // @ts-ignore: Types have separate declarations of a private property '_globalCallback'.
       ReactNGlobalCallback(this);
 
-    public get global(): GS {
-      return ReactNGlobal(this._globalCallback);
+    public get global(): Readonly<GS> {
+      return ReactNGlobal<GS>(this._globalCallback);
     }
 
     public setGlobal(
       newGlobal: NewGlobalState<GS>,
       callback: Callback<GS> | null = null,
     ): Promise<GS> {
-      return ReactNSetGlobal(
-        this, newGlobal, callback,
+      return ReactNSetGlobal<GS>(
+        newGlobal, callback,
         !isComponentDidMount &&
         !isComponentDidUpdate &&
-        !isSetGlobalCallback
+        !isSetGlobalCallback,
       );
     }
   }

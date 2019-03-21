@@ -17,6 +17,9 @@ export type StateTuple<GS extends {}, P extends keyof GS> = [
   Setter<GS, P>,
 ];
 
+export type UseGlobal<GS extends {}, Property extends keyof GS> =
+  GlobalTuple<GS> | Setter<GS, Property> | StateTuple<GS, Property>;
+
 // useGlobal()
 export default function useGlobal<
   GS extends {} = {},
@@ -51,7 +54,7 @@ export default function useGlobal<
   overrideGlobalStateManager: GlobalStateManager<GS> | null,
   property?: Property,
   setterOnly: boolean = false,
-): GlobalTuple<GS> | Setter<GS, Property> | StateTuple<GS, Property> {
+): UseGlobal<GS, Property> {
 
   // Require hooks.
   if (!React.useContext) {

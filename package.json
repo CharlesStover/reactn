@@ -20,6 +20,12 @@
     "index.js",
     "package.json"
   ],
+  "nyc": {
+    "extension": [
+      ".ts",
+      ".tsx"
+    ]
+  },
   "scripts": {
     "build": "webpack",
     "coverage": "nyc mocha  src/**/*.test.{ts,tsx}",

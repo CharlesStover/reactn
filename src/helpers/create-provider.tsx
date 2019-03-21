@@ -9,6 +9,7 @@ import useGlobal, {
   GlobalTuple,
   Setter as UseGlobalSetter,
   StateTuple,
+  UseGlobal,
 } from './use-global';
 import withGlobal, {
   Getter,
@@ -109,7 +110,7 @@ export default function createProvider<GS = {}>(
     public static useGlobal<Property extends keyof GS>(
       property?: Property,
       setterOnly: boolean = false,
-    ): GlobalTuple<GS> | StateTuple<GS, Property> | UseGlobalSetter<GS, Property> {
+    ): UseGlobal<GS, Property> {
       return useGlobal(
         globalStateManager,
         property,
