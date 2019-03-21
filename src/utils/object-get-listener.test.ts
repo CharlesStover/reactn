@@ -5,16 +5,6 @@ interface Shape {
   [key: string]: number;
 }
 
-const sortEntriesByKey = (
-  [ key1 ]: [ string, number ],
-  [ key2 ]: [ string, number ]
-): -1 | 0 | 1 =>
-  key1 < key2 ?
-    -1 :
-    key1 > key2 ?
-      1 :
-      0;
-
 describe('objectGetListener', () => {
 
   it('should return the same keys and values', () => {
@@ -25,16 +15,20 @@ describe('objectGetListener', () => {
       y: 2,
       z: 3,
     };
-    const entries = Object.entries(obj);
-    entries.sort(sortEntriesByKey);
+    const keys1 = Object.keys(obj);
+    keys1.sort();
 
     // Subscribed object.
     const obj2 = objectGetListener(obj, () => { });
-    const entries2 = Object.entries(obj2);
-    entries2.sort(sortEntriesByKey);
+    const keys2 = Object.keys(obj2);
+    keys2.sort();
 
     // Expect the shape to be the same.
-    expect(entries).to.deep.equal(entries2);
+    const keysLength: number = keys1.length;
+    expect(keysLength).to.equal(keys2.length);
+    for (let i = 0; i < keysLength; i++) {
+      expect(keys1[i]).to.deep.equal(keys2[i]);
+    }
   });
 
   it('should subscribe to the object properties\' get', () => {

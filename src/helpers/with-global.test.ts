@@ -1,3 +1,3 @@
-describe.skip('withGlobal', () => {
-
+describe('withGlobal', () => {
+  it('should do something');
 });
