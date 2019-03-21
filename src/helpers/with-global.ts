@@ -1,10 +1,16 @@
-import { ComponentClass, Context, createElement, FunctionComponent } from 'react';
-import { ReactNPureComponent } from '../components';
+import {
+  ComponentClass,
+  Context,
+  createElement,
+  FunctionComponent,
+} from 'react';
+import { ReactNComponentClass, ReactNPureComponent } from '../components';
 import ReactNContext from '../context';
 import defaultGlobalStateManager from '../default-global-state-manager';
 import GlobalStateManager, { NewGlobalState } from '../global-state-manager';
 import { ReactNGlobal, ReactNSetGlobal } from '../methods';
 import Callback from '../typings/callback';
+import { Http2ServerRequest } from 'http2';
 
 // TODO -- https://github.com/CharlesStover/reactn/issues/14
 const isComponentDidMount = false;
@@ -59,7 +65,7 @@ export default function withGlobal<
 ): WithGlobal<HP, LP> {
   return function ReactNWithGlobal(
     Component: LowerOrderComponent<LP>,
-  ): ComponentClass<HP> {
+  ): ReactNComponentClass<HP, {}, GS> {
 
     // If a Global State was provided, use it.
     // Otherwise, if a Provider was mounted, use its global state.
@@ -88,11 +94,13 @@ export default function withGlobal<
         callback: Callback<GS> = null,
       ): Promise<GS> =>
         ReactNSetGlobal<GS>(
-          this, newGlobal, callback,
+          newGlobal, callback,
           !isComponentDidMount &&
           !isComponentDidUpdate &&
           !isSetGlobalCallback,
-          globalStateManager || this.context || defaultGlobalStateManager
+          globalStateManager ||
+          this.context ||
+          defaultGlobalStateManager,
         );
 
       public render(): JSX.Element {

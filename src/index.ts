@@ -6,13 +6,46 @@ import GlobalStateManager, { NewGlobalState } from './global-state-manager';
 import addReducer from './helpers/add-reducer';
 import createProvider from './helpers/create-provider';
 import setGlobal from './helpers/set-global';
-import useGlobal, { StateTuple } from './helpers/use-global';
-import withGlobal, { Getter, Setter, WithGlobal } from './helpers/with-global';
+import useGlobalHelper, {
+  GlobalTuple,
+  Setter as UseGlobalSetter,
+  StateTuple,
+  UseGlobal,
+} from './helpers/use-global';
+import withGlobal, {
+  Getter,
+  Setter as WithGlobalSetter,
+  WithGlobal,
+} from './helpers/with-global';
 import Callback from './typings/callback';
 import { LocalReducer } from './typings/reducer';
 
 type RemoveAddedCallback = () => boolean;
 type RemoveAddedReducer = () => boolean;
+
+// useGlobal is defined as a function here to fully support its
+function useGlobal<GS extends {} = {}>(): GlobalTuple<GS>;
+function useGlobal<GS extends {}, Property extends keyof GS>(
+  property: Property,
+  setterOnly?: false,
+): StateTuple<GS, Property>;
+function useGlobal<GS extends {}, Property extends keyof GS>(
+  property: Property,
+  setterOnly: true,
+): UseGlobalSetter<GS, Property>;
+function useGlobal<GS extends {}, Property extends keyof GS>(
+  property?: Property,
+  setterOnly: boolean = false,
+): UseGlobal<GS, Property> {
+  return useGlobalHelper<GS, Property>(
+    null,
+    property,
+    // @ts-ignore-next-line:
+    //   Argument of type 'boolean' is not assignable to parameter of type
+    //   'true'.
+    setterOnly,
+  );
+}
 
 const helperFunctions = {
 
@@ -54,20 +87,14 @@ const helperFunctions = {
       callback
     ),
 
-  useGlobal: <GS extends {}, Property extends keyof GS>(
-    property: Property,
-    setterOnly: boolean = false,
-  ): StateTuple<GS, Property> =>
-    useGlobal(null, property, setterOnly),
+  useGlobal: useGlobal,
 
   withGlobal: <GS extends {} = {}, HP extends {} = {}, LP extends {} = {}>(
     getter: Getter<GS, HP, LP> = (globalState: GS): GS => globalState,
-    setter: Setter<GS, HP, LP> = () => null,
+    setter: WithGlobalSetter<GS, HP, LP> = () => null,
   ): WithGlobal<HP, LP> =>
     withGlobal<GS, HP, LP>(null, getter, setter)
 
 };
 
-Object.assign(ReactN, React, helperFunctions);
-
-module.exports = ReactN;
+export = Object.assign(ReactN, React, helperFunctions);

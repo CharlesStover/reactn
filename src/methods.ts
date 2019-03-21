@@ -59,10 +59,13 @@ export function ReactNComponentWillUnmount(
 
 // this._globalCallback
 export function ReactNGlobalCallback(
-  _this: ReactNComponent | ReactNPureComponent,
+  that: ReactNComponent | ReactNPureComponent,
 ): void {
-  const that: TrueComponent = _this as TrueComponent;
-  that.updater.enqueueForceUpdate(that, null, 'forceUpdate');
+  (that as TrueComponent).updater.enqueueForceUpdate(
+    that as TrueComponent,
+    null,
+    'forceUpdate',
+  );
 }
 
 
@@ -80,7 +83,6 @@ export function ReactNGlobal<GS>(
 
 // this.setGlobal
 export function ReactNSetGlobal<GS>(
-  _this: ReactNComponent<{}, {}, GS> | ReactNPureComponent<{}, {}, GS>,
   newGlobal: NewGlobalState<GS>,
   callback: Callback<GS> | null,
   _sync: boolean,

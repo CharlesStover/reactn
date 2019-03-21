@@ -1,14 +1,45 @@
-import { Component, PureComponent } from 'react';
-import { NewGlobalState, PropertyListener } from './global-state-manager';
+import { Component, ComponentClass, PureComponent } from 'react';
+import GlobalStateManager, { NewGlobalState, PropertyListener } from './global-state-manager';
 import {
   ReactNComponentWillUnmount,
   ReactNGlobal,
   ReactNGlobalCallback,
-  ReactNSetGlobal
+  ReactNSetGlobal,
 } from './methods';
 import Callback from './typings/callback';
 
-type ComponentWillUnmount = (..._: any[]) => void;
+
+
+interface IReactNComponent<
+  P extends {} = {},
+  S extends {} = {},
+  GS extends {} = {},
+  SS = any,
+> extends Component<P, S, SS> {
+  readonly global: Readonly<GS>;
+  setGlobal(newGlobalState: NewGlobalState<GS>, callback?: Callback<GS>):
+    Promise<Readonly<GS>>;
+}
+
+interface IReactNPureComponent<
+  P extends {} = {},
+  S extends {} = {},
+  GS extends {} = {},
+  SS = any,
+> extends IReactNComponent<P, S, GS, SS> { }
+
+export interface ReactNComponentClass<
+  P extends {} = {},
+  S extends {} = {},
+  GS extends {} = {},
+  SS = any,
+> extends ComponentClass<P, S> {
+  new (props: P, context?: any): IReactNComponent<P, S, GS, SS>;
+}
+
+type VoidFunction = () => void;
+
+
 
 // TODO -- https://github.com/CharlesStover/reactn/issues/14
 const isComponentDidMount = false;
@@ -17,14 +48,14 @@ const isSetGlobalCallback = false;
 
 // this.componentWillUnmount on instance
 const componentWillMountInstance = (
-  _this: ReactNComponent | ReactNPureComponent,
+  that: IReactNComponent | IReactNPureComponent,
   propertyListener: PropertyListener,
 ): boolean => {
-  if (Object.prototype.hasOwnProperty.call(_this, 'componentWillUnmount')) {
-    const instanceCwu: ComponentWillUnmount = _this.componentWillUnmount;
-    _this.componentWillUnmount = (...a: any[]): void => {
+  if (Object.prototype.hasOwnProperty.call(that, 'componentWillUnmount')) {
+    const instanceCwu: VoidFunction = that.componentWillUnmount;
+    that.componentWillUnmount = (): void => {
       ReactNComponentWillUnmount(propertyListener);
-      instanceCwu(...a);
+      instanceCwu();
     };
     return true;
   }
@@ -33,20 +64,22 @@ const componentWillMountInstance = (
 
 // this.componentWillUnmount on prototype
 const componentWillMountPrototype = (
-  _this: ReactNComponent | ReactNPureComponent,
+  that: IReactNComponent | IReactNPureComponent,
   propertyListener: PropertyListener,
 ): boolean => {
-  const proto: ReactNComponent | ReactNPureComponent =
-    Object.getPrototypeOf(_this);
+  const proto: IReactNComponent | IReactNPureComponent =
+    Object.getPrototypeOf(that);
   if (Object.prototype.hasOwnProperty.call(proto, 'componentWillUnmount')) {
-    _this.componentWillUnmount = (...a: any[]): void => {
+    that.componentWillUnmount = (): void => {
       ReactNComponentWillUnmount(propertyListener);
-      proto.componentWillUnmount.bind(_this)(...a);
+      proto.componentWillUnmount.bind(that)();
     };
     return true;
   }
   return false;
 };
+
+
 
 export class ReactNComponent<
   P extends {} = {},
@@ -54,7 +87,6 @@ export class ReactNComponent<
   GS extends {} = {},
   SS = any,
 > extends Component<P, S, SS> {
-
   public constructor(props: Readonly<P>, context?: any) {
     super(props, context);
 
@@ -73,7 +105,7 @@ export class ReactNComponent<
       setTimeout(() => {
         componentWillMountInstance(this);
       }, 0);
-       */
+      */
     }
   }
 
@@ -91,15 +123,15 @@ export class ReactNComponent<
   public setGlobal(
     newGlobal: NewGlobalState<GS>,
     callback: Callback<GS> | null = null
-  ): Promise<GS> {
-    return ReactNSetGlobal(
-      this, newGlobal, callback,
+  ): Promise<Readonly<GS>> {
+    return ReactNSetGlobal<GS>(
+      newGlobal, callback,
       !isComponentDidMount &&
       !isComponentDidUpdate &&
-      !isSetGlobalCallback
+      !isSetGlobalCallback,
     );
   }
-}
+};
 
 export class ReactNPureComponent<
   P extends {} = {},
@@ -107,7 +139,6 @@ export class ReactNPureComponent<
   GS extends {} = {},
   SS = any,
 > extends PureComponent<P, S, SS> {
-
   public constructor(props: Readonly<P>, context?: any) {
     super(props, context);
 
@@ -126,7 +157,7 @@ export class ReactNPureComponent<
       setTimeout(() => {
         componentWillMountInstance(this);
       }, 0);
-       */
+      */
     }
   }
 
@@ -144,12 +175,12 @@ export class ReactNPureComponent<
   public setGlobal(
     newGlobal: NewGlobalState<GS>,
     callback: Callback<GS> | null = null
-  ): Promise<GS> {
+  ): Promise<Readonly<GS>> {
     return ReactNSetGlobal<GS>(
-      this, newGlobal, callback,
+      newGlobal, callback,
       !isComponentDidMount &&
       !isComponentDidUpdate &&
-      !isSetGlobalCallback
+      !isSetGlobalCallback,
     );
   }
-}
+};
