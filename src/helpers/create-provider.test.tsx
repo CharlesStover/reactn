@@ -219,6 +219,12 @@ describe('ReactN Provider', () => {
       expect(Provider.setGlobal.length).to.equal(2);
     });
 
+    /**
+     * TODO:
+     * MOVE THIS TO GLOBAL STATE MANAGER TEST
+     * REFACTOR CREATEPROVIDER TO BEHAVE
+     * THE WAY SETGLOBAL DOES
+     */
     describe('GlobalStateManager', () => {
 
       it('should call set', () => {
