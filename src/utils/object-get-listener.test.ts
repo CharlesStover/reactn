@@ -10,25 +10,17 @@ describe('objectGetListener', () => {
   it('should return the same keys and values', () => {
 
     // Original object.
-    const obj: Shape = {
+    const obj1: Shape = {
       x: 1,
       y: 2,
       z: 3,
     };
-    const keys1 = Object.keys(obj);
-    keys1.sort();
 
     // Subscribed object.
-    const obj2 = objectGetListener(obj, () => { });
-    const keys2 = Object.keys(obj2);
-    keys2.sort();
+    const obj2 = objectGetListener(obj1, () => { });
 
     // Expect the shape to be the same.
-    const keysLength: number = keys1.length;
-    expect(keysLength).to.equal(keys2.length);
-    for (let i = 0; i < keysLength; i++) {
-      expect(keys1[i]).to.deep.equal(keys2[i]);
-    }
+    expect(obj1).to.deep.equal(obj2);
   });
 
   it('should subscribe to the object properties\' get', () => {
