@@ -1,12 +1,14 @@
 import GlobalStateManager from '../global-state-manager';
-import { LocalReducer } from '../typings/reducer';
+import Reducer from '../typings/reducer';
 
 type RemoveAddedReducer = () => boolean;
 
-export default function addReducer<GS>(
+export default function addReducer<
+  GS extends {} = {},
+>(
   globalStateManager: GlobalStateManager<GS>,
   name: string,
-  reducer: LocalReducer<GS>,
+  reducer: Reducer<GS>,
 ): RemoveAddedReducer {
   return globalStateManager.addReducer(name, reducer);
 };

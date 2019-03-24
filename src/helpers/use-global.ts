@@ -4,8 +4,11 @@ import Context from '../context';
 import defaultGlobalStateManager from '../default-global-state-manager';
 import GlobalStateManager, { NewGlobalState } from '../global-state-manager';
 import Callback from '../typings/callback';
+import Reducer, { Dispatcher } from '../typings/reducer';
 import setGlobal from './set-global';
 import makeIterable from './utils/make-iterable';
+
+
 
 export type GlobalTuple<GS> = [ GS, (newGlobal: NewGlobalState<GS>) => Promise<GS> ];
 
@@ -19,6 +22,8 @@ export type StateTuple<GS extends {}, P extends keyof GS> = [
 
 export type UseGlobal<GS extends {}, Property extends keyof GS> =
   GlobalTuple<GS> | Setter<GS, Property> | StateTuple<GS, Property>;
+
+
 
 // useGlobal()
 export default function useGlobal<
@@ -99,17 +104,20 @@ export default function useGlobal<
   }
 
   // Use a custom reducer.
+  /*
   if (typeof property === 'function') {
-    const reducer = globalStateManager.createReducer(property);
+    const dispatcher: Dispatcher<typeof property> =
+      globalStateManager.createDispatcher(property);
 
     // Support [ state, dispatch ] syntax.
     makeIterable(
-      reducer,
+      dispatcher,
       globalStateManager.spyState(forceUpdate),
-      reducer
+      dispatcher,
     );
-    return reducer;
+    return dispatcher;
   }
+  */
 
   // Use a global reducer.
   /*

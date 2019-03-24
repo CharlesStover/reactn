@@ -2,7 +2,7 @@ import React from 'react';
 import Context from '../context';
 import GlobalStateManager, { NewGlobalState } from '../global-state-manager';
 import Callback from '../typings/callback';
-import { LocalReducer } from '../typings/reducer';
+import Reducer from '../typings/reducer';
 import addReducer from './add-reducer';
 import setGlobal from './set-global';
 import useGlobal, {
@@ -19,7 +19,10 @@ import withGlobal, {
 
 export interface ReactNProvider<GS> {
   addCallback(callback: Callback<GS>): RemoveAddedCallback;
-  addReducer(name: string, reducer: LocalReducer<GS>): RemoveAddedReducer;
+  addReducer<A extends any[] = any[]>(
+    name: string,
+    reducer: Reducer<GS, A>,
+  ): RemoveAddedReducer;
   getGlobal(): GS;
   global: GS;
   removeCallback(callback: Callback<GS>): boolean;
@@ -64,9 +67,9 @@ export default function createProvider<GS = {}>(
       return globalStateManager.addCallback(f);
     }
 
-    public static addReducer(
+    public static addReducer<A extends any[] = any[]>(
       name: string,
-      reducer: LocalReducer<GS>,
+      reducer: Reducer<GS, A>,
     ): RemoveAddedReducer {
       return addReducer<GS>(globalStateManager, name, reducer);
     }
