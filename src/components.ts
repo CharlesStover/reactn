@@ -1,5 +1,5 @@
 import { Component, ComponentClass, PureComponent } from 'react';
-import GlobalStateManager, { NewGlobalState, PropertyListener } from './global-state-manager';
+import { NewGlobalState, PropertyListener } from './global-state-manager';
 import {
   ReactNComponentWillUnmount,
   ReactNGlobal,
@@ -52,7 +52,7 @@ const componentWillMountInstance = (
   propertyListener: PropertyListener,
 ): boolean => {
   if (Object.prototype.hasOwnProperty.call(that, 'componentWillUnmount')) {
-    const instanceCwu: VoidFunction = that.componentWillUnmount;
+    const instanceCwu: VoidFunction = that.componentWillUnmount!;
     that.componentWillUnmount = (): void => {
       ReactNComponentWillUnmount(propertyListener);
       instanceCwu();
@@ -72,7 +72,7 @@ const componentWillMountPrototype = (
   if (Object.prototype.hasOwnProperty.call(proto, 'componentWillUnmount')) {
     that.componentWillUnmount = (): void => {
       ReactNComponentWillUnmount(propertyListener);
-      proto.componentWillUnmount.bind(that)();
+      proto.componentWillUnmount!.bind(that)();
     };
     return true;
   }

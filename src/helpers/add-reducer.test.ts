@@ -3,18 +3,20 @@ import sinon from 'sinon';
 import GlobalStateManager from '../global-state-manager';
 import addReducer from './add-reducer';
 
-type BooleanFunction = () => boolean;
-
 const REDUCER = (_globalState, _one, _two, _three): void => { };
 const REDUCER_NAME = 'reducerName';
 
+const shouldCall = (method: string): string =>
+  `should call GlobalStateManager.${method} with correct parameters`;
+
 describe('addReducer', () => {
 
-  let globalStateManager: GlobalStateManager<{}>;
+
+
+  let globalStateManager: GlobalStateManager<{}, {}>;
   let spy: sinon.SinonSpy;
-  beforeEach(() => {
-    globalStateManager = new GlobalStateManager<{}>();
-  });
+
+
 
   it('should be a function', () => {
     expect(addReducer).to.be.a('function');
@@ -24,19 +26,26 @@ describe('addReducer', () => {
     expect(addReducer.length).to.equal(3);
   });
 
+
+
+  beforeEach(() => {
+    globalStateManager = new GlobalStateManager<{}, {}>();
+  });
+
+
+
   before(() => {
     spy = sinon.spy(GlobalStateManager.prototype, 'addReducer');
   });
   after(() => {
     spy.restore();
   });
-  it(
-    'should call GlobalStateManager.addReducer with correct parameters',
-    () => {
-      addReducer(globalStateManager, REDUCER_NAME, REDUCER);
-      expect(spy.calledOnceWithExactly(REDUCER_NAME, REDUCER)).to.equal(true);
-    }
-  );
+  it(shouldCall('addReducer'), () => {
+    addReducer(globalStateManager, REDUCER_NAME, REDUCER);
+    expect(spy.calledOnceWithExactly(REDUCER_NAME, REDUCER)).to.equal(true);
+  });
+
+
 
   describe('returned remove reducer function', () => {
 
@@ -60,7 +69,7 @@ describe('addReducer', () => {
     after(() => {
       spy.restore();
     });
-    it('should call GlobalStateManager.removeReducer', () => {
+    it(shouldCall('removeReducer'), () => {
       removeReducer();
       expect(spy.calledOnceWithExactly(REDUCER_NAME)).to.equal(true);
     });

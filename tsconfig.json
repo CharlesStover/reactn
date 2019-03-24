@@ -6,6 +6,7 @@
     "experimentalDecorators": true,
     "jsx": "react",
     "lib": [ "es2015", "es2017.object" ],
+    "strictBindCallApply": true,
     "target": "es5"
   }
 }

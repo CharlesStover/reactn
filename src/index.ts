@@ -18,7 +18,7 @@ import withGlobal, {
   WithGlobal,
 } from './helpers/with-global';
 import Callback from './typings/callback';
-import { LocalReducer } from './typings/reducer';
+import Reducer from './typings/reducer';
 
 type RemoveAddedCallback = () => boolean;
 type RemoveAddedReducer = () => boolean;
@@ -56,7 +56,7 @@ const helperFunctions = {
 
   addReducer: <GS extends {} = {}>(
     name: string,
-    reducer: LocalReducer<GS>,
+    reducer: Reducer<GS>,
   ): RemoveAddedReducer =>
     addReducer(defaultGlobalStateManager, name, reducer),
 
