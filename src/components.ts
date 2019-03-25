@@ -2,11 +2,13 @@ import { Component, ComponentClass, PureComponent } from 'react';
 import { NewGlobalState, PropertyListener } from './global-state-manager';
 import {
   ReactNComponentWillUnmount,
+  ReactNDispatch,
   ReactNGlobal,
   ReactNGlobalCallback,
   ReactNSetGlobal,
 } from './methods';
 import Callback from './typings/callback';
+import { Dispatchers } from './typings/reducer';
 
 
 
@@ -85,6 +87,7 @@ export class ReactNComponent<
   P extends {} = {},
   S extends {} = {},
   GS extends {} = {},
+  R extends {} = {},
   SS = any,
 > extends Component<P, S, SS> {
   public constructor(props: Readonly<P>, context?: any) {
@@ -116,16 +119,20 @@ export class ReactNComponent<
   private _globalCallback: PropertyListener = (): void =>
     ReactNGlobalCallback(this);
 
+  public get dispatch(): Readonly<Dispatchers<GS, R>> {
+    return ReactNDispatch<GS, R>();
+  }
+
   public get global(): Readonly<GS> {
     return ReactNGlobal<GS>(this._globalCallback);
   }
 
   public setGlobal(
-    newGlobal: NewGlobalState<GS>,
+    newGlobalState: NewGlobalState<GS>,
     callback: Callback<GS> | null = null
   ): Promise<Readonly<GS>> {
     return ReactNSetGlobal<GS>(
-      newGlobal, callback,
+      newGlobalState, callback,
       !isComponentDidMount &&
       !isComponentDidUpdate &&
       !isSetGlobalCallback,
@@ -173,11 +180,11 @@ export class ReactNPureComponent<
   }
 
   public setGlobal(
-    newGlobal: NewGlobalState<GS>,
+    newGlobalState: NewGlobalState<GS>,
     callback: Callback<GS> | null = null
   ): Promise<Readonly<GS>> {
     return ReactNSetGlobal<GS>(
-      newGlobal, callback,
+      newGlobalState, callback,
       !isComponentDidMount &&
       !isComponentDidUpdate &&
       !isSetGlobalCallback,

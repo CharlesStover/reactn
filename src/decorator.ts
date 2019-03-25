@@ -50,11 +50,11 @@ export default function ReactN<
     }
 
     public setGlobal(
-      newGlobal: NewGlobalState<GS>,
+      newGlobalState: NewGlobalState<GS>,
       callback: Callback<GS> | null = null,
     ): Promise<GS> {
       return ReactNSetGlobal<GS>(
-        newGlobal, callback,
+        newGlobalState, callback,
         !isComponentDidMount &&
         !isComponentDidUpdate &&
         !isSetGlobalCallback,
