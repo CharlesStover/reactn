@@ -4,13 +4,14 @@ import Context from '../context';
 import defaultGlobalStateManager from '../default-global-state-manager';
 import GlobalStateManager, { NewGlobalState } from '../global-state-manager';
 import Callback from '../typings/callback';
-import Reducer, { Dispatcher } from '../typings/reducer';
 import setGlobal from './set-global';
-import makeIterable from './utils/make-iterable';
 
 
 
-export type GlobalTuple<GS> = [ GS, (newGlobal: NewGlobalState<GS>) => Promise<GS> ];
+export type GlobalTuple<GS> = [
+  GS,
+  (newGlobalState: NewGlobalState<GS>) => Promise<GS>,
+];
 
 export type Setter<GS extends {}, P extends keyof GS> =
   (newValue: GS[P]) => Promise<GS>;
@@ -86,10 +87,10 @@ export default function useGlobal<
   if (typeof property === 'undefined') {
 
     const globalStateSetter = (
-      newGlobal: NewGlobalState<GS>,
+      newGlobalState: NewGlobalState<GS>,
       callback: Callback<GS> | null = null,
     ): Promise<GS> =>
-      setGlobal(globalStateManager, newGlobal, callback);
+      setGlobal(globalStateManager, newGlobalState, callback);
 
     /*
     // useGlobal(undefined, true) is just setGlobal...
@@ -131,13 +132,13 @@ export default function useGlobal<
     value: GS[Property],
     callback: Callback<GS> | null = null,
   ): Promise<GS> => {
-    const newGlobal: Partial<GS> = Object.create(null);
-    newGlobal[property] = value;
+    const newGlobalState: Partial<GS> = Object.create(null);
+    newGlobalState[property] = value;
     if (!callback) {
-      return globalStateManager.set(newGlobal);
+      return globalStateManager.set(newGlobalState);
     }
     let globalState: GS;
-    return globalStateManager.set(newGlobal)
+    return globalStateManager.set(newGlobalState)
       .then(gs => {
         globalState = gs;
         return gs;

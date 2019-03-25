@@ -30,6 +30,6 @@ export default interface Reducer<
   (globalState: GS, ...args: A): NewGlobalState<GS>;
 };
 
-export interface Reducers<GS extends {} = {}> {
+interface Reducers<GS extends {} = {}> {
   [name: string]: Reducer<GS>;
 };

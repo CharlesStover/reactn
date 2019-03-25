@@ -38,7 +38,7 @@ export type Getter<GS, HP, LP> = (globalState: GS, props: HP) =>
 type LowerOrderComponent<P = {}> = ComponentClass<P> | FunctionComponent<P> | string;
 
 type SetGlobal<GS> = (
-  newGlobal: NewGlobalState<GS>,
+  newGlobalState: NewGlobalState<GS>,
   callback?: Callback<GS>,
 ) => Promise<GS>;
 
@@ -90,11 +90,11 @@ export default function withGlobal<
       }
 
       public setGlobal = (
-        newGlobal: NewGlobalState<GS>,
+        newGlobalState: NewGlobalState<GS>,
         callback: Callback<GS> = null,
       ): Promise<GS> =>
         ReactNSetGlobal<GS>(
-          newGlobal, callback,
+          newGlobalState, callback,
           !isComponentDidMount &&
           !isComponentDidUpdate &&
           !isSetGlobalCallback,

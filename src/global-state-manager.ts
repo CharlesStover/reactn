@@ -2,7 +2,6 @@ import Callback from './typings/callback';
 import Reducer, {
   Dispatcher,
   Dispatchers,
-  Reducers,
 } from './typings/reducer';
 import objectGetListener from './utils/object-get-listener';
 import Transaction from './utils/transaction';
@@ -283,26 +282,26 @@ export default class GlobalStateManager<
   }
 
   // Set any type of state change.
-  public set(newGlobal: NewGlobalState<GS>): Promise<GS> {
+  public set(newGlobalState: NewGlobalState<GS>): Promise<GS> {
 
     // No changes, e.g. getDerivedGlobalFromProps.
     if (
-      newGlobal === null ||
-      typeof newGlobal === 'undefined'
+      newGlobalState === null ||
+      typeof newGlobalState === 'undefined'
     ) {
       return Promise.resolve(this.state);
     }
 
-    if (newGlobal instanceof Promise) {
-      return this.setPromise(newGlobal);
+    if (newGlobalState instanceof Promise) {
+      return this.setPromise(newGlobalState);
     }
 
-    if (typeof newGlobal === 'function') {
-      return this.setFunction(newGlobal);
+    if (typeof newGlobalState === 'function') {
+      return this.setFunction(newGlobalState);
     }
 
-    if (typeof newGlobal === 'object') {
-      return this.setObject(newGlobal);
+    if (typeof newGlobalState === 'object') {
+      return this.setObject(newGlobalState);
     }
 
     throw INVALID_NEW_GLOBAL_STATE;
