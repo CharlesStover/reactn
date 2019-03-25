@@ -1,10 +1,10 @@
 import testAddCallback from './global-state-manager.test.add-callback';
 import testAddPropertyListener from './global-state-manager.test.add-property-listener';
 import testAddReducer from './global-state-manager.test.add-reducer';
-import testBeginTransaction from './global-state-manager.test.begin-transaction';
-import testCommit from './global-state-manager.test.commit';
 import testConstructor from './global-state-manager.test.constructor';
 import testCreateDispatcher from './global-state-manager.test.create-dispatcher';
+import testEnqueue from './global-state-manager.test.enqueue';
+import testFlush from './global-state-manager.test.flush';
 import testRemoveCallback from './global-state-manager.test.remove-callback';
 import testRemovePropertyListener from './global-state-manager.test.remove-property-listener';
 import testRemoveReducer from './global-state-manager.test.remove-reducer';
@@ -16,14 +16,14 @@ import testSetPromise from './global-state-manager.test.set-promise';
 import testSetProperty from './global-state-manager.test.set-property';
 import testSpyState from './global-state-manager.test.spy-state';
 
-describe.only('GlobalStateManager', () => {
+describe('GlobalStateManager', () => {
   describe('constructor', testConstructor);
   describe('addCallback', testAddCallback);
   describe('addPropertyListener', testAddPropertyListener);
   describe('addReducer', testAddReducer);
-  describe('beginTransaction', testBeginTransaction);
-  describe.skip('commit', testCommit);
   describe.skip('createDispatcher', testCreateDispatcher);
+  describe.skip('enqueue', testEnqueue);
+  describe.skip('flush', testFlush);
   describe.skip('removeCallback', testRemoveCallback);
   describe.skip('removePropertyListener', testRemovePropertyListener);
   describe.skip('removeReducer', testRemoveReducer);
