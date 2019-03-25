@@ -32,5 +32,6 @@ export default (): void => {
     expect(globalStateManager.flush.length).to.equal(0);
   });
 
-  it.skip('should do more');
+  it.skip('should do more', (): void => {
+  });
 };
