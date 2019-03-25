@@ -10,15 +10,14 @@ export default (): void => {
   });
 
   it('should be a function', (): void => {
-    expect(Provider.getDispatch).to.be.a('function');
+    expect(Provider.reset).to.be.a('function');
   });
 
   it('should accept no parameters', (): void => {
-    expect(Provider.getDispatch.length).to.equal(0);
+    expect(Provider.reset.length).to.equal(0);
   });
 
-  it('should return dispatch', (): void => {
-    expect(Provider.getDispatch()).to.deep.equal(Provider.dispatch);
+  it.skip('should do more', (): void => {
   });
 };
 

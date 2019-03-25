@@ -12,11 +12,11 @@ export default (): void => {
     expect(globalStateManager.createDispatcher).to.be.a('function');
   });
 
-  it('should accept no parameters', (): void => {
-    expect(globalStateManager.createDispatcher.length).to.equal(0);
+  it('should accept 1 parameter', (): void => {
+    expect(globalStateManager.createDispatcher.length).to.equal(1);
   });
 
-  it.skip('should return a dispatcher', (): void => {
+  it.skip('should do more', (): void => {
   });
 
 };

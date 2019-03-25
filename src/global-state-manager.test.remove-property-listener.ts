@@ -9,13 +9,13 @@ export default (): void => {
   });
 
   it('should be a function', (): void => {
-    expect(globalStateManager.flush).to.be.a('function');
+    expect(globalStateManager.removePropertyListener).to.be.a('function');
   });
 
-  it('should accept no parameters', (): void => {
-    expect(globalStateManager.flush.length).to.equal(0);
+  it('should accept 1 parameter', (): void => {
+    expect(globalStateManager.removePropertyListener.length).to.equal(1);
   });
 
-  it.skip('should not return anything', (): void => {
+  it.skip('should do more', (): void => {
   });
 };

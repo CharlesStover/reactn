@@ -10,21 +10,13 @@ export default (): void => {
   });
 
   it('should be a function', (): void => {
-
-    it('should exist', (): void => {
-      expect(Provider.useGlobal).to.be.a('function');
-      expect(Provider.useGlobal.length).to.equal(2);
-    });
-
-    it.skip('should do more');
-    expect(Provider.getDispatch).to.be.a('function');
+    expect(Provider.useGlobal).to.be.a('function');
   });
 
-  it('should accept no parameters', (): void => {
-    expect(Provider.getDispatch.length).to.equal(0);
+  it('should accept 2 parameters', (): void => {
+    expect(Provider.useGlobal.length).to.equal(2);
   });
 
-  it('should return dispatch', (): void => {
-    expect(Provider.getDispatch()).to.deep.equal(Provider.dispatch);
+  it.skip('should do more', (): void => {
   });
 };
