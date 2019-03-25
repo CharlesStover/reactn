@@ -13,40 +13,46 @@ const INITIAL_GLOBAL_STATE: GlobalState = {
   x: INITIAL_X,
 };
 
-describe('setGlobal', () => {
+describe('setGlobal', (): void => {
 
   let globalStateManager: GlobalStateManager<GlobalState>;
-  beforeEach(() => {
+  beforeEach((): void => {
     globalStateManager =
       new GlobalStateManager<GlobalState>(INITIAL_GLOBAL_STATE);
   });
 
 
-  it('should be a function', () => {
+  it('should be a function', (): void => {
     expect(setGlobal).to.be.a('function');
   });
 
-  it('should accept 3 parameters', () => {
+  it('should accept 3 parameters', (): void => {
     expect(setGlobal.length).to.equal(3);
   });
 
-  it('should return a Promise if there is no callback', async () => {
-    const p = setGlobal(globalStateManager, {});
-    expect(p).to.be.instanceOf(Promise);
-    await p;
-  });
+  it(
+    'should return a Promise if there is no callback',
+    async (): Promise<void> => {
+      const p = setGlobal(globalStateManager, {});
+      expect(p).to.be.instanceOf(Promise);
+      await p;
+    }
+  );
 
-  it('should return a Promise if there is a callback', async () => {
-    const p = setGlobal(globalStateManager, {}, () => {});
-    expect(p).to.be.instanceOf(Promise);
-    await p;
-  });
+  it(
+    'should return a Promise if there is a callback',
+    async (): Promise<void> => {
+      const p = setGlobal(globalStateManager, {}, (): void => {});
+      expect(p).to.be.instanceOf(Promise);
+      await p;
+    }
+  );
 
 
 
-  describe('callback', () => {
+  describe('callback', (): void => {
 
-    it('should be called', async () => {
+    it('should be called', async (): Promise<void> => {
       const NEW_GLOBAL_STATE: GlobalState = {
         x: true,
       };
@@ -56,7 +62,7 @@ describe('setGlobal', () => {
       expect(callback.calledOnce).to.equal(true);
     });
 
-    it('should receive the global state', async () => {
+    it('should receive the global state', async (): Promise<void> => {
       const NEW_X: GlobalState['x'] = true;
       const NEW_GLOBAL_STATE: GlobalState = {
         x: NEW_X,
@@ -64,7 +70,7 @@ describe('setGlobal', () => {
       expect(NEW_X).not.to.equal(INITIAL_X);
 
       let x: GlobalState['x'] = INITIAL_X;
-      const callback = (globalState: GlobalState) => {
+      const callback = (globalState: GlobalState): void => {
         x = globalState.x;
       };
       await setGlobal(globalStateManager, NEW_GLOBAL_STATE, callback);
@@ -74,35 +80,27 @@ describe('setGlobal', () => {
 
 
 
-  describe('GlobalStateManager', () => {
-    describe('set', () => {
+  describe('GlobalStateManager.set', (): void => {
 
-      const NEW_GLOBAL_STATE: GlobalState = {
-        x: true,
-      };
-      let set: sinon.SinonSpy;
-      beforeEach(() => {
-        set = sinon.spy(GlobalStateManager.prototype, 'set');
-      });
-      afterEach(() => {
-        set.restore();
-      });
+    const NEW_GLOBAL_STATE: GlobalState = {
+      x: true,
+    };
+    let set: sinon.SinonSpy;
+    beforeEach((): void => {
+      set = sinon.spy(GlobalStateManager.prototype, 'set');
+    });
+    afterEach((): void => {
+      set.restore();
+    });
 
-      it(
-        'should be called with correct parameters if there is no callback',
-        async () => {
-          await setGlobal(globalStateManager, NEW_GLOBAL_STATE);
-          expect(set.calledOnceWithExactly(NEW_GLOBAL_STATE)).to.equal(true);
-        }
-      );
+    it('should be called if there is no callback', async (): Promise<void> => {
+        await setGlobal(globalStateManager, NEW_GLOBAL_STATE);
+        expect(set.calledOnceWithExactly(NEW_GLOBAL_STATE)).to.equal(true);
+    });
 
-      it(
-        'should be called with correct parameters if there is a callback',
-        async () => {
-          await setGlobal(globalStateManager, NEW_GLOBAL_STATE, () => {});
-          expect(set.calledOnceWithExactly(NEW_GLOBAL_STATE)).to.equal(true);
-        }
-      );
+    it('should be called if there is a callback', async (): Promise<void> => {
+        await setGlobal(globalStateManager, NEW_GLOBAL_STATE, (): void => {});
+        expect(set.calledOnceWithExactly(NEW_GLOBAL_STATE)).to.equal(true);
     });
   });
 

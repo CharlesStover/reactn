@@ -29,13 +29,12 @@ export interface ReactNProvider<
     name: string,
     reducer: Reducer<GS, A>,
   ): RemoveAddedReducer;
-  dispatch: Dispatchers<GS, R> & AdditionalDispatchers<GS>,
-  getDispatch(): Dispatchers<GS, R> & AdditionalDispatchers<GS>,
+  dispatch: Dispatchers<GS, R> & AdditionalDispatchers<GS>;
+  getDispatch(): Dispatchers<GS, R> & AdditionalDispatchers<GS>;
   getGlobal(): GS;
   global: GS;
   removeCallback(callback: Callback<GS>): boolean;
   reset(): void;
-  resetGlobal(): void;
   setGlobal(
     newGlobalState: NewGlobalState<GS>,
     callback?: Callback<GS>,
@@ -109,10 +108,6 @@ export default function createProvider<
     }
 
     public static reset(): void {
-      return globalStateManager.reset();
-    }
-
-    public static resetGlobal(): void {
       return globalStateManager.reset();
     }
 

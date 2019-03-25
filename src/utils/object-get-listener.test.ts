@@ -5,9 +5,9 @@ interface Shape {
   [key: string]: number;
 }
 
-describe('objectGetListener', () => {
+describe('objectGetListener', (): void => {
 
-  it('should return the same keys and values', () => {
+  it('should return the same keys and values', (): void => {
 
     // Original object.
     const obj1: Shape = {
@@ -17,13 +17,13 @@ describe('objectGetListener', () => {
     };
 
     // Subscribed object.
-    const obj2 = objectGetListener(obj1, () => { });
+    const obj2 = objectGetListener(obj1, (): void => { });
 
     // Expect the shape to be the same.
     expect(obj1).to.deep.equal(obj2);
   });
 
-  it('should subscribe to the object properties\' get', () => {
+  it('should subscribe to the object properties\' get', (): void => {
 
     // Listener records which properties were read.
     const read = new Set();

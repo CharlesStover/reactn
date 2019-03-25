@@ -16,7 +16,7 @@ import testSetPromise from './global-state-manager.test.set-promise';
 import testSetProperty from './global-state-manager.test.set-property';
 import testSpyState from './global-state-manager.test.spy-state';
 
-describe('GlobalStateManager', () => {
+describe('GlobalStateManager', (): void => {
   describe('constructor', testConstructor);
   describe('addCallback', testAddCallback);
   describe('addDispatcher', testAddDispatcher);

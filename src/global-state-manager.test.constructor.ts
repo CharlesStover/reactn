@@ -27,25 +27,25 @@ const INITIAL_STATE: GS = {
 
 export default (): void => {
 
-  it('should initialize with an empty state object', () => {
+  it('should initialize with an empty state object', (): void => {
     const globalStateManager: GlobalStateManager<{}> =
       new GlobalStateManager<{}, {}>();
     expect(globalStateManager.state).to.deep.equal({});
   });
 
-  it('should initialize with an empty dispatchers object', () => {
+  it('should initialize with an empty dispatchers object', (): void => {
     const globalStateManager: GlobalStateManager<{}> =
       new GlobalStateManager<{}, {}>();
     expect(globalStateManager.dispatchers).to.deep.equal({});
   });
 
-  it('should support an initial state', () => {
+  it('should support an initial state', (): void => {
     const globalStateManager: GlobalStateManager<GS> =
       new GlobalStateManager<GS>(INITIAL_STATE);
     expect(globalStateManager.state).to.deep.equal(INITIAL_STATE);
   });
 
-  it('should support initial dispatchers', () => {
+  it('should support initial dispatchers', (): void => {
     const globalStateManager: GlobalStateManager<GS> =
       new GlobalStateManager<GS, typeof INITIAL_REDUCERS>(
         INITIAL_STATE,

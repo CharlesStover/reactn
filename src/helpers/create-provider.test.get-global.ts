@@ -5,19 +5,19 @@ import createProvider, { ReactNProvider } from './create-provider';
 export default (): void => {
 
   let Provider: ReactNProvider<GS>;
-  beforeEach(() => {
+  beforeEach((): void => {
     Provider = createProvider(INITIAL_STATE);
   });
 
-  it('should be a function', () => {
+  it('should be a function', (): void => {
     expect(Provider.getGlobal).to.be.a('function');
   });
 
-  it('should accept no parameters', () => {
+  it('should accept no parameters', (): void => {
     expect(Provider.getGlobal.length).to.equal(0);
   });
 
-  it('should return global', () => {
+  it('should return global', (): void => {
     expect(Provider.getGlobal()).to.deep.equal(Provider.global);
   });
 };

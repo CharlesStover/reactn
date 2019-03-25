@@ -1,3 +1,3 @@
-describe.skip('@reactn decorator', () => {
+describe.skip('@reactn decorator', (): void => {
 
 });

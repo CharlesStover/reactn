@@ -1,3 +1,3 @@
-describe('withGlobal', () => {
+describe('withGlobal', (): void => {
   it('should do something');
 });
