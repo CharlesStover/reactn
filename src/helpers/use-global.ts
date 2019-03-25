@@ -24,6 +24,8 @@ export type StateTuple<GS extends {}, P extends keyof GS> = [
 export type UseGlobal<GS extends {}, Property extends keyof GS> =
   GlobalTuple<GS> | Setter<GS, Property> | StateTuple<GS, Property>;
 
+type VoidFunction = () => void;
+
 
 
 // useGlobal()
@@ -79,7 +81,7 @@ export default function useGlobal<
 
   // If this component ever updates or unmounts,
   //   remove the force update listener.
-  React.useEffect(() => () => {
+  React.useEffect((): VoidFunction => (): void => {
     globalStateManager.removePropertyListener(forceUpdate);
   });
 

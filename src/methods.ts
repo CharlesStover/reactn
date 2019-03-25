@@ -6,7 +6,7 @@ import GlobalStateManager, {
   PropertyListener,
 } from './global-state-manager';
 import Callback from './typings/callback';
-import { Dispatchers } from './typings/reducer';
+import { AdditionalDispatchers, Dispatchers } from './typings/reducer';
 
 const getGlobalStateManager = <GS extends {} = {}>(
 ): GlobalStateManager<GS> =>
@@ -62,7 +62,7 @@ export function ReactNComponentWillUnmount(
 export function ReactNDispatch<
   GS extends {} = {},
   R extends {} = {},
->(): Dispatchers<GS, R> {
+>(): Dispatchers<GS, R> & AdditionalDispatchers<GS> {
   return (getGlobalStateManager() as GlobalStateManager<GS, R>).dispatchers;
 }
 
@@ -104,10 +104,10 @@ export function ReactNSetGlobal<GS>(
   }
   let globalState: GS;
   return globalStateManager.set(newGlobalState)
-    .then(gs => {
+    .then((gs: GS): GS => {
       globalState = gs;
       return gs;
     })
     .then(callback)
-    .then(() => globalState);
+    .then((): GS => globalState);
 }

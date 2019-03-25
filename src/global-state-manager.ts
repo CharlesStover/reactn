@@ -184,8 +184,6 @@ export default class GlobalStateManager<
     return copyObject(this._dispatchers);
   }
 
-  // Determine whether the global state manager has a callback.
-  // Used in unit testing to track callback addition and removal.
   public hasCallback(callback: Callback<GS>): boolean {
     return this._callbacks.has(callback);
   }
@@ -194,9 +192,7 @@ export default class GlobalStateManager<
     return Object.prototype.hasOwnProperty.call(this._dispatchers, name);
   }
 
-  // Determine whether the global state manager has a property listener.
-  // Used in unit testing to track property listener addition and removal.
-  hasPropertyListener(pl: PropertyListener): boolean {
+  public hasPropertyListener(pl: PropertyListener): boolean {
     for (const propertyListeners of this.propertyListeners.values()) {
       for (const propertyListener of propertyListeners) {
         if (propertyListener === pl) {
@@ -211,7 +207,7 @@ export default class GlobalStateManager<
     return this._queue;
   }
 
-  get propertyListeners(): Map<keyof GS, Set<PropertyListener>> {
+  public get propertyListeners(): Map<keyof GS, Set<PropertyListener>> {
     return this._propertyListeners;
   }
 

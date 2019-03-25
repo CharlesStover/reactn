@@ -4,13 +4,12 @@ import {
   createElement,
   FunctionComponent,
 } from 'react';
-import { ReactNComponentClass, ReactNPureComponent } from '../components';
+import { ReactNPureComponent, ReactNPureComponentClass } from '../components';
 import ReactNContext from '../context';
 import defaultGlobalStateManager from '../default-global-state-manager';
 import GlobalStateManager, { NewGlobalState } from '../global-state-manager';
 import { ReactNGlobal, ReactNSetGlobal } from '../methods';
 import Callback from '../typings/callback';
-import { Http2ServerRequest } from 'http2';
 
 // TODO -- https://github.com/CharlesStover/reactn/issues/14
 const isComponentDidMount = false;
@@ -35,7 +34,8 @@ hoc(MyComponent);
 export type Getter<GS, HP, LP> = (globalState: GS, props: HP) =>
   null | Partial<LP> | void;
 
-type LowerOrderComponent<P = {}> = ComponentClass<P> | FunctionComponent<P> | string;
+type LowerOrderComponent<P = {}> =
+  ComponentClass<P> | FunctionComponent<P> | string;
 
 type SetGlobal<GS> = (
   newGlobalState: NewGlobalState<GS>,
@@ -45,7 +45,8 @@ type SetGlobal<GS> = (
 export type Setter<GS, HP, LP> = (setGlobal: SetGlobal<GS>, props: HP) =>
   null | Partial<LP> | void;
 
-export type WithGlobal<HP, LP> = (Component: LowerOrderComponent<LP>) => ComponentClass<HP>;
+export type WithGlobal<HP, LP> =
+  (Component: LowerOrderComponent<LP>) => ComponentClass<HP>;
 
 // Get the name of a Component.
 const componentName = (Component: LowerOrderComponent): string =>
@@ -65,7 +66,7 @@ export default function withGlobal<
 ): WithGlobal<HP, LP> {
   return function ReactNWithGlobal(
     Component: LowerOrderComponent<LP>,
-  ): ReactNComponentClass<HP, {}, GS> {
+  ): ReactNPureComponentClass<HP, {}, GS> {
 
     // If a Global State was provided, use it.
     // Otherwise, if a Provider was mounted, use its global state.

@@ -1,3 +1,3 @@
-describe.skip('Shared Methods', () => {
+describe.skip('Shared Methods', (): void => {
 
 });

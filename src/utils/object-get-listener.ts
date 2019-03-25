@@ -4,12 +4,12 @@ export default function objectGetListener<Shape>(
   obj: Shape,
   listener: Function,
 ): Shape {
-  return Object.keys(obj).reduce(
-    (accumulator: Partial<Shape>, key: string): Partial<Shape> => {
+  return (Object.keys(obj) as (keyof Shape)[]).reduce(
+    (accumulator: Partial<Shape>, key: keyof Shape): Partial<Shape> => {
       Object.defineProperty(accumulator, key, {
         configurable: false,
         enumerable: true,
-        get: () => {
+        get: (): Shape[keyof Shape] => {
           listener(key);
           return obj[key];
         }

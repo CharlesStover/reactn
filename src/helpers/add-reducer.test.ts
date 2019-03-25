@@ -1,5 +1,4 @@
 import { expect } from 'chai';
-import sinon from 'sinon';
 import GlobalStateManager from '../global-state-manager';
 import spyOn from '../utils/test/spy-on-global-state-manager';
 import addReducer from './add-reducer';
@@ -12,50 +11,50 @@ const REDUCER_NAME = 'reducerName';
 
 
 
-describe('addReducer', () => {
+describe('addReducer', (): void => {
 
 
 
   let globalStateManager: GlobalStateManager<{}, {}>;
   const spy = spyOn('addDispatcher', 'removeDispatcher');
 
-  beforeEach(() => {
+  beforeEach((): void => {
     globalStateManager = new GlobalStateManager<{}, {}>();
   });
 
 
 
-  it('should be a function', () => {
+  it('should be a function', (): void => {
     expect(addReducer).to.be.a('function');
   });
 
-  it('should accept 3 parameters', () => {
+  it('should accept 3 parameters', (): void => {
     expect(addReducer.length).to.equal(3);
   });
 
-  it('should call GlobalStateManager.addDispatcher', () => {
+  it('should call GlobalStateManager.addDispatcher', (): void => {
     addReducer(globalStateManager, REDUCER_NAME, REDUCER);
     expect(spy.addDispatcher.calledOnceWithExactly(REDUCER_NAME, REDUCER)).to.equal(true);
   });
 
 
 
-  describe('returned remove reducer function', () => {
+  describe('returned remove reducer function', (): void => {
 
     let removeReducer: () => boolean;
-    beforeEach(() => {
+    beforeEach((): void => {
       removeReducer = addReducer(globalStateManager, REDUCER_NAME, REDUCER);
     });
 
-    it('should be a function', () => {
+    it('should be a function', (): void => {
       expect(removeReducer).to.be.a('function');
     });
 
-    it('should not accept parameters', () => {
+    it('should not accept parameters', (): void => {
       expect(removeReducer.length).to.equal(0);
     });
 
-    it('should call GlobalStateManager.removeDispatcher', () => {
+    it('should call GlobalStateManager.removeDispatcher', (): void => {
       removeReducer();
       expect(spy.removeDispatcher.calledOnceWithExactly(REDUCER_NAME)).to.equal(true);
     });

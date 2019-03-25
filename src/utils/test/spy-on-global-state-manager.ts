@@ -11,13 +11,13 @@ export default function spyOn(
 
   const spies: Spies = {};
 
-  beforeEach(() => {
+  beforeEach((): void => {
     for (const method of methods) {
       spies[method] = sinon.spy(GlobalStateManager.prototype, method);
     }
   });
 
-  afterEach(() => {
+  afterEach((): void => {
     for (const method of methods) {
       spies[method].restore();
     }
