@@ -1,5 +1,11 @@
 import { NewGlobalState } from '../global-state-manager';
 
+// Additional Reducers cannot maintain their argument types, as they don't
+//   exist until runtime.
+export interface AdditionalDispatchers<GS> {
+  [name: string]: Dispatcher<Reducer<GS, any>>;
+}
+
 /*
 export interface Dispatcher<
   GS extends {},

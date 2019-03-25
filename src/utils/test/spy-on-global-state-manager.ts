@@ -1,5 +1,5 @@
 import * as sinon from 'sinon';
-import GlobalStateManager from '../global-state-manager';
+import GlobalStateManager from '../../global-state-manager';
 
 export interface Spies {
   [key: string]: sinon.SinonSpy;

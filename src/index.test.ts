@@ -61,7 +61,7 @@ describe('package.json main', () => {
   // createProvider
   it('should contain createProvider', () => {
     expect(ReactN.createProvider).to.be.a('function');
-    expect(ReactN.createProvider.length).to.equal(1);
+    expect(ReactN.createProvider.length).to.equal(2);
   });
 
   // SPY ON defaultGlobalState

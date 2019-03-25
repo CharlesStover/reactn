@@ -1,118 +1,111 @@
 import { expect } from 'chai';
 import * as React from 'react';
-import spyOn from '../utils/spy-on-global-state-manager';
+import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/test/initial';
 import createProvider, { ReactNProvider } from './create-provider';
+import testAddCallback from './create-provider.test.add-callback';
+import testAddReducer from './create-provider.test.add-reducer';
+import testDispatch from './create-provider.test.dispatch';
+import testGetDispatch from './create-provider.test.get-dispatch';
+import testGetGlobal from './create-provider.test.get-global';
+import testGlobal from './create-provider.test.global';
 
-type RemoveAddedCallback = () => boolean;
-type RemoveAddedReducer = () => boolean;
-type VoidFunction = () => void;
 
-interface GlobalState {
-  x: boolean;
-  y: number;
-  z: string;
-}
-
-const INITIAL_X: GlobalState['x'] = true;
-const INITIAL_Y: GlobalState['y'] = 1;
-const INITIAL_Z: GlobalState['z'] = 'string';
-
-const UPDATED_X: GlobalState['x'] = false;
-const UPDATED_Y: GlobalState['y'] = 2;
-const UPDATED_Z: GlobalState['z'] = 'any';
-
-const initialState = {
-  x: INITIAL_X,
-  y: INITIAL_Y,
-  z: INITIAL_Z,
-};
-
-const updatedState = {
-  x: UPDATED_X,
-  y: UPDATED_Y,
-  z: UPDATED_Z,
-};
 
 describe('createProvider', () => {
 
-  let Provider: ReactNProvider<GlobalState>;
-  beforeEach(() => {
-    Provider = createProvider(initialState);
+  it('should be a function', () => {
+    expect(createProvider).to.be.a('function');
   });
 
-  it('should create a React Component', () => {
-    expect(Object.getPrototypeOf(Provider))
-      .to.equal(React.Component);
+  it('should accept 2 parameters', () => {
+    expect(createProvider.length).to.equal(2);
   });
+
+  describe('return value', () => {
+
+    describe('with no parameters', () => {
+
+      let Provider: ReactNProvider<{}, {}>;
+      beforeEach(() => {
+        Provider = createProvider();
+      });
+
+      it('should be a React Component', () => {
+        expect(Object.getPrototypeOf(Provider))
+          .to.equal(React.Component);
+      });
+
+      it('should have an empty state', () => {
+        expect(Provider.global).to.deep.equal({});
+      });
+
+      it('should have empty dispatchers', () => {
+        expect(Provider.dispatch).to.deep.equal({});
+      });
+    });
+
+    describe('with 1 parameter', () => {
+
+      let Provider: ReactNProvider<GS>;
+      beforeEach(() => {
+        Provider = createProvider(INITIAL_STATE);
+      });
+
+      it('should be a React Component', () => {
+        expect(Object.getPrototypeOf(Provider))
+          .to.equal(React.Component);
+      });
+
+      it('should have a state', () => {
+        expect(Provider.global).to.deep.equal(INITIAL_STATE);
+      });
+
+      it('should have empty dispatchers', () => {
+        expect(Provider.dispatch).to.deep.equal({});
+      });
+    });
+
+    describe('with 2 parameters', () => {
+
+      let Provider: ReactNProvider<GS, R>;
+      beforeEach(() => {
+        Provider = createProvider(INITIAL_STATE, INITIAL_REDUCERS);
+      });
+
+      it('should be a React Component', () => {
+        expect(Object.getPrototypeOf(Provider))
+          .to.equal(React.Component);
+      });
+
+      it('should have a state', () => {
+        expect(Provider.global).to.deep.equal(INITIAL_STATE);
+      });
+
+      it('should have dispatchers', () => {
+        const initialKeys = Object.keys(INITIAL_REDUCERS).sort();
+        const setKeys = Object.keys(Provider.dispatch).sort();
+        expect(initialKeys).to.deep.equal(setKeys);
+      });
+    });
+
+  });
+
 });
 
 
 
 describe('ReactN Provider', () => {
 
-  let Provider: ReactNProvider<GlobalState>;
-  beforeEach(() => {
-    Provider = createProvider(initialState);
-  });
+  describe('addCallback', testAddCallback);
+  describe('addReducer', testAddReducer);
+  describe('dispatch', testDispatch);
+  describe('getDispatch', testGetDispatch);
+  describe('getGlobal', testGetGlobal);
+  describe('global', testGlobal);
 
 
 
-  describe('addCallback', () => {
-
-    const spy = spyOn('addCallback');
-
-    it('should exist', () => {
-      expect(Provider.addCallback).to.be.a('function');
-      expect(Provider.addCallback.length).to.equal(1);
-    });
-
-    it('should call GlobalStateManager addCallback', () => {
-      const callback = (): void => {};
-      Provider.addCallback(callback);
-      expect(spy.addCallback.calledOnceWithExactly(callback)).to.equal(true);
-    });
-
-    it('should return a remove callback function', () => {
-      const callback = (): void => {};
-      const removeCallback: RemoveAddedCallback =
-        Provider.addCallback(callback);
-      expect(removeCallback).to.be.a('function');
-      expect(removeCallback.length).to.equal(0);
-      expect(removeCallback()).to.equal(true);
-    });
-  });
-
-
-
-  describe('addReducer', () => {
-
-    const spy = spyOn('addReducer');
-
-    it('should exist', () => {
-      expect(Provider.addReducer).to.be.a('function');
-      expect(Provider.addReducer.length).to.equal(2);
-    });
-
-    it('should call GlobalStateManager addReducer', () => {
-      const name = 'REDUCER_NAME';
-      const reducer = (): void => {};
-      Provider.addReducer(name, reducer);
-      expect(spy.addReducer.calledOnceWithExactly(name, reducer)).to.equal(true);
-    });
-
-    it('should return a remove reducer function', () => {
-      const name = 'REDUCER_NAME';
-      const reducer = (): void => {};
-      const removeReducer: RemoveAddedReducer =
-        Provider.addReducer(name, reducer);
-      expect(removeReducer).to.be.a('function');
-      expect(removeReducer.length).to.equal(0);
-      expect(removeReducer()).to.equal(true);
-    });
-  });
-
-
-
+  /*
   describe('getGlobal/global', () => {
 
     it('should exist', () => {
@@ -224,7 +217,7 @@ describe('ReactN Provider', () => {
      * MOVE THIS TO GLOBAL STATE MANAGER TEST
      * REFACTOR CREATEPROVIDER TO BEHAVE
      * THE WAY SETGLOBAL DOES
-     */
+     *
     describe('GlobalStateManager', () => {
 
       it('should call set', () => {
@@ -288,5 +281,6 @@ describe('ReactN Provider', () => {
 
     it.skip('should do more');
   });
+  */
 
 });

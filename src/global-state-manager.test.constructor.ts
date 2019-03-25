@@ -33,12 +33,6 @@ export default (): void => {
     expect(globalStateManager.state).to.deep.equal({});
   });
 
-  it('should initialize with an empty reducers object', () => {
-    const globalStateManager: GlobalStateManager<{}> =
-      new GlobalStateManager<{}, {}>();
-    expect(globalStateManager.reducers).to.deep.equal({});
-  });
-
   it('should initialize with an empty dispatchers object', () => {
     const globalStateManager: GlobalStateManager<{}> =
       new GlobalStateManager<{}, {}>();
@@ -49,15 +43,6 @@ export default (): void => {
     const globalStateManager: GlobalStateManager<GS> =
       new GlobalStateManager<GS>(INITIAL_STATE);
     expect(globalStateManager.state).to.deep.equal(INITIAL_STATE);
-  });
-
-  it('should support initial reducers', () => {
-    const globalStateManager: GlobalStateManager<GS> =
-      new GlobalStateManager<GS, typeof INITIAL_REDUCERS>(
-        INITIAL_STATE,
-        INITIAL_REDUCERS
-      );
-    expect(globalStateManager.reducers).to.deep.equal(INITIAL_REDUCERS);
   });
 
   it('should support initial dispatchers', () => {
