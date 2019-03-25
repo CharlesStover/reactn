@@ -34,7 +34,8 @@ describe('addReducer', (): void => {
 
   it('should call GlobalStateManager.addDispatcher', (): void => {
     addReducer(globalStateManager, REDUCER_NAME, REDUCER);
-    expect(spy.addDispatcher.calledOnceWithExactly(REDUCER_NAME, REDUCER)).to.equal(true);
+    expect(spy.addDispatcher.calledOnceWithExactly(REDUCER_NAME, REDUCER))
+      .to.equal(true);
   });
 
 
@@ -56,7 +57,8 @@ describe('addReducer', (): void => {
 
     it('should call GlobalStateManager.removeDispatcher', (): void => {
       removeReducer();
-      expect(spy.removeDispatcher.calledOnceWithExactly(REDUCER_NAME)).to.equal(true);
+      expect(spy.removeDispatcher.calledOnceWithExactly(REDUCER_NAME))
+        .to.equal(true);
     });
   });
 
