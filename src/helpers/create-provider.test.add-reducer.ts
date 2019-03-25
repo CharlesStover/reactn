@@ -10,51 +10,51 @@ const REDUCER_NAME = 'REDUCER_NAME';
 
 
 
-export default () => {
+export default (): void => {
 
   const spy = spyOn('addDispatcher', 'removeDispatcher');
 
   let Provider: ReactNProvider<{}>;
-  beforeEach(() => {
+  beforeEach((): void => {
     Provider = createProvider();
   });
 
-  it('should be a function', () => {
+  it('should be a function', (): void => {
     expect(Provider.addReducer).to.be.a('function');
   });
 
-  it('should accept 2 parameters', () => {
+  it('should accept 2 parameters', (): void => {
     expect(Provider.addReducer.length).to.equal(2);
   });
 
-  it('should call GlobalStateManager.addReducer', () => {
+  it('should call GlobalStateManager.addReducer', (): void => {
     Provider.addReducer(REDUCER_NAME, REDUCER);
     expect(spy.addDispatcher.calledOnceWithExactly(REDUCER_NAME, REDUCER))
       .to.equal(true);
   });
 
-  describe('return value', () => {
+  describe('return value', (): void => {
 
     let removeReducer: () => boolean;
-    beforeEach(() => {
+    beforeEach((): void => {
       removeReducer = Provider.addReducer(REDUCER_NAME, REDUCER);
     });
 
-    it('should be a function', () => {
+    it('should be a function', (): void => {
       expect(removeReducer).to.be.a('function');
     });
 
-    it('should accept no parameters', () => {
+    it('should accept no parameters', (): void => {
       expect(removeReducer.length).to.equal(0);
     });
 
-    it('should call GlobalStateManager.removeReducer', () => {
+    it('should call GlobalStateManager.removeReducer', (): void => {
       removeReducer();
       expect(spy.removeDispatcher.calledOnceWithExactly(REDUCER_NAME))
         .to.equal(true);
     });
 
-    it('should return true', () => {
+    it('should return true', (): void => {
       expect(removeReducer()).to.equal(true);
     });
   });

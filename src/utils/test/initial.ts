@@ -4,15 +4,13 @@ export interface GS {
   z: string;
 }
 
-export type R = typeof INITIAL_REDUCERS;
-
-
-
 export const INITIAL_STATE: GS = {
   x: false,
   y: 0,
   z: 'string',
 };
+
+
 
 export const INITIAL_REDUCERS = {
 
@@ -30,3 +28,5 @@ export const INITIAL_REDUCERS = {
     x: !gs.x,
   }),
 };
+
+export type R = typeof INITIAL_REDUCERS;

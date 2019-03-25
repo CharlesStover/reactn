@@ -12,7 +12,8 @@ import { Dispatchers } from './typings/reducer';
 
 
 
-interface IReactNComponent<
+/*
+interface ReactNComponent<
   P extends {} = {},
   S extends {} = {},
   GS extends {} = {},
@@ -22,13 +23,7 @@ interface IReactNComponent<
   setGlobal(newGlobalState: NewGlobalState<GS>, callback?: Callback<GS>):
     Promise<Readonly<GS>>;
 }
-
-interface IReactNPureComponent<
-  P extends {} = {},
-  S extends {} = {},
-  GS extends {} = {},
-  SS = any,
-> extends IReactNComponent<P, S, GS, SS> { }
+*/
 
 export interface ReactNComponentClass<
   P extends {} = {},
@@ -36,7 +31,16 @@ export interface ReactNComponentClass<
   GS extends {} = {},
   SS = any,
 > extends ComponentClass<P, S> {
-  new (props: P, context?: any): IReactNComponent<P, S, GS, SS>;
+  new (props: P, context?: any): ReactNComponent<P, S, GS, SS>;
+}
+
+export interface ReactNPureComponentClass<
+  P extends {} = {},
+  S extends {} = {},
+  GS extends {} = {},
+  SS = any,
+> extends ComponentClass<P, S> {
+  new (props: P, context?: any): ReactNPureComponent<P, S, GS, SS>;
 }
 
 type VoidFunction = () => void;
@@ -50,11 +54,11 @@ const isSetGlobalCallback = false;
 
 // this.componentWillUnmount on instance
 const componentWillMountInstance = (
-  that: IReactNComponent | IReactNPureComponent,
+  that: ReactNComponent | ReactNPureComponent,
   propertyListener: PropertyListener,
 ): boolean => {
   if (Object.prototype.hasOwnProperty.call(that, 'componentWillUnmount')) {
-    const instanceCwu: VoidFunction = that.componentWillUnmount!;
+    const instanceCwu: VoidFunction = that.componentWillUnmount;
     that.componentWillUnmount = (): void => {
       ReactNComponentWillUnmount(propertyListener);
       instanceCwu();
@@ -66,15 +70,15 @@ const componentWillMountInstance = (
 
 // this.componentWillUnmount on prototype
 const componentWillMountPrototype = (
-  that: IReactNComponent | IReactNPureComponent,
+  that: ReactNComponent | ReactNPureComponent,
   propertyListener: PropertyListener,
 ): boolean => {
-  const proto: IReactNComponent | IReactNPureComponent =
+  const proto: ReactNComponent | ReactNPureComponent =
     Object.getPrototypeOf(that);
   if (Object.prototype.hasOwnProperty.call(proto, 'componentWillUnmount')) {
     that.componentWillUnmount = (): void => {
       ReactNComponentWillUnmount(propertyListener);
-      proto.componentWillUnmount!.bind(that)();
+      proto.componentWillUnmount.bind(that)();
     };
     return true;
   }
@@ -105,7 +109,7 @@ export class ReactNComponent<
        *   find it again after the sub class finishes its constructor.
        * Disabled because it makes me uncomfortable and doesn't pass
        *   synchronous unit tests anyway.
-      setTimeout(() => {
+      setTimeout((): void => {
         componentWillMountInstance(this);
       }, 0);
       */
@@ -161,7 +165,7 @@ export class ReactNPureComponent<
        *   find it again after the sub class finishes its constructor.
        * Disabled because it makes me uncomfortable and doesn't pass
        *   synchronous unit tests anyway.
-      setTimeout(() => {
+      setTimeout((): void => {
         componentWillMountInstance(this);
       }, 0);
       */

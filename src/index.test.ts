@@ -1,6 +1,8 @@
 import { expect } from 'chai';
 import React from 'react';
 import ReactN from './index';
+
+// @ts-ignore: Require statement not part of import statement.
 const reactn = require('./index');
 
 
@@ -12,13 +14,13 @@ const overrides: Set<string> = new Set([
 
 
 
-describe('package.json main', () => {
+describe('package.json main', (): void => {
 
-  it('should support import or require', () => {
+  it('should support import or require', (): void => {
     expect(reactn).to.equal(ReactN);
   });
 
-  it('should extend React', () => {
+  it('should extend React', (): void => {
 
     // Overrides should not match React.
     const entries: [ string, any ][] =
@@ -31,14 +33,14 @@ describe('package.json main', () => {
     }
   });
 
-  it('should override some React values', () => {
+  it('should override some React values', (): void => {
     for (const override of overrides) {
       expect(ReactN[override]).not.to.equal(React[override]);
     }
   });
 
   // addCallback
-  it('should contain addCallback', () => {
+  it('should contain addCallback', (): void => {
     expect(ReactN.addCallback).to.be.a('function');
     expect(ReactN.addCallback.length).to.equal(1);
   });
@@ -46,7 +48,7 @@ describe('package.json main', () => {
   // SPY ON defaultGlobalState
 
   // addReducer
-  it('should contain addReducer', () => {
+  it('should contain addReducer', (): void => {
     expect(ReactN.addReducer).to.be.a('function');
     expect(ReactN.addReducer.length).to.equal(2);
   });
@@ -54,12 +56,12 @@ describe('package.json main', () => {
   // SPY ON defaultGlobalState
 
   // Component
-  it('should contain the ReactN Component class', () => {
+  it('should contain the ReactN Component class', (): void => {
     expect(ReactN.Component).to.be.a('function');
   });
 
   // createProvider
-  it('should contain createProvider', () => {
+  it('should contain createProvider', (): void => {
     expect(ReactN.createProvider).to.be.a('function');
     expect(ReactN.createProvider.length).to.equal(2);
   });
@@ -67,49 +69,49 @@ describe('package.json main', () => {
   // SPY ON defaultGlobalState
 
   // default
-  it('should contain the @reactn decorator', () => {
+  it('should contain the @reactn decorator', (): void => {
     expect(ReactN).to.be.a('function');
     expect(ReactN.default).to.be.a('function');
     expect(ReactN).to.equal(ReactN.default);
   });
 
   // getGlobal
-  it('should contain getGlobal', () => {
+  it('should contain getGlobal', (): void => {
     expect(ReactN.getGlobal).to.be.a('function');
     expect(ReactN.getGlobal.length).to.equal(0);
   });
 
   // PureComponent
-  it('should contain the ReactN PureComponent class', () => {
+  it('should contain the ReactN PureComponent class', (): void => {
     expect(ReactN.PureComponent).to.be.a('function');
   });
 
   // removeCallback
-  it('should contain removeCallback', () => {
+  it('should contain removeCallback', (): void => {
     expect(ReactN.removeCallback).to.be.a('function');
     expect(ReactN.removeCallback.length).to.equal(1);
   });
 
   // resetGlobal
-  it('should contain resetGlobal', () => {
+  it('should contain resetGlobal', (): void => {
     expect(ReactN.resetGlobal).to.be.a('function');
     expect(ReactN.resetGlobal.length).to.equal(0);
   });
 
   // setGlobal
-  it('should contain setGlobal', () => {
+  it('should contain setGlobal', (): void => {
     expect(ReactN.setGlobal).to.be.a('function');
     expect(ReactN.setGlobal.length).to.equal(2);
   });
 
   // useGlobal
-  it('should contain useGlobal', () => {
+  it('should contain useGlobal', (): void => {
     expect(ReactN.useGlobal).to.be.a('function');
     expect(ReactN.useGlobal.length).to.equal(2);
   });
 
   // withGlobal
-  it('should contain withGlobal', () => {
+  it('should contain withGlobal', (): void => {
     expect(ReactN.withGlobal).to.be.a('function');
     expect(ReactN.withGlobal.length).to.equal(2);
   });
