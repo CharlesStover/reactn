@@ -10,5 +10,5 @@ export default function addReducer<
   name: string,
   reducer: Reducer<GS>,
 ): RemoveAddedReducer {
-  return globalStateManager.addReducer(name, reducer);
+  return globalStateManager.addDispatcher(name, reducer);
 };
