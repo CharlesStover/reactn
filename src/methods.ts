@@ -6,6 +6,7 @@ import GlobalStateManager, {
   PropertyListener,
 } from './global-state-manager';
 import Callback from './typings/callback';
+import { Dispatchers } from './typings/reducer';
 
 const getGlobalStateManager = <GS extends {} = {}>(
 ): GlobalStateManager<GS> =>
@@ -32,8 +33,8 @@ export function createReactNGetDerivedStateFromProps<P>(
 ) {
   return function ReactNGetDerivedStateFromProps(props: P, ...args) {
     const globalState = getGlobalStateManager();
-    const newGlobal = Component.getDerivedGlobalFromProps(props, globalState.state, ...args);
-    globalState.setAny(newGlobal);
+    const newGlobalState = Component.getDerivedGlobalFromProps(props, globalState.state, ...args);
+    globalState.setAny(newGlobalState);
 
     // getDerivedStateFromProps
     if (Object.prototype.hasOwnProperty.call(Component, 'getDerivedStateFromProps')) {
@@ -53,6 +54,16 @@ export function ReactNComponentWillUnmount(
 
   // No longer re-render this component on global state change.
   getGlobalStateManager().removePropertyListener(propertyListener);
+}
+
+
+
+// this.dispatch
+export function ReactNDispatch<
+  GS extends {} = {},
+  R extends {} = {},
+>(): Dispatchers<GS, R> {
+  return (getGlobalStateManager() as GlobalStateManager<GS, R>).dispatchers;
 }
 
 
@@ -83,16 +94,16 @@ export function ReactNGlobal<GS>(
 
 // this.setGlobal
 export function ReactNSetGlobal<GS>(
-  newGlobal: NewGlobalState<GS>,
+  newGlobalState: NewGlobalState<GS>,
   callback: Callback<GS> | null,
   _sync: boolean,
   globalStateManager: GlobalStateManager<GS> = getGlobalStateManager<GS>(),
 ): Promise<GS> {
   if (!callback) {
-    return globalStateManager.set(newGlobal);
+    return globalStateManager.set(newGlobalState);
   }
   let globalState: GS;
-  return globalStateManager.set(newGlobal)
+  return globalStateManager.set(newGlobalState)
     .then(gs => {
       globalState = gs;
       return gs;

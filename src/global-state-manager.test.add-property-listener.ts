@@ -1,9 +1,13 @@
 import { expect } from 'chai';
 import GlobalStateManager, { PropertyListener } from './global-state-manager';
 
+
+
 interface GS {
   x: boolean;
 }
+
+
 
 const INITIAL_STATE: GS = {
   x: false,
@@ -12,6 +16,8 @@ const INITIAL_STATE: GS = {
 const PROPERTY: keyof GS = 'x';
 
 const PROPERTY_LISTENER: PropertyListener = () => {};
+
+
 
 export default (): void => {
 
@@ -26,6 +32,11 @@ export default (): void => {
 
   it('should accept 2 parameters', () => {
     expect(globalStateManager.addPropertyListener.length).to.equal(2);
+  });
+
+  it('should not return anything', () => {
+    expect(globalStateManager.addPropertyListener(PROPERTY, PROPERTY_LISTENER))
+      .to.be.undefined;
   });
 
 

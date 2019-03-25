@@ -4,14 +4,14 @@ type VoidFunction<GS> = (globalState: GS) => void;
 
 export default function setGlobal<GS>(
   globalStateManager: GlobalStateManager<GS>,
-  newGlobal: NewGlobalState<GS>,
+  newGlobalState: NewGlobalState<GS>,
   callback: VoidFunction<GS> = null
 ): Promise<GS> {
   if (callback === null) {
-    return globalStateManager.set(newGlobal);
+    return globalStateManager.set(newGlobalState);
   }
   let globalState: GS;
-  return globalStateManager.set(newGlobal)
+  return globalStateManager.set(newGlobalState)
     .then(gs => {
       globalState = gs;
       return gs;

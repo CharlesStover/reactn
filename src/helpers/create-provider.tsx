@@ -29,7 +29,7 @@ export interface ReactNProvider<GS> {
   reset(): void;
   resetGlobal(): void;
   setGlobal(
-    newGlobal: NewGlobalState<GS>,
+    newGlobalState: NewGlobalState<GS>,
     callback?: Callback<GS>,
   ): Promise<GS>;
   useGlobal(): GlobalTuple<GS>;
@@ -95,10 +95,10 @@ export default function createProvider<GS = {}>(
     }
 
     public static setGlobal(
-      newGlobal: NewGlobalState<GS>,
+      newGlobalState: NewGlobalState<GS>,
       callback: Callback<GS> | null = null,
     ): Promise<GS> {
-      return setGlobal<GS>(globalStateManager, newGlobal, callback);
+      return setGlobal<GS>(globalStateManager, newGlobalState, callback);
     }
 
     public static useGlobal(): GlobalTuple<GS>;

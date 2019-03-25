@@ -78,12 +78,12 @@ const helperFunctions = {
     defaultGlobalStateManager.reset(),
 
   setGlobal: <GS extends {} = {}>(
-    newGlobal: NewGlobalState<GS>,
+    newGlobalState: NewGlobalState<GS>,
     callback: Callback<GS> | null = null,
   ): Promise<GS> =>
     setGlobal<GS>(
       defaultGlobalStateManager as GlobalStateManager<GS>,
-      newGlobal,
+      newGlobalState,
       callback
     ),
 
