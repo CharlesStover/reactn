@@ -4,7 +4,6 @@ import Reducer, {
   Dispatchers,
 } from './typings/reducer';
 import objectGetListener from './utils/object-get-listener';
-import Transaction from './utils/transaction';
 
 
 
@@ -62,12 +61,6 @@ const INVALID_NEW_GLOBAL_STATE: Error = new Error(
   'ReactN global state must be a function, null, object, or Promise.',
 );
 
-const MAX_SAFE_INTEGER = 9007199254740990;
-
-const MISSING_TRANSACTION = new Error(
-  'ReactN transaction missing during transaction process.',
-);
-
 
 
 export default class GlobalStateManager<
@@ -80,6 +73,8 @@ export default class GlobalStateManager<
   private _initialState: GS;
   private _propertyListeners: Map<keyof GS, Set<PropertyListener>> =
     new Map<keyof GS, Set<PropertyListener>>();
+  private _queue: Map<keyof GS, GS[keyof GS]> =
+    new Map<keyof GS, GS[keyof GS]>();
 
   // @ts-ignore: Property '_reducers' has no initializer and is not
   //   definitely assigned in the constructor.
@@ -88,12 +83,6 @@ export default class GlobalStateManager<
   // @ts-ignore: Property '_state' has no initializer and is not definitely
   //   assigned in the constructor.
   private _state: GS;
-
-  // @ts-ignore: Property '_transactionId' has no initializer and is not
-  //   definitely assigned in the constructor.
-  private _transactionId: number;
-  private _transactions: Map<number, Transaction<GS>> =
-    new Map<number, Transaction<GS>>();
 
 
 
@@ -142,44 +131,42 @@ export default class GlobalStateManager<
       this.removeReducer(name);
   }
 
-  // Begin a transaction.
-  public beginTransaction(): number {
-    this._transactionId = (this._transactionId + 1) % MAX_SAFE_INTEGER;
-    this._transactions.set(this._transactionId, new Transaction());
-    return this._transactionId;
+  public clearQueue(): void {
+    return this.queue.clear();
   }
 
-  // Commit a transaction.
-  public commit(transactionId: number): void {
+  public enqueue<Property extends keyof GS>(
+    property: Property,
+    value: GS[Property],
+  ): void {
+    this._queue.set(property, value);
+  }
 
-    if (!this.hasTransaction(transactionId)) {
-      throw MISSING_TRANSACTION;
-    }
-
-    const transaction: Transaction<GS> = this._transactions.get(transactionId);
-
-    // Delete state properties.
-    for (const property of transaction.voidProperties) {
-      delete this._state[property];
-    }
+  // Flush the queue.
+  public flush(): void {
+    const propertyListeners = new Set();
 
     // Commit all state changes.
-    for (const [ property, value ] of transaction.properties.entries()) {
+    for (const [ property, value ] of this.queue.entries()) {
       this._state[property] = value;
+
+      // Accumulate listeners for this property change.
+      if (this.propertyListeners.has(property)) {
+        for (const propertyListener of this.propertyListeners.get(property)) {
+          propertyListeners.add(propertyListener);
+        }
+      }
     }
 
-    // Force update all components that were a part of this transaction.
-    for (const propertyListener of transaction.propertyListeners) {
+    this.clearQueue();
+
+    // Force update all components that were a part of the queue.
+    for (const propertyListener of propertyListeners) {
       propertyListener();
     }
 
-    // Clean up this transaction.
-    this._transactions.delete(transactionId);
-
     // Call each global callback.
     for (const callback of this._callbacks) {
-
-      // Delay these until after the current transaction has deleted?
       this.set(callback(this.state));
     }
   }
@@ -230,8 +217,8 @@ export default class GlobalStateManager<
     return Object.prototype.hasOwnProperty.call(this._reducers, name);
   }
 
-  public hasTransaction(id: number): boolean {
-    return this._transactions.has(id);
+  public get queue(): Map<keyof GS, GS[keyof GS]> {
+    return this._queue;
   }
 
   get propertyListeners(): Map<keyof GS, Set<PropertyListener>> {
@@ -255,11 +242,6 @@ export default class GlobalStateManager<
       removed = removed || propertyListeners.delete(propertyListener);
     }
 
-    // Remove this property listener from currently-executing transactions.
-    for (const transaction of this._transactions.values()) {
-      transaction.deletePropertyListener(propertyListener);
-    }
-
     return removed;
   }
 
@@ -275,10 +257,9 @@ export default class GlobalStateManager<
   public reset(): void {
     this._callbacks.clear();
     this._propertyListeners.clear();
+    this._queue.clear();
     this._reducers = copyObject(this._initialReducers);
     this._state = copyObject(this._initialState);
-    this._transactionId = 0;
-    this._transactions.clear();
   }
 
   // Set any type of state change.
@@ -313,13 +294,12 @@ export default class GlobalStateManager<
 
   // Set the state's property-value pairs via an object.
   public setObject<O extends Partial<GS> = Partial<GS>>(obj: O): Promise<GS> {
-    const transactionId = this.beginTransaction();
     const properties: (keyof GS)[] = Object.keys(obj) as (keyof GS)[];
     for (const property of properties) {
       const value: GS[keyof GS] = obj[property] as GS[keyof GS];
-      this.setProperty(property, value, transactionId);
+      this.enqueue(property, value);
     }
-    this.commit(transactionId);
+    this.flush();
     return Promise.resolve(this.state);
   }
 
@@ -331,35 +311,6 @@ export default class GlobalStateManager<
       .then((result: NewGlobalState<GS>) => {
         return this.set(result);
       });
-  }
-
-  // Set a property-value pair as a part of a transaction.
-  public setProperty<Property extends keyof GS>(
-    property: Property,
-    value: GS[Property],
-    transactionId: number,
-  ): number {
-
-    if (!this.hasTransaction(transactionId)) {
-      throw MISSING_TRANSACTION;
-    }
-
-    const transaction: Transaction<GS> = this._transactions.get(transactionId);
-
-    if (typeof value === 'undefined') {
-      transaction.deleteProperty(property);
-    }
-    else {
-      transaction.setProperty(property, value);
-    }
-
-    if (this.propertyListeners.has(property)) {
-      for (const propertyListener of this.propertyListeners.get(property)) {
-        transaction.addPropertyListener(propertyListener);
-      }
-    }
-
-    return transactionId;
   }
 
   public spyState(propertyListener: PropertyListener): GS {
