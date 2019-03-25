@@ -15,8 +15,4 @@ describe('Default GlobalStateManager', () => {
   it('should not have dispatchers', () => {
     expect(defaultGlobalStateManager.dispatchers).to.deep.equal({});
   });
-
-  it('should not have reducers', () => {
-    expect(defaultGlobalStateManager.reducers).to.deep.equal({});
-  });
 });

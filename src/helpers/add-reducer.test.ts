@@ -1,20 +1,27 @@
 import { expect } from 'chai';
 import sinon from 'sinon';
 import GlobalStateManager from '../global-state-manager';
+import spyOn from '../utils/test/spy-on-global-state-manager';
 import addReducer from './add-reducer';
 
+
+
 const REDUCER = (_globalState, _one, _two, _three): void => { };
+
 const REDUCER_NAME = 'reducerName';
 
-const shouldCall = (method: string): string =>
-  `should call GlobalStateManager.${method} with correct parameters`;
+
 
 describe('addReducer', () => {
 
 
 
   let globalStateManager: GlobalStateManager<{}, {}>;
-  let spy: sinon.SinonSpy;
+  const spy = spyOn('addDispatcher', 'removeDispatcher');
+
+  beforeEach(() => {
+    globalStateManager = new GlobalStateManager<{}, {}>();
+  });
 
 
 
@@ -26,23 +33,9 @@ describe('addReducer', () => {
     expect(addReducer.length).to.equal(3);
   });
 
-
-
-  beforeEach(() => {
-    globalStateManager = new GlobalStateManager<{}, {}>();
-  });
-
-
-
-  before(() => {
-    spy = sinon.spy(GlobalStateManager.prototype, 'addReducer');
-  });
-  after(() => {
-    spy.restore();
-  });
-  it(shouldCall('addReducer'), () => {
+  it('should call GlobalStateManager.addDispatcher', () => {
     addReducer(globalStateManager, REDUCER_NAME, REDUCER);
-    expect(spy.calledOnceWithExactly(REDUCER_NAME, REDUCER)).to.equal(true);
+    expect(spy.addDispatcher.calledOnceWithExactly(REDUCER_NAME, REDUCER)).to.equal(true);
   });
 
 
@@ -62,16 +55,9 @@ describe('addReducer', () => {
       expect(removeReducer.length).to.equal(0);
     });
 
-    let spy: sinon.SinonSpy;
-    before(() => {
-      spy = sinon.spy(GlobalStateManager.prototype, 'removeReducer');
-    });
-    after(() => {
-      spy.restore();
-    });
-    it(shouldCall('removeReducer'), () => {
+    it('should call GlobalStateManager.removeDispatcher', () => {
       removeReducer();
-      expect(spy.calledOnceWithExactly(REDUCER_NAME)).to.equal(true);
+      expect(spy.removeDispatcher.calledOnceWithExactly(REDUCER_NAME)).to.equal(true);
     });
   });
 

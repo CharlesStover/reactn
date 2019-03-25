@@ -1,5 +1,6 @@
 import Callback from './typings/callback';
 import Reducer, {
+  AdditionalDispatchers,
   Dispatcher,
   Dispatchers,
 } from './typings/reducer';
@@ -7,11 +8,6 @@ import objectGetListener from './utils/object-get-listener';
 
 
 
-// Additional Reducers cannot maintain their argument types, as they don't
-//   exist until runtime.
-interface AdditionalDispatchers<GS> {
-  [name: string]: Dispatcher<Reducer<GS, any>>;
-}
 interface AdditionalReducers<GS> {
   [name: string]: Reducer<GS, any>;
 }
@@ -21,6 +17,8 @@ interface AdditionalReducers<GS> {
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 interface AsynchronousNewGlobalState<Shape>
   extends Promise<NewGlobalState<Shape>> { }
+
+type BooleanFunction = () => boolean;
 
 interface FunctionalNewGlobalState<Shape> {
   (globalState: Shape): NewGlobalState<Shape>;
@@ -42,10 +40,6 @@ export type NewGlobalState<Shape> =
 // type PartialState<Shape> = Shape extends {} ? Partial<Shape> : Shape;
 
 export type PropertyListener = () => void;
-
-type RemoveAddedCallback = () => boolean;
-
-type RemoveAddedReducer = () => boolean;
 
 type SynchronousNewGlobalState<Shape> = null | Partial<Shape> | void;
 
@@ -69,16 +63,16 @@ export default class GlobalStateManager<
 > {
 
   private _callbacks: Set<Callback<GS>> = new Set<Callback<GS>>();
+
+  // @ts-ignore: Property '_dispatchers' has no initializer and is not
+  //   definitely assigned in the constructor.
+  private _dispatchers: Dispatchers<GS, R> & AdditionalDispatchers<GS>;
   private _initialReducers: R;
   private _initialState: GS;
   private _propertyListeners: Map<keyof GS, Set<PropertyListener>> =
     new Map<keyof GS, Set<PropertyListener>>();
   private _queue: Map<keyof GS, GS[keyof GS]> =
     new Map<keyof GS, GS[keyof GS]>();
-
-  // @ts-ignore: Property '_reducers' has no initializer and is not
-  //   definitely assigned in the constructor.
-  private _reducers: R & AdditionalReducers<GS>;
 
   // @ts-ignore: Property '_state' has no initializer and is not definitely
   //   assigned in the constructor.
@@ -97,7 +91,7 @@ export default class GlobalStateManager<
 
 
 
-  public addCallback(callback: Callback<GS>): RemoveAddedCallback {
+  public addCallback(callback: Callback<GS>): BooleanFunction {
     this._callbacks.add(callback);
     return (): boolean =>
       this.removeCallback(callback);
@@ -122,13 +116,19 @@ export default class GlobalStateManager<
     }
   }
 
-  public addReducer<A extends any[] = any[]>(
+  public addDispatcher<A extends any[] = any[]>(
     name: string,
     reducer: Reducer<GS, A>,
-  ): RemoveAddedReducer {
-    this._reducers[name] = reducer;
+  ): BooleanFunction {
+    this._dispatchers[name] = this.createDispatcher(reducer);
     return (): boolean =>
-      this.removeReducer(name);
+      this.removeDispatcher(name);
+  }
+
+  public addDispatchers(reducers: AdditionalReducers<GS>): void {
+    for (const [ name, reducer ] of Object.entries(reducers)) {
+      this.addDispatcher(name, reducer);
+    }
   }
 
   public clearQueue(): void {
@@ -181,23 +181,17 @@ export default class GlobalStateManager<
   }
 
   public get dispatchers(): Dispatchers<GS, R> & AdditionalDispatchers<GS> {
-    return Object.entries(this.reducers).reduce(
-      (dispatchers, [ reducerName, reducer]) => {
-        dispatchers[reducerName] = this.createDispatcher(reducer);
-        return dispatchers;
-      },
-      Object.create(null),
-    );
-  }
-
-  public getReducer(name: string): null | Reducer<GS> {
-    return this._reducers[name] || null;
+    return copyObject(this._dispatchers);
   }
 
   // Determine whether the global state manager has a callback.
   // Used in unit testing to track callback addition and removal.
   public hasCallback(callback: Callback<GS>): boolean {
     return this._callbacks.has(callback);
+  }
+
+  public hasDispatcher(name: string): boolean {
+    return Object.prototype.hasOwnProperty.call(this._dispatchers, name);
   }
 
   // Determine whether the global state manager has a property listener.
@@ -213,20 +207,12 @@ export default class GlobalStateManager<
     return false;
   }
 
-  public hasReducer(name: string): boolean {
-    return Object.prototype.hasOwnProperty.call(this._reducers, name);
-  }
-
   public get queue(): Map<keyof GS, GS[keyof GS]> {
     return this._queue;
   }
 
   get propertyListeners(): Map<keyof GS, Set<PropertyListener>> {
     return this._propertyListeners;
-  }
-
-  public get reducers(): R & AdditionalReducers<GS> {
-    return copyObject(this._reducers);
   }
 
   public removeCallback(callback: Callback<GS>): boolean {
@@ -245,9 +231,9 @@ export default class GlobalStateManager<
     return removed;
   }
 
-  public removeReducer(reducer: string): boolean {
-    if (this.hasReducer(reducer)) {
-      delete this._reducers[reducer];
+  public removeDispatcher(dispatcherName: string): boolean {
+    if (this.hasDispatcher(dispatcherName)) {
+      delete this._dispatchers[dispatcherName];
       return true;
     }
     return false;
@@ -255,10 +241,15 @@ export default class GlobalStateManager<
 
   // Reset the global state.
   public reset(): void {
+
+    // Clear.
     this._callbacks.clear();
+    this._dispatchers = Object.create(null);
     this._propertyListeners.clear();
     this._queue.clear();
-    this._reducers = copyObject(this._initialReducers);
+
+    // Prepopulate.
+    this.addDispatchers(this._initialReducers);
     this._state = copyObject(this._initialState);
   }
 

@@ -2,7 +2,10 @@ import React from 'react';
 import Context from '../context';
 import GlobalStateManager, { NewGlobalState } from '../global-state-manager';
 import Callback from '../typings/callback';
-import Reducer from '../typings/reducer';
+import Reducer, {
+  AdditionalDispatchers,
+  Dispatchers,
+} from '../typings/reducer';
 import addReducer from './add-reducer';
 import setGlobal from './set-global';
 import useGlobal, {
@@ -17,12 +20,17 @@ import withGlobal, {
   WithGlobal,
 } from './with-global';
 
-export interface ReactNProvider<GS> {
+export interface ReactNProvider<
+  GS extends {} = {},
+  R extends {} = {},
+> {
   addCallback(callback: Callback<GS>): RemoveAddedCallback;
   addReducer<A extends any[] = any[]>(
     name: string,
     reducer: Reducer<GS, A>,
   ): RemoveAddedReducer;
+  dispatch: Dispatchers<GS, R> & AdditionalDispatchers<GS>,
+  getDispatch(): Dispatchers<GS, R> & AdditionalDispatchers<GS>,
   getGlobal(): GS;
   global: GS;
   removeCallback(callback: Callback<GS>): boolean;
@@ -52,13 +60,17 @@ type RemoveAddedCallback = () => boolean;
 
 type RemoveAddedReducer = () => boolean;
 
-export default function createProvider<GS = {}>(
-  initialState?: GS,
-): ReactNProvider<GS> {
+export default function createProvider<
+  GS extends {} = {},
+  R extends {} = {},
+>(
+  initialState: GS = Object.create(null),
+  initialReducers: R = Object.create(null),
+): ReactNProvider<GS, R> {
 
-  const globalStateManager = new GlobalStateManager(
-    initialState ||
-    Object.create(null),
+  const globalStateManager = new GlobalStateManager<GS, R>(
+    initialState,
+    initialReducers,
   );
 
   return class ReactNProvider extends React.Component<{}, {}> {
@@ -72,6 +84,16 @@ export default function createProvider<GS = {}>(
       reducer: Reducer<GS, A>,
     ): RemoveAddedReducer {
       return addReducer<GS>(globalStateManager, name, reducer);
+    }
+
+    public static get dispatch(
+    ): Dispatchers<GS, R> & AdditionalDispatchers<GS> {
+      return globalStateManager.dispatchers;
+    }
+
+    public static getDispatch(
+    ): Dispatchers<GS, R> & AdditionalDispatchers<GS> {
+      return globalStateManager.dispatchers;
     }
 
     public static getGlobal(): GS {

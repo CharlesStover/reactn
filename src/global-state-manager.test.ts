@@ -1,6 +1,6 @@
 import testAddCallback from './global-state-manager.test.add-callback';
+import testAddDispatcher from './global-state-manager.test.add-dispatcher';
 import testAddPropertyListener from './global-state-manager.test.add-property-listener';
-import testAddReducer from './global-state-manager.test.add-reducer';
 import testConstructor from './global-state-manager.test.constructor';
 import testCreateDispatcher from './global-state-manager.test.create-dispatcher';
 import testEnqueue from './global-state-manager.test.enqueue';
@@ -19,8 +19,8 @@ import testSpyState from './global-state-manager.test.spy-state';
 describe('GlobalStateManager', () => {
   describe('constructor', testConstructor);
   describe('addCallback', testAddCallback);
+  describe('addDispatcher', testAddDispatcher);
   describe('addPropertyListener', testAddPropertyListener);
-  describe('addReducer', testAddReducer);
   describe.skip('createDispatcher', testCreateDispatcher);
   describe.skip('enqueue', testEnqueue);
   describe.skip('flush', testFlush);
