@@ -1,27 +1,14 @@
 import { expect } from 'chai';
 import GlobalStateManager from './global-state-manager';
-
-
-
-interface GS {
-  x: boolean;
-  y: number;
-}
-
-
-
-const INITIAL_STATE: GS = {
-  x: false,
-  y: 0,
-};
+import { GS, INITIAL_STATE } from './utils/test/initial';
 
 
 
 export default (): void => {
 
-  let globalStateManager: GlobalStateManager<GS, {}>;
+  let globalStateManager: GlobalStateManager<GS>;
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS, {}>(INITIAL_STATE);
+    globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
   });
 
   it('should be a function with no arguments', (): void => {
@@ -29,6 +16,21 @@ export default (): void => {
     expect(globalStateManager.flush.length).to.equal(0);
   });
 
-  it.skip('should do more', (): void => {
+  it('should not return anything', (): void => {
+    expect(globalStateManager.flush()).to.be.undefined;
+  });
+
+  it('should clear the queue', (): void => {
+    globalStateManager.enqueue('x', true);
+    expect(globalStateManager.queue.size).to.equal(1);
+    globalStateManager.flush();
+    expect(globalStateManager.queue.size).to.equal(0);
+  });
+
+  it('should write the queue to the state', (): void => {
+    expect(globalStateManager.state.x).to.equal(false);
+    globalStateManager.enqueue('x', true);
+    globalStateManager.flush();
+    expect(globalStateManager.state.x).to.equal(true);
   });
 };
