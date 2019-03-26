@@ -21,6 +21,12 @@
     "package.json"
   ],
   "nyc": {
+    "exclude": [
+      ".mocharc.js",
+      "src/**/*.test.ts",
+      "src/**/*.test.*.ts",
+      "src/utils/test/*.ts"
+    ],
     "extension": [
       ".ts",
       ".tsx"
