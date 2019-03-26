@@ -78,9 +78,10 @@ export default (): void => {
         dispatch = globalStateManager.createDispatcher(REDUCER);
       });
 
-      it('should be a Promise', (): void => {
-        const NOOP = (): void => { };
-        expect(dispatch().catch(NOOP)).to.be.instanceOf(Promise);
+      it('should be a Promise', async (): Promise<void> => {
+        const value = dispatch();
+        expect(value).to.be.instanceOf(Promise);
+        await value;
       });
 
       it('should resolve to the new global state', async (): Promise<void> => {

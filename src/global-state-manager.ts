@@ -52,7 +52,7 @@ const copyObject = <Shape>(obj: Shape): Shape =>
     obj,
   );
 
-const INVALID_NEW_GLOBAL_STATE: Error = new Error(
+export const INVALID_NEW_GLOBAL_STATE: Error = new Error(
   'ReactN global state must be a function, null, object, or Promise.',
 );
 
