@@ -16,11 +16,8 @@ export default (): void => {
     Provider = createProvider();
   });
 
-  it('should be a function', (): void => {
+  it('should be a function with 1 argument', (): void => {
     expect(Provider.removeCallback).to.be.a('function');
-  });
-
-  it('should accept 1 parameter', (): void => {
     expect(Provider.removeCallback.length).to.equal(1);
   });
 

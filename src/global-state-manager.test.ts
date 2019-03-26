@@ -1,6 +1,7 @@
 import testAddCallback from './global-state-manager.test.add-callback';
 import testAddDispatcher from './global-state-manager.test.add-dispatcher';
 import testAddPropertyListener from './global-state-manager.test.add-property-listener';
+import testClearQueue from './global-state-manager.test.clear-queue';
 import testConstructor from './global-state-manager.test.constructor';
 import testCreateDispatcher from './global-state-manager.test.create-dispatcher';
 import testEnqueue from './global-state-manager.test.enqueue';
@@ -13,7 +14,6 @@ import testSet from './global-state-manager.test.set';
 import testSetFunction from './global-state-manager.test.set-function';
 import testSetObject from './global-state-manager.test.set-object';
 import testSetPromise from './global-state-manager.test.set-promise';
-import testSetProperty from './global-state-manager.test.set-property';
 import testSpyState from './global-state-manager.test.spy-state';
 
 describe('GlobalStateManager', (): void => {
@@ -21,6 +21,7 @@ describe('GlobalStateManager', (): void => {
   describe('addCallback', testAddCallback);
   describe('addDispatcher', testAddDispatcher);
   describe('addPropertyListener', testAddPropertyListener);
+  describe('clearQueue', testClearQueue);
   describe('createDispatcher', testCreateDispatcher);
   describe('enqueue', testEnqueue);
   describe('flush', testFlush);
@@ -31,7 +32,6 @@ describe('GlobalStateManager', (): void => {
   describe('set', testSet);
   describe('setFunction', testSetFunction);
   describe('setObject', testSetObject);
-  describe('commit', testSetPromise);
-  describe('setProperty', testSetProperty);
+  describe('setPromise', testSetPromise);
   describe('spyState', testSpyState);
 });

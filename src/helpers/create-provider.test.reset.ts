@@ -9,11 +9,8 @@ export default (): void => {
     Provider = createProvider(INITIAL_STATE, INITIAL_REDUCERS);
   });
 
-  it('should be a function', (): void => {
+  it('should be a function with no arguments', (): void => {
     expect(Provider.reset).to.be.a('function');
-  });
-
-  it('should accept no parameters', (): void => {
     expect(Provider.reset.length).to.equal(0);
   });
 
