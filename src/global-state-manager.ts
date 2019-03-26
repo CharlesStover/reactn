@@ -26,7 +26,8 @@ interface FunctionalNewGlobalState<Shape> {
 
 /*
 interface GlobalStateManagerClass {
-  new <GS, R>(initialGlobalState: GS, initialReducers: R): GlobalStateManager<GS, R>;
+  new <GS, R>(initialGlobalState: GS, initialReducers: R):
+    GlobalStateManager<GS, R>;
   new <GS>(initialGlobalState: GS): GlobalStateManager<GS, {}>;
   new (): GlobalStateManager<{}, {}>;
 }
@@ -215,6 +216,14 @@ export default class GlobalStateManager<
     return this._callbacks.delete(callback);
   }
 
+  public removeDispatcher(dispatcherName: string): boolean {
+    if (this.hasDispatcher(dispatcherName)) {
+      delete this._dispatchers[dispatcherName];
+      return true;
+    }
+    return false;
+  }
+
   // Unmap a component instance from all state properties.
   public removePropertyListener(propertyListener: PropertyListener): boolean {
     let removed = false;
@@ -225,14 +234,6 @@ export default class GlobalStateManager<
     }
 
     return removed;
-  }
-
-  public removeDispatcher(dispatcherName: string): boolean {
-    if (this.hasDispatcher(dispatcherName)) {
-      delete this._dispatchers[dispatcherName];
-      return true;
-    }
-    return false;
   }
 
   // Reset the global state.
@@ -295,9 +296,9 @@ export default class GlobalStateManager<
     promise: Promise<NewGlobalState<GS>>
   ): Promise<GS> {
     return promise
-      .then((result: NewGlobalState<GS>) => {
-        return this.set(result);
-      });
+      .then((result: NewGlobalState<GS>): Promise<GS> =>
+        this.set(result)
+      );
   }
 
   public spyState(propertyListener: PropertyListener): GS {
