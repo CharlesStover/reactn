@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import GlobalStateManager from './global-state-manager';
 import { GS, INITIAL_STATE } from './utils/test/initial';
+import spyOn from './utils/test/spy-on-global-state-manager';
 
 
 
@@ -9,6 +10,8 @@ const MOCK_STATE: Partial<GS> = {
   y: 1,
 };
 
+const PROPERTY: keyof GS = 'x';
+
 const PROPERTY_LISTENER = (): void => { };
 
 
@@ -16,6 +19,7 @@ const PROPERTY_LISTENER = (): void => { };
 export default (): void => {
 
   let globalStateManager: GlobalStateManager<GS>;
+  const spy = spyOn('addPropertyListener');
   beforeEach((): void => {
     globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
   });
@@ -36,8 +40,10 @@ export default (): void => {
   it('should add a property listener when accessed', (): void => {
     expect(globalStateManager.hasPropertyListener(PROPERTY_LISTENER))
       .to.equal(false);
-    globalStateManager.spyState(PROPERTY_LISTENER).x;
-    expect(globalStateManager.hasPropertyListener(PROPERTY_LISTENER))
-      .to.equal(true);
+    globalStateManager.spyState(PROPERTY_LISTENER)[PROPERTY];
+    expect(spy.addPropertyListener.calledOnceWithExactly(
+      PROPERTY,
+      PROPERTY_LISTENER,
+    )).to.equal(true);
   });
 };
