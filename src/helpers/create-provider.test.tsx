@@ -18,11 +18,8 @@ import testWithGlobal from './create-provider.test.with-global';
 
 describe('createProvider', (): void => {
 
-  it('should be a function', (): void => {
+  it('should be a function with 2 arguments', (): void => {
     expect(createProvider).to.be.a('function');
-  });
-
-  it('should accept 2 parameters', (): void => {
     expect(createProvider.length).to.equal(2);
   });
 

@@ -16,11 +16,8 @@ export default (): void => {
     globalStateManager = new GlobalStateManager<{}, {}>();
   });
 
-  it('should be a function', (): void => {
+  it('should be a function with 2 arguments', (): void => {
     expect(globalStateManager.addDispatcher).to.be.a('function');
-  });
-
-  it('should accept 2 parameters', (): void => {
     expect(globalStateManager.addDispatcher.length).to.equal(2);
   });
 
@@ -39,11 +36,8 @@ export default (): void => {
       removeDispatcher = globalStateManager.addDispatcher(REDUCER_NAME, REDUCER);
     });
 
-    it('should be a function', (): void => {
+    it('should be a function with no arguments', (): void => {
       expect(removeDispatcher).to.be.a('function');
-    });
-
-    it('should accept no parameters', (): void => {
       expect(removeDispatcher.length).to.equal(0);
     });
 

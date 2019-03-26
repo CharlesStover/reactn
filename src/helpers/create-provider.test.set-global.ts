@@ -9,11 +9,8 @@ export default (): void => {
     Provider = createProvider(INITIAL_STATE, INITIAL_REDUCERS);
   });
 
-  it('should be a function', (): void => {
+  it('should be a function with 2 arguments', (): void => {
     expect(Provider.setGlobal).to.be.a('function');
-  });
-
-  it('should accept 2 parameters', (): void => {
     expect(Provider.setGlobal.length).to.equal(2);
   });
 

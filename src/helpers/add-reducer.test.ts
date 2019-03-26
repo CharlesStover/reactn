@@ -24,11 +24,8 @@ describe('addReducer', (): void => {
 
 
 
-  it('should be a function', (): void => {
+  it('should be a function with 3 arguments', (): void => {
     expect(addReducer).to.be.a('function');
-  });
-
-  it('should accept 3 parameters', (): void => {
     expect(addReducer.length).to.equal(3);
   });
 
@@ -47,11 +44,8 @@ describe('addReducer', (): void => {
       removeReducer = addReducer(globalStateManager, REDUCER_NAME, REDUCER);
     });
 
-    it('should be a function', (): void => {
+    it('should be a function with no arguments', (): void => {
       expect(removeReducer).to.be.a('function');
-    });
-
-    it('should not accept parameters', (): void => {
       expect(removeReducer.length).to.equal(0);
     });
 
