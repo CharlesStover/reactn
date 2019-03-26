@@ -26,11 +26,8 @@ export default (): void => {
     globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
   });
 
-  it('should be a function', (): void => {
+  it('should be a function with 2 arguments', (): void => {
     expect(globalStateManager.addPropertyListener).to.be.a('function');
-  });
-
-  it('should accept 2 parameters', (): void => {
     expect(globalStateManager.addPropertyListener.length).to.equal(2);
   });
 

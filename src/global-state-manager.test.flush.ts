@@ -24,11 +24,8 @@ export default (): void => {
     globalStateManager = new GlobalStateManager<GS, {}>(INITIAL_STATE);
   });
 
-  it('should be a function', (): void => {
+  it('should be a function with no arguments', (): void => {
     expect(globalStateManager.flush).to.be.a('function');
-  });
-
-  it('should accept no parameters', (): void => {
     expect(globalStateManager.flush.length).to.equal(0);
   });
 

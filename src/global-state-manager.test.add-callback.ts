@@ -15,11 +15,8 @@ export default (): void => {
     globalStateManager = new GlobalStateManager<{}>({});
   });
 
-  it('should be a function', (): void => {
+  it('should be a function with 1 argument', (): void => {
     expect(globalStateManager.addCallback).to.be.a('function');
-  });
-
-  it('should accept 1 parameter', (): void => {
     expect(globalStateManager.addCallback.length).to.equal(1);
   });
 
@@ -38,11 +35,8 @@ export default (): void => {
       removeCallback = globalStateManager.addCallback(CALLBACK);
     });
 
-    it('should be a function', (): void => {
+    it('should be a function with no arguments', (): void => {
       expect(removeCallback).to.be.a('function');
-    });
-
-    it('should accept no parameters', (): void => {
       expect(removeCallback.length).to.equal(0);
     });
 

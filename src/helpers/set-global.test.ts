@@ -22,11 +22,8 @@ describe('setGlobal', (): void => {
   });
 
 
-  it('should be a function', (): void => {
+  it('should be a function with 3 arguments', (): void => {
     expect(setGlobal).to.be.a('function');
-  });
-
-  it('should accept 3 parameters', (): void => {
     expect(setGlobal.length).to.equal(3);
   });
 

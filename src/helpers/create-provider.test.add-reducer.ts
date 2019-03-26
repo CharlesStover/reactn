@@ -19,11 +19,8 @@ export default (): void => {
     Provider = createProvider();
   });
 
-  it('should be a function', (): void => {
+  it('should be a function with 2 arguments', (): void => {
     expect(Provider.addReducer).to.be.a('function');
-  });
-
-  it('should accept 2 parameters', (): void => {
     expect(Provider.addReducer.length).to.equal(2);
   });
 
@@ -40,11 +37,8 @@ export default (): void => {
       removeReducer = Provider.addReducer(REDUCER_NAME, REDUCER);
     });
 
-    it('should be a function', (): void => {
+    it('should be a function with no arguments', (): void => {
       expect(removeReducer).to.be.a('function');
-    });
-
-    it('should accept no parameters', (): void => {
       expect(removeReducer.length).to.equal(0);
     });
 

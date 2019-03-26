@@ -8,11 +8,8 @@ export default (): void => {
     globalStateManager = new GlobalStateManager<{}, {}>();
   });
 
-  it('should be a function', (): void => {
+  it('should be a function with no arguments', (): void => {
     expect(globalStateManager.reset).to.be.a('function');
-  });
-
-  it('should accept no parameters', (): void => {
     expect(globalStateManager.reset.length).to.equal(0);
   });
 

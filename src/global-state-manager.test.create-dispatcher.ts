@@ -14,11 +14,8 @@ export default (): void => {
     globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
   });
 
-  it('should be a function', (): void => {
+  it('should be a function with 1 argument', (): void => {
     expect(globalStateManager.createDispatcher).to.be.a('function');
-  });
-
-  it('should accept 1 parameter', (): void => {
     expect(globalStateManager.createDispatcher.length).to.equal(1);
   });
 
@@ -26,13 +23,21 @@ export default (): void => {
 
   describe('return value', (): void => {
 
+    /**
+     * Argument count is always 0, because the transpiler uses the arguments
+     *   keyword instead of including them in the function definition.
+     * There is no test for the argument count being 0, because if the
+     *   transpiler refactors the arguments to be included in the function
+     *   definition, that would still be correct behavior and should not break
+     *   the build.
+     */
     it('should be a function', (): void => {
       const dispatch: Dispatcher<typeof INITIAL_REDUCERS.reset> =
         globalStateManager.createDispatcher(INITIAL_REDUCERS.reset);
       expect(dispatch).to.be.a('function');
     });
 
-    it('should auto-fill the global state', (): void => {
+    it('should auto-fill the global state argument', (): void => {
 
       const REDUCER_WITH_ARGS =
         (_gs: GS, _1: boolean, _2: number): null => null;
