@@ -7,7 +7,7 @@ module.exports = {
   diff: true,
   extension: [ 'ts', 'tsx' ],
   forbidOnly: !isDev,
-  forbidPending: !isDev,
+  forbidPending: false,
   fullTrace: false,
   inlineDiff: true,
   recursive: true,
