@@ -34,7 +34,8 @@ export default (): void => {
 
     it('should auto-fill the global state', (): void => {
 
-      const REDUCER_WITH_ARGS = (_gs: GS, _1: boolean, _2: number) => null;
+      const REDUCER_WITH_ARGS =
+        (_gs: GS, _1: boolean, _2: number): null => null;
       const spy: sinon.SinonSpy = sinon.spy(REDUCER_WITH_ARGS);
 
       const dispatch: Dispatcher<typeof REDUCER_WITH_ARGS> =
@@ -48,7 +49,7 @@ export default (): void => {
     });
 
     const spy = spyOn('set');
-    it('should call GlobalStateManager.set', () => {
+    it('should call GlobalStateManager.set', (): void => {
       const NEW_STATE: Partial<GS> = {
         x: true,
       };
@@ -58,5 +59,30 @@ export default (): void => {
       dispatch();
       expect(spy.set.calledOnceWithExactly(NEW_STATE)).to.equal(true);
     });
-  })
+
+    describe('return value', (): void => {
+
+      const REDUCER = (): GS => ({
+        x: true,
+        y: 1,
+        z: 'any',
+      });
+
+      let dispatch: Dispatcher<typeof REDUCER>;
+      beforeEach((): void => {
+        dispatch = globalStateManager.createDispatcher(REDUCER);
+      });
+
+      it('should be a Promise', (): void => {
+        const NOOP = (): void => { };
+        expect(dispatch().catch(NOOP)).to.be.instanceOf(Promise);
+      });
+
+      it('should resolve to the new global state', async (): Promise<void> => {
+        const value: GS = await dispatch();
+        expect(value).to.deep.equal(globalStateManager.state);
+      });
+    });
+
+  });
 };
