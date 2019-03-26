@@ -135,6 +135,19 @@ export default class GlobalStateManager<
     return this.queue.clear();
   }
 
+  public createDispatcher<A extends any[] = []>(
+    reducer: Reducer<GS, A>,
+  ): Dispatcher<Reducer<GS, A>> {
+    return (...args: A): Promise<GS> =>
+      this.set(
+        reducer(this.state, ...args),
+      );
+  }
+
+  public get dispatchers(): Dispatchers<GS, R> & AdditionalDispatchers<GS> {
+    return copyObject(this._dispatchers);
+  }
+
   public enqueue<Property extends keyof GS>(
     property: Property,
     value: GS[Property],
@@ -169,19 +182,6 @@ export default class GlobalStateManager<
     for (const callback of this._callbacks) {
       this.set(callback(this.state));
     }
-  }
-
-  public createDispatcher<A extends any[] = []>(
-    reducer: Reducer<GS, A>,
-  ): Dispatcher<Reducer<GS, A>> {
-    return (...args: A): Promise<GS> =>
-      this.set(
-        reducer(this.state, ...args),
-      );
-  }
-
-  public get dispatchers(): Dispatchers<GS, R> & AdditionalDispatchers<GS> {
-    return copyObject(this._dispatchers);
   }
 
   public hasCallback(callback: Callback<GS>): boolean {
