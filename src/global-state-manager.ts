@@ -64,19 +64,14 @@ export default class GlobalStateManager<
 > {
 
   private _callbacks: Set<Callback<GS>> = new Set<Callback<GS>>();
-
-  // @ts-ignore: Property '_dispatchers' has no initializer and is not
-  //   definitely assigned in the constructor.
-  private _dispatchers: Dispatchers<GS, R> & AdditionalDispatchers<GS>;
+  private _dispatchers: Dispatchers<GS, R> & AdditionalDispatchers<GS> =
+    Object.create(null);
   private _initialReducers: R;
   private _initialState: GS;
   private _propertyListeners: Map<keyof GS, Set<PropertyListener>> =
     new Map<keyof GS, Set<PropertyListener>>();
   private _queue: Map<keyof GS, GS[keyof GS]> =
     new Map<keyof GS, GS[keyof GS]>();
-
-  // @ts-ignore: Property '_state' has no initializer and is not definitely
-  //   assigned in the constructor.
   private _state: GS;
 
 
@@ -87,7 +82,8 @@ export default class GlobalStateManager<
   ) {
     this._initialReducers = copyObject(initialReducers);
     this._initialState = copyObject(initialState);
-    this.reset();
+    this._state = copyObject(initialState);
+    this.addDispatchers(initialReducers);
   }
 
 

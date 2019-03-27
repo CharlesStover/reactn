@@ -1,12 +1,27 @@
 import { expect } from 'chai';
-import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/test/initial';
+import sinon from 'sinon';
+import { GS, INITIAL_STATE } from '../utils/test/initial';
+import spyOn from '../utils/test/spy-on-global-state-manager';
 import createProvider, { ReactNProvider } from './create-provider';
+
+
+
+const STATE_CHANGE: Partial<GS> = {
+  x: !INITIAL_STATE.x,
+};
+
+const NEW_STATE: GS = {
+  ...INITIAL_STATE,
+  ...STATE_CHANGE,
+};
+
+
 
 export default (): void => {
 
-  let Provider: ReactNProvider<GS, R>;
+  let Provider: ReactNProvider<GS>;
   beforeEach((): void => {
-    Provider = createProvider(INITIAL_STATE, INITIAL_REDUCERS);
+    Provider = createProvider<GS>(INITIAL_STATE);
   });
 
   it('should be a function with 2 arguments', (): void => {
@@ -14,68 +29,53 @@ export default (): void => {
     expect(Provider.setGlobal.length).to.equal(2);
   });
 
-  it.skip('should do more', (): void => {
-  });
-};
+  it(
+    'should execute a callback with the new state',
+    async (): Promise<void> => {
+      const CALLBACK: sinon.SinonSpy = sinon.spy();
+      await Provider.setGlobal(STATE_CHANGE, CALLBACK);
+      expect(CALLBACK.calledOnceWithExactly(NEW_STATE)).to.equal(true);
+    }
+  );
 
-/*
-export default (): void => {
+  describe('GlobalStateManager set', (): void => {
 
-    const spy = spyOn('set', 'setFunction', 'setObject', 'setPromise');
+    const spy = spyOn('set');
 
-    afterEach((): void => {
-      Provider.reset();
+    it('should be called without a callback', async (): Promise<void> => {
+      await Provider.setGlobal(STATE_CHANGE);
+      expect(spy.set.calledOnceWithExactly(STATE_CHANGE)).to.equal(true);
     });
 
-    it('should exist', (): void => {
-      expect(Provider.setGlobal).to.be.a('function');
-      expect(Provider.setGlobal.length).to.equal(2);
-    });
-
-    /**
-     * TODO:
-     * MOVE THIS TO GLOBAL STATE MANAGER TEST
-     * REFACTOR CREATEPROVIDER TO BEHAVE
-     * THE WAY SETGLOBAL DOES
-     *
-    describe('GlobalStateManager', (): void => {
-
-      it('should call set', (): void => {
-        Provider.setGlobal(updatedState);
-        expect(spy.set.calledOnceWithExactly(updatedState)).to.equal(true);
-      });
-
-      it('should call setFunction', (): void => {
-        const updatedStateFunction = (): GlobalState => updatedState;
-        Provider.setGlobal(updatedStateFunction);
-        expect(spy.set.callCount).to.equal(2);
-        expect(spy.set.firstCall.calledWithExactly(updatedStateFunction))
-          .to.equal(true);
-        expect(spy.setFunction.calledOnceWithExactly(updatedStateFunction))
-          .to.equal(true);
-        expect(spy.set.secondCall.calledWithExactly(updatedState))
-          .to.equal(true);
-      });
-
-      it('should call setObject', (): void => {
-        Provider.setGlobal(updatedState);
-        expect(spy.set.calledOnceWithExactly(updatedState)).to.equal(true);
-        expect(spy.setObject.calledOnceWithExactly(updatedState)).to.equal(true);
-      });
-
-      it('should call setPromise', async (): void => {
-        const updatedStatePromise: Promise<GlobalState> =
-          Promise.resolve(updatedState);
-        await Provider.setGlobal(updatedStatePromise);
-        expect(spy.set.callCount).to.equal(2);
-        expect(spy.set.firstCall.calledWithExactly(updatedStatePromise))
-          .to.equal(true);
-        expect(spy.setPromise.calledOnceWithExactly(updatedStatePromise))
-          .to.equal(true);
-        expect(spy.set.secondCall.calledWithExactly(updatedState))
-          .to.equal(true);
-      });
+    it('should be called with a callback', async (): Promise<void> => {
+      const NOOP = (): void => { };
+      await Provider.setGlobal(STATE_CHANGE, NOOP);
+      expect(spy.set.calledOnceWithExactly(STATE_CHANGE)).to.equal(true);
     });
   });
+
+  describe('return value', (): void => {
+
+    it(
+      'should be a Promise of the new global state if there was a callback',
+      async (): Promise<void> => {
+        const set: Promise<GS> = Provider.setGlobal(STATE_CHANGE);
+        expect(set).to.be.instanceOf(Promise);
+        const value: GS = await set;
+        expect(value).to.deep.equal(NEW_STATE);
+      }
+    );
+
+    it(
+      'should be a Promise of the new global state ' +
+      'if there was not a callback',
+      async (): Promise<void> => {
+        const NOOP = (): void => { };
+        const set: Promise<GS> = Provider.setGlobal(STATE_CHANGE, NOOP);
+        expect(set).to.be.instanceOf(Promise);
+        const value: GS = await set;
+        expect(value).to.deep.equal(NEW_STATE);
+      }
+    );
+  });
 };
-*/
