@@ -1,0 +1,37 @@
+import testAddCallback from './add-callback';
+import testAddDispatcher from './add-dispatcher';
+import testAddPropertyListener from './add-property-listener';
+import testClearQueue from './clear-queue';
+import testConstructor from './constructor';
+import testCreateDispatcher from './create-dispatcher';
+import testEnqueue from './enqueue';
+import testFlush from './flush';
+import testRemoveCallback from './remove-callback';
+import testRemoveDispatcher from './remove-dispatcher';
+import testRemovePropertyListener from './remove-property-listener';
+import testReset from './reset';
+import testSet from './set';
+import testSetFunction from './set-function';
+import testSetObject from './set-object';
+import testSetPromise from './set-promise';
+import testSpyState from './spy-state';
+
+describe('GlobalStateManager', (): void => {
+  describe('constructor', testConstructor);
+  describe('addCallback', testAddCallback);
+  describe('addDispatcher', testAddDispatcher);
+  describe('addPropertyListener', testAddPropertyListener);
+  describe('clearQueue', testClearQueue);
+  describe('createDispatcher', testCreateDispatcher);
+  describe('enqueue', testEnqueue);
+  describe('flush', testFlush);
+  describe('removeCallback', testRemoveCallback);
+  describe('removeDispatcher', testRemoveDispatcher);
+  describe('removePropertyListener', testRemovePropertyListener);
+  describe('reset', testReset);
+  describe('set', testSet);
+  describe('setFunction', testSetFunction);
+  describe('setObject', testSetObject);
+  describe('setPromise', testSetPromise);
+  describe('spyState', testSpyState);
+});

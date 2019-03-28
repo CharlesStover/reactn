@@ -64,8 +64,6 @@ const helperFunctions = {
 
   createProvider,
 
-  default: ReactN,
-
   getGlobal: <GS extends {} = {}>(): GS =>
     defaultGlobalStateManager.state as GS,
 
@@ -97,4 +95,6 @@ const helperFunctions = {
 
 };
 
-export = Object.assign(ReactN, React, helperFunctions);
+export = Object.assign(ReactN, React, helperFunctions, {
+  default: ReactN,
+});
