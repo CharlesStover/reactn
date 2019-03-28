@@ -8,48 +8,50 @@ const NODE_ENV =
 module.exports = {
   devServer: {
     headers: {
-      'Access-Control-Allow-Origin': '*'
-    }
+      'Access-Control-Allow-Origin': '*',
+    },
   },
   entry: {
-    index: './src/index.js'
+    index: './build/index.js',
   },
   externals: [
-    '@types/react', {
+    '@types/react',
+    'use-force-update', {
     'react': {
       amd: 'react',
       commonjs: 'react',
       commonjs2: 'react',
       root: 'React',
-      umd: 'react'
-    }
+      umd: 'react',
+    },
   }],
   mode: NODE_ENV,
   module: {
     rules: [
 
-      // JavaScript
+      // TypeScript
       {
         test: /\.js$/,
         use: {
-          loader: 'babel-loader'
-        }
-      }
-    ]
+          loader: 'babel-loader',
+        },
+      },
+    ],
   },
   output: {
-    filename: '[name].js',
+    filename: 'index.js',
     globalObject: 'typeof self !== \'undefined\' ? self : this',
     library: 'reactn',
     libraryTarget: 'umd',
     path: path.resolve(__dirname, '.'),
-    umdNamedDefine: true
+    umdNamedDefine: true,
   },
   resolve: {
     alias: {
       '@types/react': path.resolve(__dirname, './node_modules/@types/react'),
-      'react': path.resolve(__dirname, './node_modules/react')
-    }
+      'react': path.resolve(__dirname, './node_modules/react'),
+      'use-force-update': path.resolve(__dirname, './node_modules/use-force-update'),
+    },
   },
-  watch: NODE_ENV === 'development'
+  watch: NODE_ENV === 'development',
 };
