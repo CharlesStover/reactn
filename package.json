@@ -23,9 +23,7 @@
   "nyc": {
     "exclude": [
       ".mocharc.js",
-      "src/**/*.test.ts",
-      "src/**/*.test.*.ts",
-      "src/utils/test/*.ts"
+      "tests/**/*"
     ],
     "extension": [
       ".ts",
@@ -33,12 +31,12 @@
     ]
   },
   "scripts": {
-    "build": "tsc && webpack",
-    "coverage": "nyc mocha src/**/*.test.{ts,tsx}",
-    "dev": "set NODE_ENV=development&& mocha src/**/*.test.{ts,tsx}",
+    "build": "yarn prepublishOnly",
+    "coverage": "nyc yarn test",
+    "dev": "set NODE_ENV=development&& yarn test",
     "lint": "eslint src/**/*.{ts,tsx}",
-    "prepublishOnly": "tsc && webpack",
-    "test": "mocha src/**/*.test.{ts,tsx}"
+    "prepublishOnly": "tsc",
+    "test": "mocha tests/**/*.test.{ts,tsx}"
   },
   "types": "./index.d.ts",
   "dependencies": {
