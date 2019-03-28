@@ -33,11 +33,11 @@
     ]
   },
   "scripts": {
-    "build": "webpack",
+    "build": "tsc && webpack",
     "coverage": "nyc mocha src/**/*.test.{ts,tsx}",
     "dev": "set NODE_ENV=development&& mocha src/**/*.test.{ts,tsx}",
     "lint": "eslint src/**/*.{ts,tsx}",
-    "prepublishOnly": "webpack",
+    "prepublishOnly": "tsc && webpack",
     "test": "mocha src/**/*.test.{ts,tsx}"
   },
   "types": "./index.d.ts",
@@ -70,6 +70,8 @@
     "react-test-renderer": "^16.8.2",
     "sinon": "^7.2.7",
     "ts-node": "^8.0.2",
+    "tslint": "^5.14.0",
+    "tslint-react": "^4.0.0",
     "typescript": "^3.3.1",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.2"
