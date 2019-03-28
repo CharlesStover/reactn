@@ -12,35 +12,24 @@ import { Dispatchers } from './typings/reducer';
 
 
 
-/*
-interface ReactNComponent<
-  P extends {} = {},
-  S extends {} = {},
-  GS extends {} = {},
-  SS = any,
-> extends Component<P, S, SS> {
-  readonly global: Readonly<GS>;
-  setGlobal(newGlobalState: NewGlobalState<GS>, callback?: Callback<GS>):
-    Promise<Readonly<GS>>;
-}
-*/
-
 export interface ReactNComponentClass<
   P extends {} = {},
   S extends {} = {},
   GS extends {} = {},
+  R extends {} = {},
   SS = any,
 > extends ComponentClass<P, S> {
-  new (props: P, context?: any): ReactNComponent<P, S, GS, SS>;
+  new (props: P, context?: any): ReactNComponent<P, S, GS, R, SS>;
 }
 
 export interface ReactNPureComponentClass<
   P extends {} = {},
   S extends {} = {},
   GS extends {} = {},
+  R extends {} = {},
   SS = any,
 > extends ComponentClass<P, S> {
-  new (props: P, context?: any): ReactNPureComponent<P, S, GS, SS>;
+  new (props: P, context?: any): ReactNPureComponent<P, S, GS, R, SS>;
 }
 
 type VoidFunction = () => void;
@@ -109,6 +98,8 @@ export class ReactNComponent<
        *   find it again after the sub class finishes its constructor.
        * Disabled because it makes me uncomfortable and doesn't pass
        *   synchronous unit tests anyway.
+       */
+      /*
       setTimeout((): void => {
         componentWillMountInstance(this);
       }, 0);
@@ -119,9 +110,6 @@ export class ReactNComponent<
   public componentWillUnmount(): void {
     return ReactNComponentWillUnmount(this._globalCallback);
   }
-
-  private _globalCallback: PropertyListener = (): void =>
-    ReactNGlobalCallback(this);
 
   public get dispatch(): Readonly<Dispatchers<GS, R>> {
     return ReactNDispatch<GS, R>();
@@ -142,12 +130,16 @@ export class ReactNComponent<
       !isSetGlobalCallback,
     );
   }
+
+  private _globalCallback: PropertyListener = (): void =>
+    ReactNGlobalCallback(this);
 };
 
 export class ReactNPureComponent<
   P extends {} = {},
   S extends {} = {},
   GS extends {} = {},
+  R extends {} = {},
   SS = any,
 > extends PureComponent<P, S, SS> {
   public constructor(props: Readonly<P>, context?: any) {
@@ -165,6 +157,8 @@ export class ReactNPureComponent<
        *   find it again after the sub class finishes its constructor.
        * Disabled because it makes me uncomfortable and doesn't pass
        *   synchronous unit tests anyway.
+       */
+      /*
       setTimeout((): void => {
         componentWillMountInstance(this);
       }, 0);
@@ -176,8 +170,9 @@ export class ReactNPureComponent<
     return ReactNComponentWillUnmount(this._globalCallback);
   }
 
-  private _globalCallback: PropertyListener = (): void =>
-    ReactNGlobalCallback(this);
+  public get dispatch(): Readonly<Dispatchers<GS, R>> {
+    return ReactNDispatch<GS, R>();
+  }
 
   public get global(): Readonly<GS> {
     return ReactNGlobal<GS>(this._globalCallback);
@@ -194,4 +189,7 @@ export class ReactNPureComponent<
       !isSetGlobalCallback,
     );
   }
+
+  private _globalCallback: PropertyListener = (): void =>
+    ReactNGlobalCallback(this);
 };
