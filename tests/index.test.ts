@@ -1,9 +1,9 @@
 import { expect } from 'chai';
 import React from 'react';
-import ReactN from '../build/index';
+import ReactN from '../src/index';
 
 // @ts-ignore: Require statement not part of import statement.
-const reactn = require('../build/index');
+const reactn = require('../src/index');
 
 
 
@@ -25,7 +25,7 @@ describe('package.json main', (): void => {
     // Overrides should not match React.
     const entries: [ string, any ][] =
       Object.entries(React)
-      .filter(([ property ]) => !overrides.has(property));
+        .filter(([ property ]) => !overrides.has(property));
 
     // All remaining properties should match React.
     for (const [ key, value ] of entries) {
@@ -45,15 +45,17 @@ describe('package.json main', (): void => {
     expect(ReactN.addCallback.length).to.equal(1);
   });
 
-  // SPY ON defaultGlobalState
-
   // addReducer
   it('should contain addReducer', (): void => {
     expect(ReactN.addReducer).to.be.a('function');
     expect(ReactN.addReducer.length).to.equal(2);
   });
 
-  // SPY ON defaultGlobalState
+  // addReducers
+  it('should contain addReducers', (): void => {
+    expect(ReactN.addReducers).to.be.a('function');
+    expect(ReactN.addReducers.length).to.equal(1);
+  });
 
   // Component
   it('should contain the ReactN Component class', (): void => {
@@ -65,8 +67,6 @@ describe('package.json main', (): void => {
     expect(ReactN.createProvider).to.be.a('function');
     expect(ReactN.createProvider.length).to.equal(2);
   });
-
-  // SPY ON defaultGlobalState
 
   // default
   it('should contain the @reactn decorator', (): void => {

@@ -4,6 +4,7 @@ import ReactN from './decorator';
 import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager, { NewGlobalState } from './global-state-manager';
 import addReducer from './helpers/add-reducer';
+import addReducers from './helpers/add-reducers';
 import createProvider from './helpers/create-provider';
 import setGlobal from './helpers/set-global';
 import useGlobalHelper, {
@@ -18,10 +19,13 @@ import withGlobal, {
   WithGlobal,
 } from './helpers/with-global';
 import Callback from './typings/callback';
-import Reducer from './typings/reducer';
+import Reducer, { Reducers } from './typings/reducer';
 
-type RemoveAddedCallback = () => boolean;
-type RemoveAddedReducer = () => boolean;
+
+
+type BooleanFunction = () => boolean;
+
+
 
 // useGlobal is defined as a function here to fully support its
 function useGlobal<GS extends {} = {}>(): GlobalTuple<GS>;
@@ -51,14 +55,19 @@ const helperFunctions = {
 
   addCallback: <GS extends {} = {}>(
     callback: Callback<GS>
-  ): RemoveAddedCallback =>
+  ): BooleanFunction =>
     defaultGlobalStateManager.addCallback(callback),
 
   addReducer: <GS extends {} = {}>(
     name: string,
     reducer: Reducer<GS>,
-  ): RemoveAddedReducer =>
+  ): BooleanFunction =>
     addReducer(defaultGlobalStateManager, name, reducer),
+
+  addReducers: <GS extends {} = {}>(
+    reducers: Reducers<GS>,
+  ): BooleanFunction =>
+    addReducers(defaultGlobalStateManager, reducers),
 
   Component: ReactNComponent,
 
