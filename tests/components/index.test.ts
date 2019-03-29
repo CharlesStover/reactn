@@ -9,16 +9,43 @@ import testMount from './mount';
 
 
 
+interface TestProps {
+  x: boolean;
+  y: number;
+}
+
 type VoidFunction = () => void;
 
 
 
-const testComponent = (
-  _Super: typeof Component,
-): VoidFunction =>
+const testComponent = (_Super: typeof Component): VoidFunction =>
   (): void => {
 
-    class TestComponent extends _Super<{}, {}, GS, R> {
+    class TestComponent extends _Super<TestProps, {}, GS, R> {
+
+      componentDidMount() {
+        this.dispatch.append('ab', 'cd');
+      }
+
+      componentDidUpdate(prevProps: TestProps, nextProps: TestProps) {
+        this.dispatch.increment(nextProps.y);
+      }
+
+      componentWillUnmount() {
+        this.dispatch.toggle();
+      }
+
+      handleClick = () => {
+        this.setGlobal({
+          x: false,
+          y: 0,
+          z: 'string',
+        });
+      };
+
+      render() {
+        return this.global.x;
+      }
     }
 
     beforeEach((): void => {
@@ -35,5 +62,8 @@ const testComponent = (
 
 describe.only('Components', (): void => {
   describe('ReactNComponent', testComponent(Component));
-  describe('ReactNPureComponent', testComponent(PureComponent));
+  describe(
+    'ReactNPureComponent',
+    testComponent(PureComponent as any as typeof Component),
+  );
 });

@@ -30,7 +30,10 @@ export default function ReactN<
   S extends {} = {},
   GS extends {} = {},
   R extends {} = {},
->(DecoratedComponent: ComponentClass<P, S>): ReactNComponentClass<P, S, GS> {
+  SS = any,
+>(
+  DecoratedComponent: ComponentClass<P, S>,
+): ReactNComponentClass<P, S, GS, R, SS> {
   class ReactNComponent extends DecoratedComponent {
 
     public static displayName: string =
@@ -49,11 +52,6 @@ export default function ReactN<
       return ReactNDispatch<GS, R>();
     }
 
-    private _globalCallback = (): void =>
-      // @ts-ignore: Types have separate declarations of a private property
-      //   '_globalCallback'.
-      ReactNGlobalCallback(this);
-
     public get global(): Readonly<GS> {
       return ReactNGlobal<GS>(this._globalCallback);
     }
@@ -68,6 +66,12 @@ export default function ReactN<
         !isComponentDidUpdate &&
         !isSetGlobalCallback,
       );
+    }
+
+    private _globalCallback(): void {
+      // @ts-ignore: Types have separate declarations of a private property
+      //   '_globalCallback'.
+      return ReactNGlobalCallback(this);
     }
   }
 
