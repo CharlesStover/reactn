@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import React from 'react';
+import React = require('react');
 import ReactN from '../src/index';
 
 // @ts-ignore: Require statement not part of import statement.

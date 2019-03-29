@@ -131,8 +131,9 @@ export class ReactNComponent<
     );
   }
 
-  private _globalCallback: PropertyListener = (): void =>
-    ReactNGlobalCallback(this);
+  private _globalCallback(): void {
+    return ReactNGlobalCallback(this);
+  }
 };
 
 export class ReactNPureComponent<
@@ -190,6 +191,7 @@ export class ReactNPureComponent<
     );
   }
 
-  private _globalCallback: PropertyListener = (): void =>
-    ReactNGlobalCallback(this);
+  private _globalCallback(): void {
+    return ReactNGlobalCallback(this);
+  }
 };

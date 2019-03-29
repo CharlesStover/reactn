@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React = require('react');
 import { ReactNComponent, ReactNPureComponent } from './components';
 import ReactN from './decorator';
 import defaultGlobalStateManager from './default-global-state-manager';
