@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import sinon from 'sinon';
+import * as sinon from 'sinon';
 import GlobalStateManager from '../src/global-state-manager';
 import setGlobal from '../src/helpers/set-global';
 

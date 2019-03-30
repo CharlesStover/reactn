@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import makeIterable from '../src/helpers/utils/make-iterable';
 
 describe('makeIterable', (): void => {
+
   it('should make a function destructurable', (): void => {
     function x(): void { }
     makeIterable(x, 1, 'ABC', true, x);

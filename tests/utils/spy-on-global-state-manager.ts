@@ -13,7 +13,20 @@ export default function spyOn(
 
   beforeEach((): void => {
     for (const method of methods) {
-      spies[method] = sinon.spy(GlobalStateManager.prototype, method);
+      if (method === 'state') {
+        const temp = sinon.spy(
+          GlobalStateManager.prototype,
+          method,
+          [ 'get' ],
+        );
+        // @ts-ignore: Property 'get' does not exist on type
+        //   'SinonSpy<any[], any>'.
+        spies[method] = temp.get;
+        spies[method].restore = temp.restore;
+      }
+      else {
+        spies[method] = sinon.spy(GlobalStateManager.prototype, method);
+      }
     }
   });
 
