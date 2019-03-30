@@ -5,8 +5,10 @@ import Callback from '../typings/callback';
 import Reducer, {
   AdditionalDispatchers,
   Dispatchers,
+  Reducers,
 } from '../typings/reducer';
 import addReducer from './add-reducer';
+import addReducers from './add-reducers';
 import setGlobal from './set-global';
 import useGlobal, {
   GlobalTuple,
@@ -20,15 +22,20 @@ import withGlobal, {
   WithGlobal,
 } from './with-global';
 
+
+
+type BooleanFunction = () => boolean;
+
 export interface ReactNProvider<
   GS extends {} = {},
   R extends {} = {},
 > {
-  addCallback(callback: Callback<GS>): RemoveAddedCallback;
+  addCallback(callback: Callback<GS>): BooleanFunction;
   addReducer<A extends any[] = any[]>(
     name: string,
     reducer: Reducer<GS, A>,
-  ): RemoveAddedReducer;
+  ): BooleanFunction;
+  addReducers(reducers: Reducers<GS>): BooleanFunction;
   dispatch: Dispatchers<GS, R> & AdditionalDispatchers<GS>;
   getDispatch(): Dispatchers<GS, R> & AdditionalDispatchers<GS>;
   getGlobal(): GS;
@@ -55,9 +62,7 @@ export interface ReactNProvider<
   new (props: {}, context?: any): React.Component<{}, {}>;
 }
 
-type RemoveAddedCallback = () => boolean;
 
-type RemoveAddedReducer = () => boolean;
 
 export default function createProvider<
   GS extends {} = {},
@@ -74,15 +79,19 @@ export default function createProvider<
 
   return class ReactNProvider extends React.Component<{}, {}> {
 
-    public static addCallback(f: Callback<GS>): RemoveAddedCallback {
+    public static addCallback(f: Callback<GS>): BooleanFunction {
       return globalStateManager.addCallback(f);
     }
 
     public static addReducer<A extends any[] = any[]>(
       name: string,
       reducer: Reducer<GS, A>,
-    ): RemoveAddedReducer {
+    ): BooleanFunction {
       return addReducer<GS>(globalStateManager, name, reducer);
+    }
+
+    public static addReducers(reducers: Reducers<GS>): BooleanFunction {
+      return addReducers<GS>(globalStateManager, reducers);
     }
 
     public static get dispatch(
@@ -134,7 +143,8 @@ export default function createProvider<
       return useGlobal(
         globalStateManager,
         property,
-        // @ts-ignore-next-line: Argument of type 'boolean' is not assignable to parameter of type 'true'.
+        // @ts-ignore-next-line: Argument of type 'boolean' is not assignable
+        //   to parameter of type 'true'.
         setterOnly,
       );
     }
@@ -148,6 +158,10 @@ export default function createProvider<
 
     public render(): JSX.Element {
       return (
+        // @ts-ignore: Type 'GlobalStateManager<GS, R>' is not assignable to
+        //   type 'GlobalStateManager<Record<ReactText, any>, Record<ReactText,
+        //   any>>'.
+        // Type 'Record<ReactText, any>' is not assignable to type 'GS'.
         <Context.Provider value={globalStateManager}>
           {this.props.children}
         </Context.Provider>

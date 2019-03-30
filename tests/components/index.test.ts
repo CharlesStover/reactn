@@ -5,7 +5,7 @@ import {
   setGlobal,
 } from '../../build/index';
 import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
-import testMount from './mount';
+// import testMount from './mount';
 
 
 
@@ -53,14 +53,14 @@ const testComponent = (_Super: typeof Component): VoidFunction =>
       setGlobal(INITIAL_STATE);
     });
 
-    it('should mount without error', testMount(TestComponent));
+    // it('should mount without error', testMount(TestComponent));
 
     it('should do more');
   };
 
 
 
-describe.only('Components', (): void => {
+describe.skip('Components', (): void => {
   describe('ReactNComponent', testComponent(Component));
   describe(
     'ReactNPureComponent',
