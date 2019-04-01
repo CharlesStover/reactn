@@ -1,5 +1,4 @@
-import React from '../../build/index';
-import { ComponentClass } from '../../build/index';
+import React, { ComponentClass } from '../../build/index';
 import { GS, R } from '../utils/initial';
 
 
