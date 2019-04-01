@@ -83,8 +83,6 @@ export default function withGlobal<
 
       public get global(): GS {
         return ReactNGlobal<GS>(
-
-          // @ts-ignore-next-line: _globalCallback is private.
           this._globalCallback,
           globalStateManager || this.context || defaultGlobalStateManager
         );

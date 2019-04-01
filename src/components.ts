@@ -131,7 +131,7 @@ export class ReactNComponent<
     );
   }
 
-  private _globalCallback(): void {
+  public _globalCallback(): void {
     return ReactNGlobalCallback(this);
   }
 };
@@ -191,7 +191,7 @@ export class ReactNPureComponent<
     );
   }
 
-  private _globalCallback(): void {
+  public _globalCallback(): void {
     return ReactNGlobalCallback(this);
   }
 };
