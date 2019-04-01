@@ -70,9 +70,7 @@ export default function ReactN<
       );
     }
 
-    private _globalCallback(): void {
-      // @ts-ignore: Types have separate declarations of a private property
-      //   '_globalCallback'.
+    public _globalCallback(): void {
       return ReactNGlobalCallback(this);
     }
   }
@@ -84,12 +82,5 @@ export default function ReactN<
   }
   */
 
-  // @ts-ignore:
-  //   Type 'typeof ReactNComponent' is not assignable to type
-  //     'ReactNComponentClass<P, S, GS, any>'.
-  //   Type 'ReactNComponent' is not assignable to type
-  //     'ReactNComponent<P, S, GS, any, any>'.
-  //   Types have separate declarations of a private property
-  //     '_globalCallback'.
   return ReactNComponent;
 };
