@@ -58,12 +58,5 @@ const testComponent = (_Super: typeof Component): VoidFunction => (): void => {
 
 describe.only('Components', (): void => {
   describe('ReactNComponent', testComponent(Component));
-  describe(
-    'ReactNPureComponent',
-
-    // TODO: Remove "as any as typeof Component." Extending _Super is currently
-    //   not possible using "(typeof Component) | (typeof PureComponent)" even
-    //   though "typeof Component" and "typeof PureComponent" work indvidually.
-    testComponent(PureComponent as any as typeof Component),
-  );
+  describe('ReactNPureComponent', testComponent(PureComponent));
 });
