@@ -56,7 +56,7 @@ const testComponent = (_Super: typeof Component): VoidFunction => (): void => {
 
 
 
-describe.only('Components', (): void => {
+describe('Components', (): void => {
   describe('ReactNComponent', testComponent(Component));
   describe('ReactNPureComponent', testComponent(PureComponent));
 });
