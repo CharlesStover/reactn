@@ -1,6 +1,6 @@
 import { expect } from 'chai';
+import addReducer from '../src/add-reducer';
 import GlobalStateManager from '../src/global-state-manager';
-import addReducer from '../src/helpers/add-reducer';
 import spyOn from './utils/spy-on-global-state-manager';
 
 

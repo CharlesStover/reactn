@@ -1,6 +1,6 @@
 import { expect } from 'chai';
+import getGlobal from '../src/get-global';
 import GlobalStateManager from '../src/global-state-manager';
-import getGlobal from '../src/helpers/get-global';
 import { GS, INITIAL_STATE } from './utils/initial';
 import spyOn from './utils/spy-on-global-state-manager';
 

@@ -1,15 +1,15 @@
-import React from 'react';
-import Context from '../context';
-import GlobalStateManager, { NewGlobalState } from '../global-state-manager';
-import Callback from '../typings/callback';
+import * as React from 'react';
+import Context from './context';
+import addReducer from './add-reducer';
+import addReducers from './add-reducers';
+import GlobalStateManager, { NewGlobalState } from './global-state-manager';
+import setGlobal from './set-global';
+import Callback from './typings/callback';
 import Reducer, {
   AdditionalDispatchers,
   Dispatchers,
   Reducers,
-} from '../typings/reducer';
-import addReducer from './add-reducer';
-import addReducers from './add-reducers';
-import setGlobal from './set-global';
+} from './typings/reducer';
 import useGlobal, {
   GlobalTuple,
   Setter as UseGlobalSetter,

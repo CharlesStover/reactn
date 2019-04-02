@@ -1,5 +1,4 @@
-/.nyc_output
 /build
+/jest
 /node_modules
-/index.js
 /yarn-error.lock

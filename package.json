@@ -7,6 +7,7 @@
   "license": "MIT",
   "main": "index.js",
   "repository": "github:CharlesStover/reactn",
+  "types": "./build/index.d.ts",
   "bugs": {
     "email": "reactn@charlesstover.com",
     "url": "https://github.com/CharlesStover/reactn/issues"
@@ -20,57 +21,33 @@
     "index.js",
     "package.json"
   ],
-  "nyc": {
-    "exclude": [
-      ".mocharc.js",
-      "tests/**/*"
-    ],
-    "extension": [
-      ".ts",
-      ".tsx"
-    ]
-  },
   "scripts": {
     "build": "yarn prepublishOnly",
-    "coverage": "nyc yarn test",
-    "dev": "set NODE_ENV=development&& yarn test",
     "lint": "eslint src/**/*.{ts,tsx}",
     "prepublishOnly": "tsc && cp src/index.d.ts build/index.d.ts",
-    "test": "mocha tests/**/*.test.{ts,tsx}"
+    "test": "jest"
   },
-  "types": "./index.d.ts",
   "dependencies": {
     "use-force-update": "^1.0.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.2",
-    "@babel/plugin-proposal-class-properties": "^7.1.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
-    "@babel/preset-env": "^7.1.0",
-    "@babel/preset-react": "^7.0.0",
-    "@babel/register": "^7.0.0",
-    "@types/chai": "^4.1.7",
-    "@types/mocha": "^5.2.5",
+    "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/jest": "^24.0.11",
     "@types/node": "^10.12.21",
     "@types/react": "^16.7.13",
-    "@types/react-test-renderer": "^16.8.1",
-    "@types/sinon": "^7.0.6",
     "@typescript-eslint/eslint-plugin": "^1.4.2",
     "@typescript-eslint/parser": "^1.4.2",
-    "babel-core": "7.0.0-bridge.0",
-    "babel-loader": "^8.0.4",
-    "chai": "^4.2.0",
+    "babel-jest": "^24.6.0",
     "eslint": "^5.15.2",
     "eslint-plugin-react": "^7.12.4",
-    "mocha": "^6.0.2",
-    "nyc": "^13.2.0",
+    "jest": "^24.6.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-test-renderer": "^16.8.2",
-    "sinon": "^7.2.7",
+    "react-testing-library": "^6.0.4",
+    "ts-jest": "^24.0.1",
     "ts-node": "^8.0.2",
-    "typescript": "^3.3.1",
-    "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.2"
+    "typescript": "^3.3.1"
   }
 }

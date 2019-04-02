@@ -1,21 +1,21 @@
 import React from 'react';
 import { ReactNComponent, ReactNPureComponent } from './components';
+import { ReactNProvider } from './create-provider';
 import reactn from './decorator';
 import { NewGlobalState } from './global-state-manager';
-import { ReactNProvider } from './helpers/create-provider';
+import Callback from './typings/callback';
+import Reducer, { Reducers } from './typings/reducer';
 import {
   GlobalTuple,
   Setter as UseGlobalSetter,
   StateTuple,
   UseGlobal,
-} from './helpers/use-global';
+} from './use-global';
 import {
   Getter,
   Setter as WithGlobalSetter,
   WithGlobal,
-} from './helpers/with-global';
-import Callback from './typings/callback';
-import Reducer, { Reducers } from './typings/reducer';
+} from './with-global';
 
 
 

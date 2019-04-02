@@ -1,17 +1,17 @@
 import React = require('react');
 import { ReactNComponent, ReactNPureComponent } from './components';
+import addCallback from './add-callback';
+import addReducer from './add-reducer';
+import addReducers from './add-reducers';
+import createProvider from './create-provider';
 import reactn from './decorator';
 import defaultGlobalStateManager from './default-global-state-manager';
-import addCallback from './helpers/add-callback';
-import addReducer from './helpers/add-reducer';
-import addReducers from './helpers/add-reducers';
-import createProvider from './helpers/create-provider';
-import getGlobal from './helpers/get-global';
-import removeCallback from './helpers/remove-callback';
-import resetGlobal from './helpers/reset-global';
-import setGlobal from './helpers/set-global';
-import useGlobal from './helpers/use-global';
-import withGlobal from './helpers/with-global';
+import getGlobal from './get-global';
+import removeCallback from './remove-callback';
+import resetGlobal from './reset-global';
+import setGlobal from './set-global';
+import useGlobal from './use-global';
+import withGlobal from './with-global';
 
 
 

@@ -1,7 +1,5 @@
 import { expect } from 'chai';
-import createProvider, {
-  ReactNProvider,
-} from '../../src/helpers/create-provider';
+import createProvider, { ReactNProvider } from '../../src/create-provider';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
