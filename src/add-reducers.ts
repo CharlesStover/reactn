@@ -1,6 +1,6 @@
-import GlobalStateManager from '../global-state-manager';
-import { Reducers } from '../typings/reducer';
 import addReducer from './add-reducer';
+import GlobalStateManager from './global-state-manager';
+import { Reducers } from './typings/reducer';
 
 
 

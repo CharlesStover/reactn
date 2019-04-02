@@ -1,8 +1,7 @@
-import * as sinon from 'sinon';
 import GlobalStateManager from '../../src/global-state-manager';
 
 export interface Spies {
-  [key: string]: sinon.SinonSpy;
+  [key: string]: jest.SpyInstance;
 }
 
 export default function spyOn(
@@ -13,26 +12,27 @@ export default function spyOn(
 
   beforeEach((): void => {
     for (const method of methods) {
-      if (method === 'state') {
-        const temp = sinon.spy(
+      if (
+        method === 'dispatchers' ||
+        method === 'propertyListeners' ||
+        method === 'queue' ||
+        method === 'state'
+      ) {
+        spies[method] = jest.spyOn(
           GlobalStateManager.prototype,
           method,
-          [ 'get' ],
+          'get'
         );
-        // @ts-ignore: Property 'get' does not exist on type
-        //   'SinonSpy<any[], any>'.
-        spies[method] = temp.get;
-        spies[method].restore = temp.restore;
       }
       else {
-        spies[method] = sinon.spy(GlobalStateManager.prototype, method);
+        spies[method] = jest.spyOn(GlobalStateManager.prototype, method);
       }
     }
   });
 
   afterEach((): void => {
     for (const method of methods) {
-      spies[method].restore();
+      spies[method].mockRestore();
     }
   });
 

@@ -1,7 +1,7 @@
 import { expect } from 'chai';
+import addCallback from '../src/add-callback';
 import GlobalStateManager from '../src/global-state-manager';
-import addCallback from '../src/helpers/add-callback';
-import removeCallback from '../src/helpers/remove-callback';
+import removeCallback from '../src/remove-callback';
 import Callback from '../src/typings/callback';
 import { GS, INITIAL_STATE } from './utils/initial';
 import spyOn from './utils/spy-on-global-state-manager';

@@ -1,4 +1,4 @@
-import GlobalStateManager, { NewGlobalState } from '../global-state-manager';
+import GlobalStateManager, { NewGlobalState } from './global-state-manager';
 
 
 
