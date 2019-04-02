@@ -1,37 +1,42 @@
-import { expect } from 'chai';
-import * as sinon from 'sinon';
 import GlobalStateManager from '../src/global-state-manager';
-import setGlobal from '../src/helpers/set-global';
+import setGlobal from '../src/set-global';
+import { GS, INITIAL_STATE } from './utils/initial';
+import spyOn from './utils/spy-on-global-state-manager';
 
-interface GlobalState {
-  x: boolean;
-}
 
-const INITIAL_X: GlobalState['x'] = false;
 
-const INITIAL_GLOBAL_STATE: GlobalState = {
-  x: INITIAL_X,
+const CALLBACK: jest.Mock<void, []> = jest.fn();
+
+const STATE_CHANGE: Partial<GS> = {
+  x: true,
 };
+
+const NEW_STATE: GS = {
+  ...INITIAL_STATE,
+  ...STATE_CHANGE,
+};
+
+
 
 describe('setGlobal', (): void => {
 
-  let globalStateManager: GlobalStateManager<GlobalState>;
+  let globalStateManager: GlobalStateManager<GS>;
   beforeEach((): void => {
-    globalStateManager =
-      new GlobalStateManager<GlobalState>(INITIAL_GLOBAL_STATE);
+    globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
   });
 
 
+
   it('should be a function with 3 arguments', (): void => {
-    expect(setGlobal).to.be.a('function');
-    expect(setGlobal.length).to.equal(3);
+    expect(setGlobal).toBeInstanceOf(Function);
+    expect(setGlobal).toHaveLength(3);
   });
 
   it(
     'should return a Promise if there is no callback',
     async (): Promise<void> => {
-      const p = setGlobal(globalStateManager, {});
-      expect(p).to.be.instanceOf(Promise);
+      const p = setGlobal<GS>(globalStateManager, STATE_CHANGE);
+      expect(p).toBeInstanceOf(Promise);
       await p;
     }
   );
@@ -39,65 +44,37 @@ describe('setGlobal', (): void => {
   it(
     'should return a Promise if there is a callback',
     async (): Promise<void> => {
-      const p = setGlobal(globalStateManager, {}, (): void => {});
-      expect(p).to.be.instanceOf(Promise);
+      const p = setGlobal<GS>(globalStateManager, STATE_CHANGE, CALLBACK);
+      expect(p).toBeInstanceOf(Promise);
       await p;
+    }
+  );
+
+  it(
+    'should call the callback with the new global state',
+    async (): Promise<void> => {
+      await setGlobal<GS>(globalStateManager, STATE_CHANGE, CALLBACK);
+      expect(CALLBACK).toHaveBeenCalledTimes(1);
+      expect(CALLBACK).toHaveBeenCalledWith(NEW_STATE);
     }
   );
 
 
 
-  describe('callback', (): void => {
-
-    it('should be called', async (): Promise<void> => {
-      const NEW_GLOBAL_STATE: GlobalState = {
-        x: true,
-      };
-
-      const callback = sinon.spy();
-      await setGlobal(globalStateManager, NEW_GLOBAL_STATE, callback);
-      expect(callback.calledOnce).to.equal(true);
-    });
-
-    it('should receive the global state', async (): Promise<void> => {
-      const NEW_X: GlobalState['x'] = true;
-      const NEW_GLOBAL_STATE: GlobalState = {
-        x: NEW_X,
-      };
-      expect(NEW_X).not.to.equal(INITIAL_X);
-
-      let x: GlobalState['x'] = INITIAL_X;
-      const callback = (globalState: GlobalState): void => {
-        x = globalState.x;
-      };
-      await setGlobal(globalStateManager, NEW_GLOBAL_STATE, callback);
-      expect(x).to.equal(NEW_X);
-    });
-  });
-
-
-
   describe('GlobalStateManager.set', (): void => {
 
-    const NEW_GLOBAL_STATE: GlobalState = {
-      x: true,
-    };
-    let set: sinon.SinonSpy;
-    beforeEach((): void => {
-      set = sinon.spy(GlobalStateManager.prototype, 'set');
-    });
-    afterEach((): void => {
-      set.restore();
-    });
+    const spies = spyOn('set');
 
     it('should be called if there is no callback', async (): Promise<void> => {
-        await setGlobal(globalStateManager, NEW_GLOBAL_STATE);
-        expect(set.calledOnceWithExactly(NEW_GLOBAL_STATE)).to.equal(true);
+        await setGlobal<GS>(globalStateManager, STATE_CHANGE);
+        expect(spies.set).toHaveBeenCalledTimes(1);
+        expect(spies.set).toHaveBeenCalledWith(STATE_CHANGE);
     });
 
     it('should be called if there is a callback', async (): Promise<void> => {
-        await setGlobal(globalStateManager, NEW_GLOBAL_STATE, (): void => {});
-        expect(set.calledOnceWithExactly(NEW_GLOBAL_STATE)).to.equal(true);
+        await setGlobal<GS>(globalStateManager, STATE_CHANGE, CALLBACK);
+        expect(spies.set).toHaveBeenCalledTimes(1);
+        expect(spies.set).toHaveBeenCalledWith(STATE_CHANGE);
     });
   });
 

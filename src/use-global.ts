@@ -1,10 +1,10 @@
 import * as React from 'react';
 import useForceUpdate from 'use-force-update';
-import Context from '../context';
-import defaultGlobalStateManager from '../default-global-state-manager';
-import GlobalStateManager, { NewGlobalState } from '../global-state-manager';
-import Callback from '../typings/callback';
+import Context from './context';
+import defaultGlobalStateManager from './default-global-state-manager';
+import GlobalStateManager, { NewGlobalState } from './global-state-manager';
 import setGlobal from './set-global';
+import Callback from './typings/callback';
 
 
 

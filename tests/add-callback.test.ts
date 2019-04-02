@@ -1,6 +1,5 @@
-import { expect } from 'chai';
+import addCallback from '../src/add-callback';
 import GlobalStateManager from '../src/global-state-manager';
-import addCallback from '../src/helpers/add-callback';
 import Callback from '../src/typings/callback';
 import { GS, INITIAL_STATE } from './utils/initial';
 import spyOn from './utils/spy-on-global-state-manager';
@@ -11,7 +10,7 @@ const CALLBACK: Callback<GS> = (_globalState: GS) => null;
 
 
 
-describe('addCallback', (): void => {
+describe.only('addCallback', (): void => {
 
   let globalStateManager: GlobalStateManager<GS>;
   const spy = spyOn('addCallback', 'removeCallback');
@@ -23,14 +22,14 @@ describe('addCallback', (): void => {
 
 
   it('should be a function with 2 arguments', (): void => {
-    expect(addCallback).to.be.a('function');
-    expect(addCallback.length).to.equal(2);
+    expect(addCallback).toBeInstanceOf(Function);
+    expect(addCallback).toHaveLength(2);
   });
 
   it('should call GlobalStateManager.addCallback', (): void => {
     addCallback(globalStateManager, CALLBACK);
-    expect(spy.addCallback.calledOnceWithExactly(CALLBACK))
-      .to.equal(true);
+    expect(spy.addCallback).toHaveBeenCalledTimes(1);
+    expect(spy.addCallback).toHaveBeenCalledWith(CALLBACK);
   });
 
 
@@ -43,14 +42,14 @@ describe('addCallback', (): void => {
     });
 
     it('should be a function with no arguments', (): void => {
-      expect(removeCallback).to.be.a('function');
-      expect(removeCallback.length).to.equal(0);
+      expect(removeCallback).toBeInstanceOf(Function);
+      expect(removeCallback).toHaveLength(0);
     });
 
     it('should call GlobalStateManager.removeCallback', (): void => {
       removeCallback();
-      expect(spy.removeCallback.calledOnceWithExactly(CALLBACK))
-        .to.equal(true);
+      expect(spy.removeCallback).toHaveBeenCalledTimes(1);
+      expect(spy.removeCallback).toHaveBeenCalledWith(CALLBACK);
     });
   });
 

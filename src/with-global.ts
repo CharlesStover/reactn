@@ -4,32 +4,14 @@ import {
   createElement,
   FunctionComponent,
 } from 'react';
-import { ReactNPureComponent, ReactNPureComponentClass } from '../components';
-import ReactNContext from '../context';
-import defaultGlobalStateManager from '../default-global-state-manager';
-import GlobalStateManager, { NewGlobalState } from '../global-state-manager';
-import { ReactNGlobal, ReactNSetGlobal } from '../methods';
-import Callback from '../typings/callback';
+import { ReactNPureComponent, ReactNPureComponentClass } from './components';
+import ReactNContext from './context';
+import defaultGlobalStateManager from './default-global-state-manager';
+import GlobalStateManager, { NewGlobalState } from './global-state-manager';
+import { ReactNGlobal, ReactNSetGlobal } from './methods';
+import Callback from './typings/callback';
 
-// TODO -- https://github.com/CharlesStover/reactn/issues/14
-const isComponentDidMount = false;
-const isComponentDidUpdate = false;
-const isSetGlobalCallback = false;
 
-/*
-Creates a Higher-Order Component that passes the global state
-  to the wrapped Component as props.
-Behaves analogously to Redux's connect() HOC.
-
-const hoc = withGlobal(
-  (global, props) => ({
-    age: global.people[props.person].age,
-    propName: global.property
-  })
-);
-hoc(MyComponent);
-
-*/
 
 export type Getter<GS, HP, LP> = (globalState: GS, props: HP) =>
   null | Partial<LP> | void;
@@ -48,12 +30,35 @@ export type Setter<GS, HP, LP> = (setGlobal: SetGlobal<GS>, props: HP) =>
 export type WithGlobal<HP, LP> =
   (Component: LowerOrderComponent<LP>) => ComponentClass<HP>;
 
+
+
+// TODO -- https://github.com/CharlesStover/reactn/issues/14
+const isComponentDidMount = false;
+const isComponentDidUpdate = false;
+const isSetGlobalCallback = false;
+
+/*
+Creates a Higher-Order Component that passes the global state
+  to the wrapped Component as props.
+Behaves analogously to Redux's connect() HOC.
+
+const hoc = withGlobal(
+  (global, props) => ({
+    age: global.people[props.person].age,
+    propName: global.property
+  })
+);
+hoc(MyComponent);
+*/
+
 // Get the name of a Component.
 const componentName = (Component: LowerOrderComponent): string =>
   typeof Component === 'string' ?
     Component :
     Component.displayName ||
     Component.name;
+
+
 
 export default function withGlobal<
   GS extends {} = {},

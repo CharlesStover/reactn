@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import GlobalStateManager from '../src/global-state-manager';
-import resetGlobal from '../src/helpers/reset-global';
+import resetGlobal from '../src/reset-global';
 import spyOn from './utils/spy-on-global-state-manager';
 
 describe('resetGlobal', (): void => {

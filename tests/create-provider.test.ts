@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { Component } from 'react';
-import createProvider, { ReactNProvider } from '../src/helpers/create-provider';
+import createProvider, { ReactNProvider } from '../src/create-provider';
 import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from './utils/initial';
 
 
