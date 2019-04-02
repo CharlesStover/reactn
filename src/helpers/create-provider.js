@@ -1,4 +1,4 @@
-import { Component } from 'react';
+import React, { Component } from 'react';
 import Context from '../context';
 import GlobalState from '../global-state';
 import addReducer from './add-reducer';
