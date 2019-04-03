@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import createProvider, { ReactNProvider } from '../../src/create-provider';
 import spyOn from '../utils/spy-on-global-state-manager';
 
@@ -18,13 +17,14 @@ describe('Provider.addCallback', (): void => {
   });
 
   it('should be a function with 1 argument', (): void => {
-    expect(Provider.addCallback).to.be.a('function');
-    expect(Provider.addCallback.length).to.equal(1);
+    expect(Provider.addCallback).toEqual(expect.any(Function));;
+    expect(Provider.addCallback.length).toBe(1);
   });
 
   it('should call GlobalStateManager.addCallback', (): void => {
     Provider.addCallback(CALLBACK);
-    expect(spy.addCallback.calledOnceWithExactly(CALLBACK)).to.equal(true);
+    expect(spy.addCallback).toHaveBeenCalledTimes(1);
+    expect(spy.addCallback).toHaveBeenCalledWith(CALLBACK);
   });
 
   describe('return value', (): void => {
@@ -36,18 +36,18 @@ describe('Provider.addCallback', (): void => {
     });
 
     it('should be a function with no arguments', (): void => {
-      expect(removeCallback).to.be.a('function');
-      expect(removeCallback.length).to.equal(0);
+      expect(removeCallback).toEqual(expect.any(Function));;
+      expect(removeCallback.length).toBe(0);
     });
 
     it('should call GlobalStateManager.removeCallback', (): void => {
       removeCallback();
-      expect(spy.removeCallback.calledOnceWithExactly(CALLBACK))
-        .to.equal(true);
+      expect(spy.removeCallback).toHaveBeenCalledTimes(1);
+      expect(spy.removeCallback).toHaveBeenCalledWith(CALLBACK);
     });
 
     it('should return true', (): void => {
-      expect(removeCallback()).to.equal(true);
+      expect(removeCallback()).toBe(true);
     });
   });
 });

@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import GlobalStateManager, {
   INVALID_NEW_GLOBAL_STATE,
 } from '../../src/global-state-manager';
@@ -25,29 +24,29 @@ describe('GlobalStateManager.set', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(globalStateManager.set).to.be.a('function');
-    expect(globalStateManager.set.length).to.equal(1);
+    expect(globalStateManager.set).toEqual(expect.any(Function));;
+    expect(globalStateManager.set.length).toBe(1);
   });
 
   it('should not accept boolean', (): void => {
     expect((): void => {
       // @ts-ignore: Deliberately throwing an error.
       globalStateManager.set(true);
-    }).to.throw(INVALID_NEW_GLOBAL_STATE);
+    }).toThrow(INVALID_NEW_GLOBAL_STATE);
   });
 
   it('should not accept number', (): void => {
     expect((): void => {
       // @ts-ignore: Deliberately throwing an error.
       globalStateManager.set(1);
-    }).to.throw(INVALID_NEW_GLOBAL_STATE);
+    }).toThrow(INVALID_NEW_GLOBAL_STATE);
   });
 
   it('should not accept string', (): void => {
     expect((): void => {
       // @ts-ignore: Deliberately throwing an error.
       globalStateManager.set('any');
-    }).to.throw(INVALID_NEW_GLOBAL_STATE);
+    }).toThrow(INVALID_NEW_GLOBAL_STATE);
   });
 
   it(
@@ -55,7 +54,8 @@ describe('GlobalStateManager.set', (): void => {
     async (): Promise<void> => {
       const FUNC = (): null => null;
       const set: Promise<GS> = globalStateManager.set(FUNC);
-      expect(spy.setFunction.calledOnceWithExactly(FUNC)).to.equal(true);
+      expect(spy.setFunction).toHaveBeenCalledTimes(1);
+      expect(spy.setFunction).toHaveBeenCalledWith(FUNC);
       await set;
     }
   );
@@ -67,7 +67,8 @@ describe('GlobalStateManager.set', (): void => {
         x: true,
       };
       const set: Promise<GS> = globalStateManager.set(OBJ);
-      expect(spy.setObject.calledOnceWithExactly(OBJ)).to.equal(true);
+      expect(spy.setObject).toHaveBeenCalledTimes(1);
+      expect(spy.setObject).toHaveBeenCalledWith(OBJ);
       await set;
     }
   );
@@ -79,7 +80,8 @@ describe('GlobalStateManager.set', (): void => {
         x: true,
       });
       const set: Promise<GS> = globalStateManager.set(PROMISE);
-      expect(spy.setPromise.calledOnceWithExactly(PROMISE)).to.equal(true);
+      expect(spy.setPromise).toHaveBeenCalledTimes(1);
+      expect(spy.setPromise).toHaveBeenCalledWith(PROMISE);
       await set;
     }
   );
@@ -90,9 +92,9 @@ describe('GlobalStateManager.set', (): void => {
 
     it('should exist if the new state is null', async (): Promise<void> => {
       const set: Promise<GS> = globalStateManager.set(null);
-      expect(set).to.be.instanceOf(Promise);
+      expect(set).toBeInstanceOf(Promise);
       const globalState: GS = await set;
-      expect(globalState).to.deep.equal(INITIAL_STATE);
+      expect(globalState).toEqual(INITIAL_STATE);
     });
 
     it(
@@ -102,9 +104,9 @@ describe('GlobalStateManager.set', (): void => {
           x: true,
         });
         const set: Promise<GS> = globalStateManager.set(FUNC);
-        expect(set).to.be.instanceOf(Promise);
+        expect(set).toBeInstanceOf(Promise);
         const globalState: GS = await set;
-        expect(globalState).to.deep.equal(NEW_STATE);
+        expect(globalState).toEqual(NEW_STATE);
       }
     );
 
@@ -114,9 +116,9 @@ describe('GlobalStateManager.set', (): void => {
         const set: Promise<GS> = globalStateManager.set({
           x: true,
         });
-        expect(set).to.be.instanceOf(Promise);
+        expect(set).toBeInstanceOf(Promise);
         const globalState: GS = await set;
-        expect(globalState).to.deep.equal(NEW_STATE);
+        expect(globalState).toEqual(NEW_STATE);
       }
     );
 
@@ -126,9 +128,9 @@ describe('GlobalStateManager.set', (): void => {
         const set: Promise<GS> = globalStateManager.set(Promise.resolve({
           x: true,
         }));
-        expect(set).to.be.instanceOf(Promise);
+        expect(set).toBeInstanceOf(Promise);
         const globalState: GS = await set;
-        expect(globalState).to.deep.equal(NEW_STATE);
+        expect(globalState).toEqual(NEW_STATE);
       }
     );
   });

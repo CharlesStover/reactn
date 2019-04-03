@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import GlobalStateManager from '../../src/global-state-manager';
 
 
@@ -19,14 +18,14 @@ describe('GlobalStateManager.addDispatcher', (): void => {
 
 
   it('should be a function with 2 arguments', (): void => {
-    expect(globalStateManager.addDispatcher).to.be.a('function');
-    expect(globalStateManager.addDispatcher.length).to.equal(2);
+    expect(globalStateManager.addDispatcher).toEqual(expect.any(Function));
+    expect(globalStateManager.addDispatcher.length).toBe(2);
   });
 
   it('should add a reducer', (): void => {
-    expect(globalStateManager.hasDispatcher(REDUCER_NAME)).to.equal(false);
+    expect(globalStateManager.hasDispatcher(REDUCER_NAME)).toBe(false);
     globalStateManager.addDispatcher(REDUCER_NAME, REDUCER);
-    expect(globalStateManager.hasDispatcher(REDUCER_NAME)).to.equal(true);
+    expect(globalStateManager.hasDispatcher(REDUCER_NAME)).toBe(true);
   });
 
 
@@ -39,14 +38,14 @@ describe('GlobalStateManager.addDispatcher', (): void => {
     });
 
     it('should be a function with no arguments', (): void => {
-      expect(removeDispatcher).to.be.a('function');
-      expect(removeDispatcher.length).to.equal(0);
+      expect(removeDispatcher).toEqual(expect.any(Function));
+      expect(removeDispatcher.length).toBe(0);
     });
 
     it('should remove the callback', (): void => {
-      expect(globalStateManager.hasDispatcher(REDUCER_NAME)).to.equal(true);
+      expect(globalStateManager.hasDispatcher(REDUCER_NAME)).toBe(true);
       removeDispatcher();
-      expect(globalStateManager.hasDispatcher(REDUCER_NAME)).to.equal(false);
+      expect(globalStateManager.hasDispatcher(REDUCER_NAME)).toBe(false);
     });
   });
 

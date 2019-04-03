@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import { Component } from 'react';
 import createProvider, { ReactNProvider } from '../src/create-provider';
 import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from './utils/initial';
@@ -8,8 +7,8 @@ import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from './utils/initial';
 describe('createProvider', (): void => {
 
   it('should be a function with 2 arguments', (): void => {
-    expect(createProvider).to.be.a('function');
-    expect(createProvider.length).to.equal(2);
+    expect(createProvider).toEqual(expect.any(Function));
+    expect(createProvider).toHaveLength(2);
   });
 
 
@@ -24,16 +23,15 @@ describe('createProvider', (): void => {
       });
 
       it('should be a React Component', (): void => {
-        expect(Object.getPrototypeOf(Provider))
-          .to.equal(Component);
+        expect(Object.getPrototypeOf(Provider)).toEqual(Component);
       });
 
       it('should have an empty state', (): void => {
-        expect(Provider.global).to.deep.equal({});
+        expect(Provider.global).toEqual({});
       });
 
       it('should have empty dispatchers', (): void => {
-        expect(Provider.dispatch).to.deep.equal({});
+        expect(Provider.dispatch).toEqual({});
       });
     });
 
@@ -47,16 +45,15 @@ describe('createProvider', (): void => {
       });
 
       it('should be a React Component', (): void => {
-        expect(Object.getPrototypeOf(Provider))
-          .to.equal(Component);
+        expect(Object.getPrototypeOf(Provider)).toEqual(Component);
       });
 
       it('should have a state', (): void => {
-        expect(Provider.global).to.deep.equal(INITIAL_STATE);
+        expect(Provider.global).toEqual(INITIAL_STATE);
       });
 
       it('should have empty dispatchers', (): void => {
-        expect(Provider.dispatch).to.deep.equal({});
+        expect(Provider.dispatch).toEqual({});
       });
     });
 
@@ -70,18 +67,17 @@ describe('createProvider', (): void => {
       });
 
       it('should be a React Component', (): void => {
-        expect(Object.getPrototypeOf(Provider))
-          .to.equal(Component);
+        expect(Object.getPrototypeOf(Provider)).toEqual(Component);
       });
 
       it('should have a state', (): void => {
-        expect(Provider.global).to.deep.equal(INITIAL_STATE);
+        expect(Provider.global).toEqual(INITIAL_STATE);
       });
 
       it('should have dispatchers', (): void => {
         const initialKeys = Object.keys(INITIAL_REDUCERS).sort();
         const setKeys = Object.keys(Provider.dispatch).sort();
-        expect(initialKeys).to.deep.equal(setKeys);
+        expect(initialKeys).toEqual(setKeys);
       });
     });
 

@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import GlobalStateManager from '../../src/global-state-manager';
 import { GS, INITIAL_STATE } from '../utils/initial';
 
@@ -19,17 +18,17 @@ describe('GlobalStateManager.removePropertyListener', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(globalStateManager.removePropertyListener).to.be.a('function');
-    expect(globalStateManager.removePropertyListener.length).to.equal(1);
+    expect(globalStateManager.removePropertyListener).toEqual(expect.any(Function));;
+    expect(globalStateManager.removePropertyListener.length).toBe(1);
   });
 
   it('remove a property listener', (): void => {
     globalStateManager.addPropertyListener(PROPERTY, PROPERTY_LISTENER);
     expect(globalStateManager.hasPropertyListener(PROPERTY_LISTENER))
-      .to.equal(true);
+      .toBe(true);
     globalStateManager.removePropertyListener(PROPERTY_LISTENER);
     expect(globalStateManager.hasPropertyListener(PROPERTY_LISTENER))
-      .to.equal(false);
+      .toBe(false);
   });
 
 
@@ -40,13 +39,13 @@ describe('GlobalStateManager.removePropertyListener', (): void => {
       globalStateManager.addPropertyListener(PROPERTY, PROPERTY_LISTENER);
       const removed: boolean =
         globalStateManager.removePropertyListener(PROPERTY_LISTENER);
-      expect(removed).to.equal(true);
+      expect(removed).toBe(true);
     });
 
     it('should be false if the property listener did not exist', (): void => {
       const removed: boolean =
         globalStateManager.removePropertyListener(PROPERTY_LISTENER);
-      expect(removed).to.equal(false);
+      expect(removed).toBe(false);
     });
   });
 

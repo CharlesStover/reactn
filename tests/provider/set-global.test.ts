@@ -69,7 +69,7 @@ describe('Provider.setGlobal', (): void => {
         const set: Promise<GS> = Provider.setGlobal(STATE_CHANGE);
         expect(set).toBeInstanceOf(Promise);
         const value: GS = await set;
-        expect(value).toStrictEqual(NEW_STATE);
+        expect(value).toEqual(NEW_STATE);
       }
     );
 
@@ -81,7 +81,7 @@ describe('Provider.setGlobal', (): void => {
         const set: Promise<GS> = Provider.setGlobal(STATE_CHANGE, NOOP);
         expect(set).toBeInstanceOf(Promise);
         const value: GS = await set;
-        expect(value).toStrictEqual(NEW_STATE);
+        expect(value).toEqual(NEW_STATE);
       }
     );
   });

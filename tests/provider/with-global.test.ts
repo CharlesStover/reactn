@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import createProvider, { ReactNProvider } from '../../src/create-provider';
 import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 
@@ -14,8 +13,8 @@ describe('Provider.withGlobal', (): void => {
 
 
   it('should be a function with 2 arguments', (): void => {
-    expect(Provider.withGlobal).to.be.a('function');
-    expect(Provider.withGlobal.length).to.equal(2);
+    expect(Provider.withGlobal).toEqual(expect.any(Function));;
+    expect(Provider.withGlobal.length).toBe(2);
   });
 
   it.skip('should do more', (): void => {

@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import GlobalStateManager from '../../src/global-state-manager';
 import Callback from '../../src/typings/callback';
 
@@ -18,14 +17,14 @@ describe('GlobalStateManager.addCallback', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(globalStateManager.addCallback).to.be.a('function');
-    expect(globalStateManager.addCallback.length).to.equal(1);
+    expect(globalStateManager.addCallback).toEqual(expect.any(Function));
+    expect(globalStateManager.addCallback.length).toBe(1);
   });
 
   it('should add a callback', (): void => {
-    expect(globalStateManager.hasCallback(CALLBACK)).to.equal(false);
+    expect(globalStateManager.hasCallback(CALLBACK)).toBe(false);
     globalStateManager.addCallback(CALLBACK);
-    expect(globalStateManager.hasCallback(CALLBACK)).to.equal(true);
+    expect(globalStateManager.hasCallback(CALLBACK)).toBe(true);
   });
 
 
@@ -38,14 +37,14 @@ describe('GlobalStateManager.addCallback', (): void => {
     });
 
     it('should be a function with no arguments', (): void => {
-      expect(removeCallback).to.be.a('function');
-      expect(removeCallback.length).to.equal(0);
+      expect(removeCallback).toEqual(expect.any(Function));
+      expect(removeCallback.length).toBe(0);
     });
 
     it('should remove the callback', (): void => {
-      expect(globalStateManager.hasCallback(CALLBACK)).to.equal(true);
+      expect(globalStateManager.hasCallback(CALLBACK)).toBe(true);
       removeCallback();
-      expect(globalStateManager.hasCallback(CALLBACK)).to.equal(false);
+      expect(globalStateManager.hasCallback(CALLBACK)).toBe(false);
     });
   });
 

@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import GlobalStateManager, { PropertyListener } from '../../src/global-state-manager';
 
 
@@ -29,13 +28,13 @@ describe('GlobalStateManager.addPropertyListener', (): void => {
 
 
   it('should be a function with 2 arguments', (): void => {
-    expect(globalStateManager.addPropertyListener).to.be.a('function');
-    expect(globalStateManager.addPropertyListener.length).to.equal(2);
+    expect(globalStateManager.addPropertyListener).toEqual(expect.any(Function));;
+    expect(globalStateManager.addPropertyListener.length).toBe(2);
   });
 
   it('should not return anything', (): void => {
     expect(globalStateManager.addPropertyListener(PROPERTY, PROPERTY_LISTENER))
-      .to.be.undefined;
+      .toBeUndefined();
   });
 
 
@@ -44,16 +43,16 @@ describe('GlobalStateManager.addPropertyListener', (): void => {
 
     it('should add a property listener', (): void => {
       expect(globalStateManager.hasPropertyListener(PROPERTY_LISTENER))
-        .to.equal(false);
+        .toBe(false);
       globalStateManager.addPropertyListener(PROPERTY, PROPERTY_LISTENER);
       expect(globalStateManager.hasPropertyListener(PROPERTY_LISTENER))
-        .to.equal(true);
+        .toBe(true);
     });
 
     it('should not return anything', (): void => {
       const value: void =
         globalStateManager.addPropertyListener(PROPERTY, PROPERTY_LISTENER);
-      expect(value).to.be.undefined;
+      expect(value).toBeUndefined();
     });
   });
 
@@ -66,19 +65,19 @@ describe('GlobalStateManager.addPropertyListener', (): void => {
     it('should add a property listener', (): void => {
       globalStateManager.addPropertyListener(PROPERTY, PROPERTY_LISTENER);
       expect(globalStateManager.hasPropertyListener(PROPERTY_LISTENER))
-        .to.equal(true);
+        .toBe(true);
       expect(globalStateManager.hasPropertyListener(PROPERTY_LISTENER2))
-        .to.equal(false);
+        .toBe(false);
       globalStateManager.addPropertyListener(PROPERTY, PROPERTY_LISTENER2);
       expect(globalStateManager.hasPropertyListener(PROPERTY_LISTENER2))
-        .to.equal(true);
+        .toBe(true);
     });
 
     it('should not return anything', (): void => {
       globalStateManager.addPropertyListener(PROPERTY, PROPERTY_LISTENER);
       const value: void =
         globalStateManager.addPropertyListener(PROPERTY, PROPERTY_LISTENER2);
-      expect(value).to.be.undefined;
+      expect(value).toBeUndefined();
     });
   });
 
