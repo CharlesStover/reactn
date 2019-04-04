@@ -1,9 +1,7 @@
-import * as React from 'react';
 import GlobalStateManager from '../../src/global-state-manager';
-import useGlobal, {
-  GlobalTuple,
-  REACT_HOOKS_ERROR,
-} from '../../src/use-global';
+import useGlobal, { GlobalTuple } from '../../src/use-global';
+import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
+import deleteHooks from '../utils/delete-hooks';
 import HookTest from '../utils/hook-test';
 import { GS, INITIAL_STATE } from '../utils/initial';
 
@@ -102,44 +100,68 @@ describe('useGlobal()', (): void => {
 
   describe('setter', (): void => {
 
-    it(
-      'should return a Promise of the new global state',
-      async (): Promise<void> => {
+    describe('with callback', (): void => {
+      const CALLBACK: jest.Mock<void, [ GS ]> = jest.fn();
+
+      it(
+        'should return a Promise of the new global state',
+        async (): Promise<void> => {
+          testUseGlobal.render();
+          const [ , setGlobal ]: GlobalTuple<GS> = testUseGlobal.value;
+          let set: Promise<GS>;
+          set = setGlobal(STATE_CHANGE, CALLBACK);
+          expect(set).toBeInstanceOf(Promise);
+          let value: GS;
+          value = await set;
+          expect(value).toEqual(NEW_STATE);
+        }
+      );
+
+      it('should update the state', async (): Promise<void> => {
         testUseGlobal.render();
         const [ , setGlobal ]: GlobalTuple<GS> = testUseGlobal.value;
-        let set: Promise<GS>;
-        set = setGlobal(STATE_CHANGE);
-        expect(set).toBeInstanceOf(Promise);
-        let value: GS;
-        value = await set;
-        expect(value).toEqual(NEW_STATE);
-      }
-    );
+        await setGlobal(STATE_CHANGE, CALLBACK);
+        expect(globalStateManager.state).toEqual(NEW_STATE);
+      });
 
-    it('should update the state', async (): Promise<void> => {
-      testUseGlobal.render();
-      const [ , setGlobal ]: GlobalTuple<GS> = testUseGlobal.value;
-      await setGlobal(STATE_CHANGE);
-      expect(globalStateManager.state).toEqual(NEW_STATE);
+      it('should execute the callback', async (): Promise<void> => {
+        testUseGlobal.render();
+        const [ , setGlobal ]: GlobalTuple<GS> = testUseGlobal.value;
+        await setGlobal(STATE_CHANGE, CALLBACK);
+        expect(CALLBACK).toHaveBeenCalledTimes(1);
+        expect(CALLBACK).toHaveBeenCalledWith(NEW_STATE);
+      });
+    });
+
+    describe('without callback', (): void => {
+
+      it(
+        'should return a Promise of the new global state',
+        async (): Promise<void> => {
+          testUseGlobal.render();
+          const [ , setGlobal ]: GlobalTuple<GS> = testUseGlobal.value;
+          let set: Promise<GS>;
+          set = setGlobal(STATE_CHANGE);
+          expect(set).toBeInstanceOf(Promise);
+          let value: GS;
+          value = await set;
+          expect(value).toEqual(NEW_STATE);
+        }
+      );
+
+      it('should update the state', async (): Promise<void> => {
+        testUseGlobal.render();
+        const [ , setGlobal ]: GlobalTuple<GS> = testUseGlobal.value;
+        await setGlobal(STATE_CHANGE);
+        expect(globalStateManager.state).toEqual(NEW_STATE);
+      });
     });
   });
 
 
 
   describe('React Hooks', (): void => {
-
-    let useContext: typeof React.useContext;
-
-    beforeEach((): void => {
-      useContext = React.useContext;
-      delete React.useContext;
-    });
-
-    afterEach((): void => {
-      // @ts-ignore: Cannot assign to 'useContext' because it is a read-only
-      //   property.
-      React.useContext = useContext;
-    });
+    deleteHooks();
 
     it('should be required', (): void => {
       testUseGlobal.render();

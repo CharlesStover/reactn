@@ -4,18 +4,9 @@ import { ReactNProvider } from './create-provider';
 import reactn from './decorator';
 import { NewGlobalState } from './global-state-manager';
 import Callback from './typings/callback';
-import Reducer, { Reducers } from './typings/reducer';
-import {
-  GlobalTuple,
-  Setter as UseGlobalSetter,
-  StateTuple,
-  UseGlobal,
-} from './use-global';
-import {
-  Getter,
-  Setter as WithGlobalSetter,
-  WithGlobal,
-} from './with-global';
+import Reducer, { Dispatcher, ExtractA, Reducers } from './typings/reducer';
+import { GlobalTuple, StateTuple, UseGlobal } from './use-global';
+import { Getter, Setter, WithGlobal } from './with-global';
 
 
 
@@ -68,17 +59,19 @@ interface ReactN extends TypeOfReact {
 
   useGlobal<GS extends {}, Property extends keyof GS>(
     property: Property,
-    setterOnly?: false,
   ): StateTuple<GS, Property>;
 
-  useGlobal<GS extends {}, Property extends keyof GS>(
-    property: Property,
-    setterOnly: true,
-  ): UseGlobalSetter<GS, Property>;
+  useGlobalReducer<GS extends {} = {}, A extends any[] = any[]>(
+    reducer: Reducer<GS, A>,
+  ): Dispatcher<GS, A>;
+
+  useGlobalReducer<GS extends {} = {}, R extends {} = {}, K extends keyof R = keyof R>(
+    reducer: K,
+  ): Dispatcher<GS, ExtractA<R[K]>>;
 
   withGlobal<GS extends {} = {}, HP extends {} = {}, LP extends {} = {}>(
     getter?: Getter<GS, HP, LP>,
-    setter?: WithGlobalSetter<GS, HP, LP>,
+    setter?: Setter<GS, HP, LP>,
   ): WithGlobal<HP, LP>;
 }
 

@@ -7,20 +7,14 @@ import setGlobal from './set-global';
 import Callback from './typings/callback';
 import Reducer, {
   AdditionalDispatchers,
+  Dispatcher,
   Dispatchers,
+  ExtractA,
   Reducers,
 } from './typings/reducer';
-import useGlobal, {
-  GlobalTuple,
-  Setter as UseGlobalSetter,
-  StateTuple,
-  UseGlobal,
-} from './use-global';
-import withGlobal, {
-  Getter,
-  Setter as WithGlobalSetter,
-  WithGlobal,
-} from './with-global';
+import useGlobal, { GlobalTuple, StateTuple, UseGlobal } from './use-global';
+import useGlobalReducer, { UseGlobalReducer } from './use-global-reducer';
+import withGlobal, { Getter, Setter, WithGlobal } from './with-global';
 
 
 
@@ -49,15 +43,10 @@ export interface ReactNProvider<
   useGlobal(): GlobalTuple<GS>;
   useGlobal<Property extends keyof GS>(
     property: Property,
-    setterOnly?: false,
   ): StateTuple<GS, Property>;
-  useGlobal<Property extends keyof GS>(
-    property: Property,
-    setterOnly: true,
-  ): UseGlobalSetter<GS, Property>;
   withGlobal<HP, LP>(
     getter: Getter<GS, HP, LP>,
-    setter: WithGlobalSetter<GS, HP, LP>,
+    setter: Setter<GS, HP, LP>,
   ): WithGlobal<HP, LP>;
   new (props: {}, context?: any): React.Component<{}, {}>;
 }
@@ -130,28 +119,35 @@ export default function createProvider<
     public static useGlobal(): GlobalTuple<GS>;
     public static useGlobal<Property extends keyof GS>(
       property: Property,
-      setterOnly?: false,
     ): StateTuple<GS, Property>;
     public static useGlobal<Property extends keyof GS>(
-      property: Property,
-      setterOnly: true,
-    ): UseGlobalSetter<GS, Property>;
-    public static useGlobal<Property extends keyof GS>(
       property?: Property,
-      setterOnly: boolean = false,
     ): UseGlobal<GS, Property> {
-      return useGlobal(
-        globalStateManager,
-        property,
-        // @ts-ignore-next-line: Argument of type 'boolean' is not assignable
-        //   to parameter of type 'true'.
-        setterOnly,
-      );
+      return useGlobal(globalStateManager, property);
+    }
+
+    public static useGlobalReducer<A extends any[] = any[]>(
+      reducer: Reducer<GS, A>,
+    ): Dispatcher<GS, A>;
+    public static useGlobalReducer<K extends keyof R = keyof R>(
+      reducer: K,
+    ): Dispatcher<GS, ExtractA<R[K]>>;
+    public static useGlobalReducer<K extends keyof R = keyof R, A extends any[] = any[]>(
+      reducer: K | Reducer<GS, A>,
+    ): UseGlobalReducer<GS, R, K, A> {
+
+      // TypeScript required this be an if-else block with the exact same
+      //   function call.
+      // The generics were added to make the best of an inefficient situation.
+      if (typeof reducer === 'function') {
+        return useGlobalReducer<GS, A>(globalStateManager, reducer);
+      }
+      return useGlobalReducer<GS, R>(globalStateManager, reducer);
     }
 
     public static withGlobal<HP, LP>(
       getter: Getter<GS, HP, LP> = (globalState: GS): GS => globalState,
-      setter: WithGlobalSetter<GS, HP, LP> = (): null => null,
+      setter: Setter<GS, HP, LP> = (): null => null,
     ): WithGlobal<HP, LP> {
       return withGlobal<GS, HP, LP>(globalStateManager, getter, setter);
     }

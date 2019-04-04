@@ -32,7 +32,7 @@ describe('GlobalStateManager.createDispatcher', (): void => {
      *   the build.
      */
     it('should be a function', (): void => {
-      const dispatch: Dispatcher<typeof INITIAL_REDUCERS.reset> =
+      const dispatch: Dispatcher<GS, []> =
         globalStateManager.createDispatcher(INITIAL_REDUCERS.reset);
       expect(dispatch).toBeInstanceOf(Function);
     });
@@ -43,7 +43,7 @@ describe('GlobalStateManager.createDispatcher', (): void => {
         (_gs: GS, _1: boolean, _2: number): null => null;
       const spy = jest.fn(REDUCER_WITH_ARGS);
 
-      const dispatch: Dispatcher<typeof REDUCER_WITH_ARGS> =
+      const dispatch: Dispatcher<GS, [ boolean, number ]> =
         globalStateManager.createDispatcher(spy);
       dispatch(true, 1);
       expect(spy).toHaveBeenCalledTimes(1);
@@ -56,7 +56,7 @@ describe('GlobalStateManager.createDispatcher', (): void => {
         x: true,
       };
       const REDUCER = (): Partial<GS> => NEW_STATE;
-      const dispatch: Dispatcher<typeof REDUCER> =
+      const dispatch: Dispatcher<GS, []> =
         globalStateManager.createDispatcher(REDUCER);
       dispatch();
       expect(spy.set).toHaveBeenCalledTimes(1);
@@ -73,7 +73,7 @@ describe('GlobalStateManager.createDispatcher', (): void => {
         z: 'any',
       });
 
-      let dispatch: Dispatcher<typeof REDUCER>;
+      let dispatch: Dispatcher<GS, []>;
       beforeEach((): void => {
         dispatch = globalStateManager.createDispatcher(REDUCER);
       });
