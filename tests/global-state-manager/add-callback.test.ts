@@ -17,8 +17,8 @@ describe('GlobalStateManager.addCallback', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(globalStateManager.addCallback).toEqual(expect.any(Function));
-    expect(globalStateManager.addCallback.length).toBe(1);
+    expect(globalStateManager.addCallback).toBeInstanceOf(Function);
+    expect(globalStateManager.addCallback).toHaveLength(1);
   });
 
   it('should add a callback', (): void => {
@@ -37,8 +37,8 @@ describe('GlobalStateManager.addCallback', (): void => {
     });
 
     it('should be a function with no arguments', (): void => {
-      expect(removeCallback).toEqual(expect.any(Function));
-      expect(removeCallback.length).toBe(0);
+      expect(removeCallback).toBeInstanceOf(Function);
+      expect(removeCallback).toHaveLength(0);
     });
 
     it('should remove the callback', (): void => {

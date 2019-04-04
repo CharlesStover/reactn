@@ -13,8 +13,8 @@ describe('GlobalStateManager.flush', (): void => {
 
 
   it('should be a function with no arguments', (): void => {
-    expect(globalStateManager.flush).toEqual(expect.any(Function));;
-    expect(globalStateManager.flush.length).toBe(0);
+    expect(globalStateManager.flush).toBeInstanceOf(Function);
+    expect(globalStateManager.flush).toHaveLength(0);
   });
 
   it('should not return anything', (): void => {

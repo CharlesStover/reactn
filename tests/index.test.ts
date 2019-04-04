@@ -28,7 +28,7 @@ describe('package.json main', (): void => {
 
     // All remaining properties should match React.
     for (const [ key, value ] of entries) {
-      expect(ReactN[key]).toEqual(value);
+      expect(ReactN[key]).toStrictEqual(value);
     }
   });
 
@@ -40,78 +40,78 @@ describe('package.json main', (): void => {
 
   // addCallback
   it('should contain addCallback', (): void => {
-    expect(ReactN.addCallback).toEqual(expect.any(Function));
-    expect(ReactN.addCallback.length).toBe(1);
+    expect(ReactN.addCallback).toBeInstanceOf(Function);
+    expect(ReactN.addCallback).toHaveLength(1);
   });
 
   // addReducer
   it('should contain addReducer', (): void => {
-    expect(ReactN.addReducer).toEqual(expect.any(Function));
-    expect(ReactN.addReducer.length).toBe(2);
+    expect(ReactN.addReducer).toBeInstanceOf(Function);
+    expect(ReactN.addReducer).toHaveLength(2);
   });
 
   // addReducers
   it('should contain addReducers', (): void => {
-    expect(ReactN.addReducers).toEqual(expect.any(Function));
-    expect(ReactN.addReducers.length).toBe(1);
+    expect(ReactN.addReducers).toBeInstanceOf(Function);
+    expect(ReactN.addReducers).toHaveLength(1);
   });
 
   // Component
   it('should contain the ReactN Component class', (): void => {
-    expect(ReactN.Component).toEqual(expect.any(Function));
+    expect(ReactN.Component).toBeInstanceOf(Function);
   });
 
   // createProvider
   it('should contain createProvider', (): void => {
-    expect(ReactN.createProvider).toEqual(expect.any(Function));
-    expect(ReactN.createProvider.length).toBe(2);
+    expect(ReactN.createProvider).toBeInstanceOf(Function);
+    expect(ReactN.createProvider).toHaveLength(2);
   });
 
   // default
   it('should contain the @reactn decorator', (): void => {
-    expect(ReactN).toEqual(expect.any(Function));
-    expect(ReactN.default).toEqual(expect.any(Function));
+    expect(ReactN).toBeInstanceOf(Function);
+    expect(ReactN.default).toBeInstanceOf(Function);
     expect(ReactN).toBe(ReactN.default);
   });
 
   // getGlobal
   it('should contain getGlobal', (): void => {
-    expect(ReactN.getGlobal).toEqual(expect.any(Function));
+    expect(ReactN.getGlobal).toBeInstanceOf(Function);
     expect(ReactN.getGlobal).toHaveLength(0);
   });
 
   // PureComponent
   it('should contain the ReactN PureComponent class', (): void => {
-    expect(ReactN.PureComponent).toEqual(expect.any(Function));
+    expect(ReactN.PureComponent).toBeInstanceOf(Function);
   });
 
   // removeCallback
   it('should contain removeCallback', (): void => {
-    expect(ReactN.removeCallback).toEqual(expect.any(Function));
+    expect(ReactN.removeCallback).toBeInstanceOf(Function);
     expect(ReactN.removeCallback).toHaveLength(1);
   });
 
   // resetGlobal
   it('should contain resetGlobal', (): void => {
-    expect(ReactN.resetGlobal).toEqual(expect.any(Function));
+    expect(ReactN.resetGlobal).toBeInstanceOf(Function);
     expect(ReactN.resetGlobal).toHaveLength(0);
   });
 
   // setGlobal
   it('should contain setGlobal', (): void => {
-    expect(ReactN.setGlobal).toEqual(expect.any(Function));
+    expect(ReactN.setGlobal).toBeInstanceOf(Function);
     expect(ReactN.setGlobal).toHaveLength(2);
   });
 
   // useGlobal
   it('should contain useGlobal', (): void => {
-    expect(ReactN.useGlobal).toEqual(expect.any(Function));
+    expect(ReactN.useGlobal).toBeInstanceOf(Function);
     expect(ReactN.useGlobal).toHaveLength(2);
   });
 
   // withGlobal
   it('should contain withGlobal', (): void => {
-    expect(ReactN.withGlobal).toEqual(expect.any(Function));
+    expect(ReactN.withGlobal).toBeInstanceOf(Function);
     expect(ReactN.withGlobal).toHaveLength(2);
   });
 

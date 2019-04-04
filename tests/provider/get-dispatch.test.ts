@@ -13,11 +13,11 @@ describe('Provider.getDispatch', (): void => {
 
 
   it('should be a function with no arguments', (): void => {
-    expect(Provider.getDispatch).toEqual(expect.any(Function));;
-    expect(Provider.getDispatch.length).toBe(0);
+    expect(Provider.getDispatch).toBeInstanceOf(Function);
+    expect(Provider.getDispatch).toHaveLength(0);
   });
 
   it('should return dispatch', (): void => {
-    expect(Provider.getDispatch()).toEqual(Provider.dispatch);
+    expect(Provider.getDispatch()).toStrictEqual(Provider.dispatch);
   });
 });

@@ -13,7 +13,7 @@ describe('resetGlobal', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(resetGlobal).toEqual(expect.any(Function));
+    expect(resetGlobal).toBeInstanceOf(Function);
     expect(resetGlobal).toHaveLength(1);
   });
 

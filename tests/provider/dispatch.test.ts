@@ -3,6 +3,12 @@ import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 
 
 
+const INITIAL_REDUCERS_KEYS: string[] = Object.keys(INITIAL_REDUCERS);
+
+INITIAL_REDUCERS_KEYS.sort();
+
+
+
 describe('Provider.dispatch', (): void => {
 
   let Provider: ReactNProvider<GS, R>;
@@ -13,9 +19,10 @@ describe('Provider.dispatch', (): void => {
 
 
   it('should be an object of functions', (): void => {
+    // Provider.dispatch extends Object.create(null), so it has no prototype.
     expect(Provider.dispatch).toEqual(expect.any(Object));
     for (const dispatcher of Object.values(Provider.dispatch)) {
-      expect(dispatcher).toEqual(expect.any(Function));;
+      expect(dispatcher).toBeInstanceOf(Function);
     }
   });
 
@@ -27,17 +34,17 @@ describe('Provider.dispatch', (): void => {
   });
 
   it('should share keys with reducers', (): void => {
-    const dispatchKeys = Object.keys(Provider.dispatch).sort();
-    const reducerKeys = Object.keys(INITIAL_REDUCERS).sort();
-    expect(dispatchKeys).toEqual(reducerKeys);
+    const dispatchKeys: string[] = Object.keys(Provider.dispatch);
+    dispatchKeys.sort();
+    expect(dispatchKeys).toStrictEqual(INITIAL_REDUCERS_KEYS);
   });
 
   it('should update when reducers update', (): void => {
-    const REDUCER = (): void => {};
+    const REDUCER = (): void => { };
     const REDUCER_NAME = 'REDUCER_NAME';
 
     expect(Provider.dispatch[REDUCER_NAME]).toBeUndefined();
     Provider.addReducer(REDUCER_NAME, REDUCER);
-    expect(Provider.dispatch[REDUCER_NAME]).toEqual(expect.any(Function));;
+    expect(Provider.dispatch[REDUCER_NAME]).toBeInstanceOf(Function);
   });
 });

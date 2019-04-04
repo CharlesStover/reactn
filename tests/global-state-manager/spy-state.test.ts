@@ -26,8 +26,8 @@ describe('GlobalStateManager.spyState', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(globalStateManager.spyState).toEqual(expect.any(Function));;
-    expect(globalStateManager.spyState.length).toBe(1);
+    expect(globalStateManager.spyState).toBeInstanceOf(Function);
+    expect(globalStateManager.spyState).toHaveLength(1);
   });
 
   it('should return the current state', async (): Promise<void> => {
@@ -43,6 +43,7 @@ describe('GlobalStateManager.spyState', (): void => {
       .toBe(false);
     globalStateManager.spyState(PROPERTY_LISTENER)[PROPERTY];
     expect(spy.addPropertyListener).toHaveBeenCalledTimes(1);
-    expect(spy.addPropertyListener).toHaveBeenCalledWith(PROPERTY, PROPERTY_LISTENER);
+    expect(spy.addPropertyListener)
+      .toHaveBeenCalledWith(PROPERTY, PROPERTY_LISTENER);
   });
 });

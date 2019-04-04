@@ -23,8 +23,8 @@ describe('Provider.addReducers', (): void => {
 
 
   it('should be a function with 1 arguments', (): void => {
-    expect(Provider.addReducers).toEqual(expect.any(Function));;
-    expect(Provider.addReducers.length).toBe(1);
+    expect(Provider.addReducers).toBeInstanceOf(Function);
+    expect(Provider.addReducers).toHaveLength(1);
   });
 
   it(
@@ -50,8 +50,8 @@ describe('Provider.addReducers', (): void => {
 
 
     it('should be a function with no arguments', (): void => {
-      expect(removeReducers).toEqual(expect.any(Function));;
-      expect(removeReducers.length).toBe(0);
+      expect(removeReducers).toBeInstanceOf(Function);
+      expect(removeReducers).toHaveLength(0);
     });
 
     it(

@@ -13,8 +13,8 @@ describe('Provider.withGlobal', (): void => {
 
 
   it('should be a function with 2 arguments', (): void => {
-    expect(Provider.withGlobal).toEqual(expect.any(Function));;
-    expect(Provider.withGlobal.length).toBe(2);
+    expect(Provider.withGlobal).toBeInstanceOf(Function);
+    expect(Provider.withGlobal).toHaveLength(2);
   });
 
   it.skip('should do more', (): void => {

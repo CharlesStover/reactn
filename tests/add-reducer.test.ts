@@ -22,7 +22,7 @@ describe('addReducer', (): void => {
 
 
   it('should be a function with 3 arguments', (): void => {
-    expect(addReducer).toEqual(expect.any(Function));
+    expect(addReducer).toBeInstanceOf(Function);
     expect(addReducer).toHaveLength(3);
   });
 
@@ -42,7 +42,7 @@ describe('addReducer', (): void => {
     });
 
     it('should be a function with no arguments', (): void => {
-      expect(removeReducer).toEqual(expect.any(Function));
+      expect(removeReducer).toBeInstanceOf(Function);
       expect(removeReducer).toHaveLength(0);
     });
 

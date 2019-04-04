@@ -22,8 +22,8 @@ describe('GlobalStateManager.clearQueue', (): void => {
 
 
   it('should be a function with no arguments', (): void => {
-    expect(globalStateManager.clearQueue).toEqual(expect.any(Function));;
-    expect(globalStateManager.clearQueue.length).toBe(0);
+    expect(globalStateManager.clearQueue).toBeInstanceOf(Function);
+    expect(globalStateManager.clearQueue).toHaveLength(0);
   });
 
   it('should not return anything', (): void => {

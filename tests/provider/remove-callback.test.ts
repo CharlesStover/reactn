@@ -18,8 +18,8 @@ describe('Provider.removeCallback', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(Provider.removeCallback).toEqual(expect.any(Function));;
-    expect(Provider.removeCallback.length).toBe(1);
+    expect(Provider.removeCallback).toBeInstanceOf(Function);
+    expect(Provider.removeCallback).toHaveLength(1);
   });
 
   it('should call GlobalStateManager.removeCallback', () => {

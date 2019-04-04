@@ -15,8 +15,8 @@ describe('GlobalStateManager.createDispatcher', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(globalStateManager.createDispatcher).toEqual(expect.any(Function));;
-    expect(globalStateManager.createDispatcher.length).toBe(1);
+    expect(globalStateManager.createDispatcher).toBeInstanceOf(Function);
+    expect(globalStateManager.createDispatcher).toHaveLength(1);
   });
 
 
@@ -34,7 +34,7 @@ describe('GlobalStateManager.createDispatcher', (): void => {
     it('should be a function', (): void => {
       const dispatch: Dispatcher<typeof INITIAL_REDUCERS.reset> =
         globalStateManager.createDispatcher(INITIAL_REDUCERS.reset);
-      expect(dispatch).toEqual(expect.any(Function));;
+      expect(dispatch).toBeInstanceOf(Function);
     });
 
     it('should auto-fill the global state argument', (): void => {
@@ -86,7 +86,7 @@ describe('GlobalStateManager.createDispatcher', (): void => {
 
       it('should resolve to the new global state', async (): Promise<void> => {
         const value: GS = await dispatch();
-        expect(value).toEqual(globalStateManager.state);
+        expect(value).toStrictEqual(globalStateManager.state);
       });
     });
 

@@ -21,8 +21,8 @@ describe('GlobalStateManager.setObject', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(globalStateManager.setObject).toEqual(expect.any(Function));;
-    expect(globalStateManager.setObject.length).toBe(1);
+    expect(globalStateManager.setObject).toBeInstanceOf(Function);
+    expect(globalStateManager.setObject).toHaveLength(1);
   });
 
   it('should call enqueue and flush', async (): Promise<void> => {

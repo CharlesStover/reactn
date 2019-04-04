@@ -23,7 +23,7 @@ describe('removeCallback', (): void => {
 
 
   it('should be a function with 2 arguments', (): void => {
-    expect(removeCallback).toEqual(expect.any(Function));
+    expect(removeCallback).toBeInstanceOf(Function);
     expect(removeCallback).toHaveLength(2);
   });
 

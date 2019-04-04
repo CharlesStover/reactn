@@ -24,8 +24,8 @@ describe('GlobalStateManager.set', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(globalStateManager.set).toEqual(expect.any(Function));;
-    expect(globalStateManager.set.length).toBe(1);
+    expect(globalStateManager.set).toBeInstanceOf(Function);
+    expect(globalStateManager.set).toHaveLength(1);
   });
 
   it('should not accept boolean', (): void => {

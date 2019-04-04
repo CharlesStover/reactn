@@ -23,8 +23,8 @@ describe('GlobalStateManager.setFunction', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(globalStateManager.setFunction).toEqual(expect.any(Function));;
-    expect(globalStateManager.setFunction.length).toBe(1);
+    expect(globalStateManager.setFunction).toBeInstanceOf(Function);
+    expect(globalStateManager.setFunction).toHaveLength(1);
   });
 
   it('should call set', async (): Promise<void> => {

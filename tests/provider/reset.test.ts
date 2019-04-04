@@ -14,8 +14,8 @@ describe('Provider.reset', (): void => {
 
 
   it('should be a function with no arguments', (): void => {
-    expect(Provider.reset).toEqual(expect.any(Function));;
-    expect(Provider.reset.length).toBe(0);
+    expect(Provider.reset).toBeInstanceOf(Function);
+    expect(Provider.reset).toHaveLength(0);
   });
 
   it('should call GlobalStateManager.reset', (): void => {

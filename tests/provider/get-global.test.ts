@@ -13,11 +13,11 @@ describe('Provider.getGlobal', (): void => {
 
 
   it('should be a function with no arguments', (): void => {
-    expect(Provider.getGlobal).toEqual(expect.any(Function));;
-    expect(Provider.getGlobal.length).toBe(0);
+    expect(Provider.getGlobal).toBeInstanceOf(Function);
+    expect(Provider.getGlobal).toHaveLength(0);
   });
 
   it('should return global', (): void => {
-    expect(Provider.getGlobal()).toEqual(Provider.global);
+    expect(Provider.getGlobal()).toStrictEqual(Provider.global);
   });
 });
