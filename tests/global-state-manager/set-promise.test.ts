@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import GlobalStateManager from '../../src/global-state-manager';
 import { GS, INITIAL_STATE } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
@@ -24,13 +23,14 @@ describe('GlobalStateManager.setPromise', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(globalStateManager.setPromise).to.be.a('function');
-    expect(globalStateManager.setPromise.length).to.equal(1);
+    expect(globalStateManager.setPromise).toEqual(expect.any(Function));;
+    expect(globalStateManager.setPromise.length).toBe(1);
   });
 
   it('should call set', async (): Promise<void> => {
     await globalStateManager.setPromise(PROMISE);
-    expect(spy.set.calledOnceWithExactly(STATE_CHANGE)).to.equal(true);
+    expect(spy.set).toHaveBeenCalledTimes(1);
+    expect(spy.set).toHaveBeenCalledWith(STATE_CHANGE);
   });
 
 
@@ -39,14 +39,14 @@ describe('GlobalStateManager.setPromise', (): void => {
 
     it('should be a Promise', async (): Promise<void> => {
       const set: Promise<GS | void> = globalStateManager.setPromise(PROMISE);
-      expect(set).to.be.instanceOf(Promise);
+      expect(set).toBeInstanceOf(Promise);
       await set;
     });
 
     it('should resolve to the new global state', async (): Promise<void> => {
       const set: Promise<GS> = globalStateManager.setPromise(PROMISE);
       const value = await set;
-      expect(value).to.deep.equal({
+      expect(value).toEqual({
         ...INITIAL_STATE,
         ...STATE_CHANGE,
       });

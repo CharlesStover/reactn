@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import makeIterable from '../src/utils/make-iterable';
 
 describe('makeIterable', (): void => {
@@ -8,10 +7,10 @@ describe('makeIterable', (): void => {
     makeIterable(x, 1, 'ABC', true, x);
     // @ts-ignore: () => { } is not an array
     const [ num, str, bool, f ] = x;
-    expect(num).to.equal(1);
-    expect(str).to.equal('ABC');
-    expect(bool).to.equal(true);
-    expect(f).to.equal(x);
+    expect(num).toBe(1);
+    expect(str).toBe('ABC');
+    expect(bool).toBe(true);
+    expect(f).toBe(x);
   });
 
   it('should make a function iterable', (): void => {
@@ -20,7 +19,7 @@ describe('makeIterable', (): void => {
     const y = makeIterable.apply(null, [ x, ...items ]);
     let key = 0;
     for (const item of y) {
-      expect(item).to.equal(items[key]);
+      expect(item).toBe(items[key]);
       key++;
     }
   });

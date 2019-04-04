@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import GlobalStateManager from '../src/global-state-manager';
 import resetGlobal from '../src/reset-global';
 import spyOn from './utils/spy-on-global-state-manager';
@@ -14,16 +13,17 @@ describe('resetGlobal', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(resetGlobal).to.be.a('function');
-    expect(resetGlobal.length).to.equal(1);
+    expect(resetGlobal).toEqual(expect.any(Function));
+    expect(resetGlobal).toHaveLength(1);
   });
 
   it('should call GlobalStateManager.reset', (): void => {
     resetGlobal(globalStateManager);
-    expect(spy.reset.calledOnceWithExactly()).to.equal(true);
+    expect(spy.reset).toHaveBeenCalledTimes(1);
+    expect(spy.reset).toHaveBeenCalledWith();
   });
 
   it('should return undefined', (): void => {
-    expect(resetGlobal(globalStateManager)).to.be.undefined;
+    expect(resetGlobal(globalStateManager)).toBeUndefined();
   });
 });

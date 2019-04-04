@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import addCallback from '../src/add-callback';
 import GlobalStateManager from '../src/global-state-manager';
 import removeCallback from '../src/remove-callback';
@@ -24,24 +23,25 @@ describe('removeCallback', (): void => {
 
 
   it('should be a function with 2 arguments', (): void => {
-    expect(removeCallback).to.be.a('function');
-    expect(removeCallback.length).to.equal(2);
+    expect(removeCallback).toEqual(expect.any(Function));
+    expect(removeCallback).toHaveLength(2);
   });
 
   it('should call GlobalStateManager.removeCallback', (): void => {
     removeCallback(globalStateManager, CALLBACK);
-    expect(spy.removeCallback.calledOnceWithExactly(CALLBACK)).to.equal(true);
+    expect(spy.removeCallback).toHaveBeenCalledTimes(1);
+    expect(spy.removeCallback).toHaveBeenCalledWith(CALLBACK);
   });
 
   describe('return value', (): void => {
 
     it('should be true if the callback existed', (): void => {
       addCallback(globalStateManager, CALLBACK);
-      expect(removeCallback(globalStateManager, CALLBACK)).to.equal(true);
+      expect(removeCallback(globalStateManager, CALLBACK)).toBe(true);
     });
 
     it('should be false if the callback did not exist', (): void => {
-      expect(removeCallback(globalStateManager, CALLBACK)).to.equal(false);
+      expect(removeCallback(globalStateManager, CALLBACK)).toBe(false);
     });
   });
 });

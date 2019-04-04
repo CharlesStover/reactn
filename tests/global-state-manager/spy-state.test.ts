@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import GlobalStateManager from '../../src/global-state-manager';
 import { GS, INITIAL_STATE } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
@@ -27,13 +26,13 @@ describe('GlobalStateManager.spyState', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(globalStateManager.spyState).to.be.a('function');
-    expect(globalStateManager.spyState.length).to.equal(1);
+    expect(globalStateManager.spyState).toEqual(expect.any(Function));;
+    expect(globalStateManager.spyState.length).toBe(1);
   });
 
   it('should return the current state', async (): Promise<void> => {
     await globalStateManager.set(MOCK_STATE);
-    expect(globalStateManager.spyState(PROPERTY_LISTENER)).to.deep.equal({
+    expect(globalStateManager.spyState(PROPERTY_LISTENER)).toEqual({
       ...INITIAL_STATE,
       ...MOCK_STATE,
     });
@@ -41,11 +40,9 @@ describe('GlobalStateManager.spyState', (): void => {
 
   it('should add a property listener when accessed', (): void => {
     expect(globalStateManager.hasPropertyListener(PROPERTY_LISTENER))
-      .to.equal(false);
+      .toBe(false);
     globalStateManager.spyState(PROPERTY_LISTENER)[PROPERTY];
-    expect(spy.addPropertyListener.calledOnceWithExactly(
-      PROPERTY,
-      PROPERTY_LISTENER,
-    )).to.equal(true);
+    expect(spy.addPropertyListener).toHaveBeenCalledTimes(1);
+    expect(spy.addPropertyListener).toHaveBeenCalledWith(PROPERTY, PROPERTY_LISTENER);
   });
 });

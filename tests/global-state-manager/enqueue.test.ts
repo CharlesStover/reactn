@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import GlobalStateManager from '../../src/global-state-manager';
 import { GS, INITIAL_STATE } from '../utils/initial';
 
@@ -14,18 +13,18 @@ describe('GlobalStateManager.enqueue', (): void => {
 
 
   it('should be a function with 2 arguments', (): void => {
-    expect(globalStateManager.enqueue).to.be.a('function');
-    expect(globalStateManager.enqueue.length).to.equal(2);
+    expect(globalStateManager.enqueue).toEqual(expect.any(Function));;
+    expect(globalStateManager.enqueue.length).toBe(2);
   });
 
   it('should not return anything', (): void => {
-    expect(globalStateManager.enqueue('x', true)).to.be.undefined;
+    expect(globalStateManager.enqueue('x', true)).toBeUndefined();
   });
 
   it('should update the queue', (): void => {
-    expect(globalStateManager.queue.get('x')).to.be.undefined;
+    expect(globalStateManager.queue.get('x')).toBeUndefined();
     globalStateManager.enqueue('x', true);
-    expect(globalStateManager.queue.size).to.equal(1);
-    expect(globalStateManager.queue.get('x')).to.equal(true);
+    expect(globalStateManager.queue.size).toBe(1);
+    expect(globalStateManager.queue.get('x')).toBe(true);
   });
 });

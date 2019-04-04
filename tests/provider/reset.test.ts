@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import createProvider, { ReactNProvider } from '../../src/create-provider';
 import spyOn from '../utils/spy-on-global-state-manager';
 
@@ -15,16 +14,17 @@ describe('Provider.reset', (): void => {
 
 
   it('should be a function with no arguments', (): void => {
-    expect(Provider.reset).to.be.a('function');
-    expect(Provider.reset.length).to.equal(0);
+    expect(Provider.reset).toEqual(expect.any(Function));;
+    expect(Provider.reset.length).toBe(0);
   });
 
   it('should call GlobalStateManager.reset', (): void => {
     Provider.reset();
-    expect(spy.reset.calledOnceWithExactly()).to.equal(true);
+    expect(spy.reset).toHaveBeenCalledTimes(1);
+    expect(spy.reset).toHaveBeenCalledWith();
   });
 
   it('should return undefined', (): void => {
-    expect(Provider.reset()).to.be.undefined;
+    expect(Provider.reset()).toBeUndefined();
   });
 });

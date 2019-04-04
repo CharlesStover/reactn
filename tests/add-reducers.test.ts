@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import addReducers from '../src/add-reducers';
 import GlobalStateManager from '../src/global-state-manager';
 import { GS, INITIAL_REDUCERS, INITIAL_STATE } from './utils/initial';
@@ -24,18 +23,17 @@ describe('addReducers', (): void => {
 
 
   it('should be a function with 2 arguments', (): void => {
-    expect(addReducers).to.be.a('function');
-    expect(addReducers.length).to.equal(2);
+    expect(addReducers).toEqual(expect.any(Function));
+    expect(addReducers).toHaveLength(2);
   });
 
   it(
     'should call GlobalStateManager.addDispatcher for each reducer',
     (): void => {
       addReducers(globalStateManager, INITIAL_REDUCERS);
-      expect(spy.addDispatcher.callCount).to.equal(REDUCERS.length);
+      expect(spy.addDispatcher).toHaveBeenCalledTimes(REDUCERS.length);
       for (const [ name, reducer ] of REDUCERS) {
-        expect(spy.addDispatcher.calledWithExactly(name, reducer))
-          .to.equal(true);
+        expect(spy.addDispatcher).toHaveBeenCalledWith(name, reducer);
       }
     }
   );
@@ -50,24 +48,23 @@ describe('addReducers', (): void => {
     });
 
     it('should be a function with no arguments', (): void => {
-      expect(removeReducers).to.be.a('function');
-      expect(removeReducers.length).to.equal(0);
+      expect(removeReducers).toEqual(expect.any(Function));
+      expect(removeReducers).toHaveLength(0);
     });
 
     it(
       'should call GlobalStateManager.removeDispatcher for each reducer',
       (): void => {
         removeReducers();
-        expect(spy.removeDispatcher.callCount).to.equal(REDUCERS.length);
+        expect(spy.removeDispatcher).toHaveBeenCalledTimes(REDUCERS.length);
         for (const reducerName of REDUCER_NAMES) {
-          expect(spy.removeDispatcher.calledWithExactly(reducerName))
-            .to.equal(true);
+          expect(spy.removeDispatcher).toHaveBeenCalledWith(reducerName);
         }
       }
     );
 
     it('should return true', (): void => {
-      expect(removeReducers()).to.equal(true);
+      expect(removeReducers()).toBe(true);
     });
   });
 

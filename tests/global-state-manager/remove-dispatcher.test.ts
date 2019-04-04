@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import GlobalStateManager from '../../src/global-state-manager';
 import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 
@@ -21,14 +20,14 @@ describe('GlobalStateManager.removeDispatcher', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(globalStateManager.removeDispatcher).to.be.a('function');
-    expect(globalStateManager.removeDispatcher.length).to.equal(1);
+    expect(globalStateManager.removeDispatcher).toEqual(expect.any(Function));;
+    expect(globalStateManager.removeDispatcher.length).toBe(1);
   });
 
   it('remove a dispatcher', (): void => {
-    expect(globalStateManager.hasDispatcher(DISPATCHER_NAME)).to.equal(true);
+    expect(globalStateManager.hasDispatcher(DISPATCHER_NAME)).toBe(true);
     globalStateManager.removeDispatcher(DISPATCHER_NAME);
-    expect(globalStateManager.hasDispatcher(DISPATCHER_NAME)).to.equal(false);
+    expect(globalStateManager.hasDispatcher(DISPATCHER_NAME)).toBe(false);
   });
 
 
@@ -38,14 +37,14 @@ describe('GlobalStateManager.removeDispatcher', (): void => {
     it('should be true if the dispatcher existed', (): void => {
       const removed: boolean =
         globalStateManager.removeDispatcher(DISPATCHER_NAME);
-      expect(removed).to.equal(true);
+      expect(removed).toBe(true);
     });
 
     it('should be false if the dispatcher did not exist', (): void => {
       const FAKE_DISPATCHER_NAME: string = 'mockDispatcher';
       const removed: boolean =
         globalStateManager.removeDispatcher(FAKE_DISPATCHER_NAME);
-      expect(removed).to.equal(false);
+      expect(removed).toBe(false);
     });
   });
 
