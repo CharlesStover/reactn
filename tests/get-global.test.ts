@@ -17,7 +17,7 @@ describe('getGlobal', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(getGlobal).toEqual(expect.any(Function));
+    expect(getGlobal).toBeInstanceOf(Function);
     expect(getGlobal).toHaveLength(1);
   });
 

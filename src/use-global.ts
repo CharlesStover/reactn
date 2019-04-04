@@ -28,6 +28,13 @@ type VoidFunction = () => void;
 
 
 
+export const REACT_HOOKS_ERROR = new Error(
+  'The installed version of React does not support Hooks, ' +
+  'which are required for useGlobal.'
+);
+
+
+
 // useGlobal()
 export default function useGlobal<
   GS extends {} = {},
@@ -66,10 +73,7 @@ export default function useGlobal<
 
   // Require hooks.
   if (!React.useContext) {
-    throw new Error(
-      'The installed version of React does not support Hooks, ' +
-      'which are required for useGlobal.'
-    );
+    throw REACT_HOOKS_ERROR;
   }
 
   const globalStateManager: GlobalStateManager<GS> =
@@ -136,17 +140,7 @@ export default function useGlobal<
   ): Promise<GS> => {
     const newGlobalState: Partial<GS> = Object.create(null);
     newGlobalState[property] = value;
-    if (!callback) {
-      return globalStateManager.set(newGlobalState);
-    }
-    let globalState: GS;
-    return globalStateManager.set(newGlobalState)
-      .then(gs => {
-        globalState = gs;
-        return gs;
-      })
-      .then(callback)
-      .then(() => globalState);
+    return setGlobal(globalStateManager, newGlobalState, callback);
   };
 
   // Return only the setter (better performance).

@@ -4,10 +4,18 @@ import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from './utils/initial';
 
 
 
+const EMPTY_OBJECT: {} = Object.create(null);
+
+const INITIAL_REDUCERS_KEYS: string[] = Object.keys(INITIAL_REDUCERS);
+
+INITIAL_REDUCERS_KEYS.sort();
+
+
+
 describe('createProvider', (): void => {
 
   it('should be a function with 2 arguments', (): void => {
-    expect(createProvider).toEqual(expect.any(Function));
+    expect(createProvider).toBeInstanceOf(Function);
     expect(createProvider).toHaveLength(2);
   });
 
@@ -23,15 +31,15 @@ describe('createProvider', (): void => {
       });
 
       it('should be a React Component', (): void => {
-        expect(Object.getPrototypeOf(Provider)).toEqual(Component);
+        expect(Object.getPrototypeOf(Provider)).toBe(Component);
       });
 
       it('should have an empty state', (): void => {
-        expect(Provider.global).toEqual({});
+        expect(Provider.global).toStrictEqual(EMPTY_OBJECT);
       });
 
       it('should have empty dispatchers', (): void => {
-        expect(Provider.dispatch).toEqual({});
+        expect(Provider.dispatch).toStrictEqual(EMPTY_OBJECT);
       });
     });
 
@@ -45,7 +53,7 @@ describe('createProvider', (): void => {
       });
 
       it('should be a React Component', (): void => {
-        expect(Object.getPrototypeOf(Provider)).toEqual(Component);
+        expect(Object.getPrototypeOf(Provider)).toStrictEqual(Component);
       });
 
       it('should have a state', (): void => {
@@ -53,7 +61,7 @@ describe('createProvider', (): void => {
       });
 
       it('should have empty dispatchers', (): void => {
-        expect(Provider.dispatch).toEqual({});
+        expect(Provider.dispatch).toStrictEqual(EMPTY_OBJECT);
       });
     });
 
@@ -67,7 +75,7 @@ describe('createProvider', (): void => {
       });
 
       it('should be a React Component', (): void => {
-        expect(Object.getPrototypeOf(Provider)).toEqual(Component);
+        expect(Object.getPrototypeOf(Provider)).toStrictEqual(Component);
       });
 
       it('should have a state', (): void => {
@@ -75,9 +83,9 @@ describe('createProvider', (): void => {
       });
 
       it('should have dispatchers', (): void => {
-        const initialKeys = Object.keys(INITIAL_REDUCERS).sort();
-        const setKeys = Object.keys(Provider.dispatch).sort();
-        expect(initialKeys).toEqual(setKeys);
+        const dispatchKeys: string[] = Object.keys(Provider.dispatch);
+        dispatchKeys.sort();
+        expect(dispatchKeys).toStrictEqual(INITIAL_REDUCERS_KEYS);
       });
     });
 

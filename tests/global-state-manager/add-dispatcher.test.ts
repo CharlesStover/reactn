@@ -18,8 +18,8 @@ describe('GlobalStateManager.addDispatcher', (): void => {
 
 
   it('should be a function with 2 arguments', (): void => {
-    expect(globalStateManager.addDispatcher).toEqual(expect.any(Function));
-    expect(globalStateManager.addDispatcher.length).toBe(2);
+    expect(globalStateManager.addDispatcher).toBeInstanceOf(Function);
+    expect(globalStateManager.addDispatcher).toHaveLength(2);
   });
 
   it('should add a reducer', (): void => {
@@ -38,8 +38,8 @@ describe('GlobalStateManager.addDispatcher', (): void => {
     });
 
     it('should be a function with no arguments', (): void => {
-      expect(removeDispatcher).toEqual(expect.any(Function));
-      expect(removeDispatcher.length).toBe(0);
+      expect(removeDispatcher).toBeInstanceOf(Function);
+      expect(removeDispatcher).toHaveLength(0);
     });
 
     it('should remove the callback', (): void => {

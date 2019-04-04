@@ -15,6 +15,7 @@ describe('Provider.global', (): void => {
 
 
   it('should be an object', (): void => {
+    // Provider.global extends Object.create(null), so it has no prototype.
     expect(Provider.global).toEqual(expect.any(Object));
   });
 

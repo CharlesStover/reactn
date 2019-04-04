@@ -16,8 +16,8 @@ describe('GlobalStateManager.removeCallback', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(globalStateManager.removeCallback).toEqual(expect.any(Function));;
-    expect(globalStateManager.removeCallback.length).toBe(1);
+    expect(globalStateManager.removeCallback).toBeInstanceOf(Function);
+    expect(globalStateManager.removeCallback).toHaveLength(1);
   });
 
   it('remove a callback', (): void => {

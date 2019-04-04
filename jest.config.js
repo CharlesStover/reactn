@@ -11,5 +11,5 @@ module.exports = {
   restoreMocks: true,
   roots: [ "<rootDir>/tests" ],
   testRegex: '/tests/.+\\.test\\.tsx?$',
-  verbose: true,
+  verbose: false,
 };

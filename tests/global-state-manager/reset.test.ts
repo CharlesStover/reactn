@@ -16,8 +16,8 @@ describe('GlobalStateManager.reset', (): void => {
 
 
   it('should be a function with no arguments', (): void => {
-    expect(globalStateManager.reset).toEqual(expect.any(Function));;
-    expect(globalStateManager.reset.length).toBe(0);
+    expect(globalStateManager.reset).toBeInstanceOf(Function);
+    expect(globalStateManager.reset).toHaveLength(0);
   });
 
   it('should remove callbacks', (): void => {

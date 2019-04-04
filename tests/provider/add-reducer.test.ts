@@ -21,8 +21,8 @@ describe('Provider.addReducer', (): void => {
 
 
   it('should be a function with 2 arguments', (): void => {
-    expect(Provider.addReducer).toEqual(expect.any(Function));;
-    expect(Provider.addReducer.length).toBe(2);
+    expect(Provider.addReducer).toBeInstanceOf(Function);
+    expect(Provider.addReducer).toHaveLength(2);
   });
 
   it('should call GlobalStateManager.addDispatcher', (): void => {
@@ -41,8 +41,8 @@ describe('Provider.addReducer', (): void => {
     });
 
     it('should be a function with no arguments', (): void => {
-      expect(removeReducer).toEqual(expect.any(Function));;
-      expect(removeReducer.length).toBe(0);
+      expect(removeReducer).toBeInstanceOf(Function);
+      expect(removeReducer).toHaveLength(0);
     });
 
     it('should call GlobalStateManager.removeDispatcher', (): void => {

@@ -20,8 +20,8 @@ describe('GlobalStateManager.removeDispatcher', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(globalStateManager.removeDispatcher).toEqual(expect.any(Function));;
-    expect(globalStateManager.removeDispatcher.length).toBe(1);
+    expect(globalStateManager.removeDispatcher).toBeInstanceOf(Function);
+    expect(globalStateManager.removeDispatcher).toHaveLength(1);
   });
 
   it('remove a dispatcher', (): void => {

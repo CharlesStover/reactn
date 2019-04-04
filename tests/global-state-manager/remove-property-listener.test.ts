@@ -18,8 +18,8 @@ describe('GlobalStateManager.removePropertyListener', (): void => {
 
 
   it('should be a function with 1 argument', (): void => {
-    expect(globalStateManager.removePropertyListener).toEqual(expect.any(Function));;
-    expect(globalStateManager.removePropertyListener.length).toBe(1);
+    expect(globalStateManager.removePropertyListener).toBeInstanceOf(Function);
+    expect(globalStateManager.removePropertyListener).toHaveLength(1);
   });
 
   it('remove a property listener', (): void => {

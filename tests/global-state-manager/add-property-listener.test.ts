@@ -28,8 +28,8 @@ describe('GlobalStateManager.addPropertyListener', (): void => {
 
 
   it('should be a function with 2 arguments', (): void => {
-    expect(globalStateManager.addPropertyListener).toEqual(expect.any(Function));;
-    expect(globalStateManager.addPropertyListener.length).toBe(2);
+    expect(globalStateManager.addPropertyListener).toBeInstanceOf(Function);
+    expect(globalStateManager.addPropertyListener).toHaveLength(2);
   });
 
   it('should not return anything', (): void => {

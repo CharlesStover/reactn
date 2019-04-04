@@ -13,8 +13,8 @@ describe('GlobalStateManager.enqueue', (): void => {
 
 
   it('should be a function with 2 arguments', (): void => {
-    expect(globalStateManager.enqueue).toEqual(expect.any(Function));;
-    expect(globalStateManager.enqueue.length).toBe(2);
+    expect(globalStateManager.enqueue).toBeInstanceOf(Function);
+    expect(globalStateManager.enqueue).toHaveLength(2);
   });
 
   it('should not return anything', (): void => {
