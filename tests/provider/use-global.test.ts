@@ -14,7 +14,7 @@ describe('Provider.useGlobal', (): void => {
 
   it('should be a function with 2 arguments', (): void => {
     expect(Provider.useGlobal).toBeInstanceOf(Function);
-    expect(Provider.useGlobal).toHaveLength(2);
+    expect(Provider.useGlobal).toHaveLength(1);
   });
 
   it.skip('should call the useGlobal helper function', (): void => {

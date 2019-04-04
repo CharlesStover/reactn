@@ -3,6 +3,7 @@ import Reducer, {
   AdditionalDispatchers,
   Dispatcher,
   Dispatchers,
+  ExtractA,
 } from './typings/reducer';
 import objectGetListener from './utils/object-get-listener';
 
@@ -134,7 +135,7 @@ export default class GlobalStateManager<
 
   public createDispatcher<A extends any[] = []>(
     reducer: Reducer<GS, A>,
-  ): Dispatcher<Reducer<GS, A>> {
+  ): Dispatcher<GS, A> {
     return (...args: A): Promise<GS> =>
       this.set(
         reducer(this.state, ...args),
@@ -181,11 +182,20 @@ export default class GlobalStateManager<
     }
   }
 
+  public getDispatcher<K extends keyof R>(
+    name: K,
+  ): Dispatcher<GS, ExtractA<R[K]>> {
+    if (this.hasDispatcher(name)) {
+      return this._dispatchers[name];
+    }
+    throw new Error(`Cannot return unknown ReactN reducer \`${name}\`.`);
+  }
+
   public hasCallback(callback: Callback<GS>): boolean {
     return this._callbacks.has(callback);
   }
 
-  public hasDispatcher(name: string): boolean {
+  public hasDispatcher(name: keyof R | string): boolean {
     return Object.prototype.hasOwnProperty.call(this._dispatchers, name);
   }
 

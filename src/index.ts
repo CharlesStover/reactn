@@ -11,6 +11,7 @@ import removeCallback from './remove-callback';
 import resetGlobal from './reset-global';
 import setGlobal from './set-global';
 import useGlobal from './use-global';
+import useGlobalReducer from './use-global-reducer';
 import withGlobal from './with-global';
 
 
@@ -30,5 +31,6 @@ export = Object.assign(reactn, React, {
   resetGlobal: resetGlobal.bind(null, defaultGlobalStateManager),
   setGlobal: setGlobal.bind(null, defaultGlobalStateManager),
   useGlobal: useGlobal.bind(null, null),
+  useGlobalReducer: useGlobalReducer.bind(null, null),
   withGlobal: withGlobal.bind(null, null),
 });

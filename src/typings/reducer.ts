@@ -3,31 +3,21 @@ import { NewGlobalState } from '../global-state-manager';
 // Additional Reducers cannot maintain their argument types, as they don't
 //   exist until runtime.
 export interface AdditionalDispatchers<GS> {
-  [name: string]: Dispatcher<Reducer<GS, any>>;
+  [name: string]: Dispatcher<GS, any>;
 }
 
-/*
 export interface Dispatcher<
-  GS extends {},
+  GS extends {} = {},
   A extends any[] = any[],
-> {
-  (...args: A): Promise<GS>;
-}
-*/
-
-export interface Dispatcher<
-  R extends Reducer<any, any>,
 > extends CallableFunction {
-  (...args: ExtractA<R>): Promise<ExtractGS<R>>;
+  (...args: A): Promise<GS>;
 }
 
 export type Dispatchers<GS, R extends Reducers<GS>> = {
-  [name in keyof R]: Dispatcher<R[name]>;
+  [name in keyof R]: Dispatcher<GS, ExtractA<R[name]>>;
 };
 
-type ExtractA<R> = R extends Reducer<infer _GS, infer A> ? A : never;
-
-type ExtractGS<R> = R extends Reducer<infer GS, infer _A> ? GS : never;
+export type ExtractA<R> = R extends Reducer<infer _GS, infer A> ? A : never;
 
 export default interface Reducer<
   GS extends {} = {},
