@@ -10,6 +10,6 @@ module.exports = {
   resetModules: true,
   restoreMocks: true,
   roots: [ "<rootDir>/tests" ],
-  testRegex: '/tests/.*\\.test\\.tsx?$',
+  testRegex: '/tests/.+\\.test\\.tsx?$',
   verbose: true,
 };
