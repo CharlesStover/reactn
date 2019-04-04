@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import addReducer from '../src/add-reducer';
 import GlobalStateManager from '../src/global-state-manager';
 import spyOn from './utils/spy-on-global-state-manager';
@@ -23,14 +22,14 @@ describe('addReducer', (): void => {
 
 
   it('should be a function with 3 arguments', (): void => {
-    expect(addReducer).to.be.a('function');
-    expect(addReducer.length).to.equal(3);
+    expect(addReducer).toEqual(expect.any(Function));
+    expect(addReducer).toHaveLength(3);
   });
 
   it('should call GlobalStateManager.addDispatcher', (): void => {
     addReducer(globalStateManager, REDUCER_NAME, REDUCER);
-    expect(spy.addDispatcher.calledOnceWithExactly(REDUCER_NAME, REDUCER))
-      .to.equal(true);
+    expect(spy.addDispatcher).toHaveBeenCalledTimes(1);
+    expect(spy.addDispatcher).toHaveBeenCalledWith(REDUCER_NAME, REDUCER);
   });
 
 
@@ -43,14 +42,14 @@ describe('addReducer', (): void => {
     });
 
     it('should be a function with no arguments', (): void => {
-      expect(removeReducer).to.be.a('function');
-      expect(removeReducer.length).to.equal(0);
+      expect(removeReducer).toEqual(expect.any(Function));
+      expect(removeReducer).toHaveLength(0);
     });
 
     it('should call GlobalStateManager.removeDispatcher', (): void => {
       removeReducer();
-      expect(spy.removeDispatcher.calledOnceWithExactly(REDUCER_NAME))
-        .to.equal(true);
+      expect(spy.removeDispatcher).toHaveBeenCalledTimes(1);
+      expect(spy.removeDispatcher).toHaveBeenCalledWith(REDUCER_NAME);
     });
   });
 

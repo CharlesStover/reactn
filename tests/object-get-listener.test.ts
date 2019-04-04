@@ -1,4 +1,3 @@
-import { expect } from 'chai';
 import objectGetListener from '../src/utils/object-get-listener';
 
 interface Shape {
@@ -20,7 +19,7 @@ describe('objectGetListener', (): void => {
     const obj2 = objectGetListener(obj1, (): void => { });
 
     // Expect the shape to be the same.
-    expect(obj1).to.deep.equal(obj2);
+    expect(obj1).toEqual(obj2);
   });
 
   it('should subscribe to the object properties\' get', (): void => {
@@ -38,11 +37,11 @@ describe('objectGetListener', (): void => {
       z: 3,
     };
     const obj2 = objectGetListener(obj, listener);
-    expect(obj2.y).to.equal(2);
+    expect(obj2.y).toBe(2);
 
     // Expect only Y to be read.
-    expect(read.has('x')).to.equal(false);
-    expect(read.has('y')).to.equal(true);
-    expect(read.has('z')).to.equal(false);
+    expect(read.has('x')).toBe(false);
+    expect(read.has('y')).toBe(true);
+    expect(read.has('z')).toBe(false);
   });
 });
