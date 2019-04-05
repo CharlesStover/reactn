@@ -44,6 +44,12 @@ export interface ReactNProvider<
   useGlobal<Property extends keyof GS>(
     property: Property,
   ): StateTuple<GS, Property>;
+  useGlobalReducer<A extends any[] = any[]>(
+    reducer: Reducer<GS, A>,
+  ): Dispatcher<GS, A>;
+  useGlobalReducer<K extends keyof R = keyof R>(
+    reducer: K,
+  ): Dispatcher<GS, ExtractA<R[K]>>;
   withGlobal<HP, LP>(
     getter: Getter<GS, HP, LP>,
     setter: Setter<GS, HP, LP>,

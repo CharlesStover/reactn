@@ -1,15 +1,29 @@
 import * as React from 'react';
 import { render } from 'react-testing-library';
 
+interface Parent<P> {
+  Component: React.ComponentClass<P, any>;
+  props?: P;
+}
+
 export default class HookTest<P extends any[] = any[], R extends any = any> {
 
   private _error: Error = null;
   private _hook: (...args: P) => R;
+  private _parents: Parent<any>[] = [];
   private _renders: number = 0;
   private _value: R;
 
   constructor(hook: (...args: P) => R) {
     this._hook = hook;
+  }
+
+  addParent<P extends {} = {}>(Component: React.ComponentClass<P>, props?: P): this {
+    this._parents.push({
+      Component,
+      props,
+    });
+    return this;
   }
 
   get error(): Error {
@@ -32,9 +46,16 @@ export default class HookTest<P extends any[] = any[], R extends any = any> {
 
   render(...args: P): this {
     const TestComponent = this.TestComponent(...args);
+    const children: JSX.Element = this._parents.reduce(
+      (child: JSX.Element, parent: Parent<any>): JSX.Element =>
+        <parent.Component {...parent.props}>
+          {child}
+        </parent.Component>,
+      <TestComponent />
+    );
     render(
       <this.ErrorBoundary>
-        <TestComponent />
+        {children}
       </this.ErrorBoundary>
     );
     return this;
