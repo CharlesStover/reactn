@@ -41,7 +41,8 @@ describe('useGlobalReducer(Function)', (): void => {
     globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
     testUseGlobalReducer =
       new HookTest<P, V>(
-        (reducer: P[0]): V => useGlobalReducer(globalStateManager, reducer)
+        (reducer: Reducer<GS, A>): V =>
+          useGlobalReducer(globalStateManager, reducer)
       );
   });
 

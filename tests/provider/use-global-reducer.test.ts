@@ -13,10 +13,10 @@ describe('Provider.useGlobal', (): void => {
 
 
   it('should be a function with 1 arguments', (): void => {
-    expect(Provider.useGlobal).toBeInstanceOf(Function);
-    expect(Provider.useGlobal).toHaveLength(1);
+    expect(Provider.useGlobalReducer).toBeInstanceOf(Function);
+    expect(Provider.useGlobalReducer).toHaveLength(1);
   });
 
-  it.skip('should call the useGlobal helper function', (): void => {
+  it.skip('should call the useGlobalReducer helper function', (): void => {
   });
 });

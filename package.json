@@ -24,7 +24,7 @@
   "scripts": {
     "build": "yarn prepublishOnly",
     "lint": "eslint src/**/*.{ts,tsx}",
-    "prepublishOnly": "tsc && cp src/index.d.ts build/index.d.ts",
+    "prepublishOnly": "rm -rf build && tsc",
     "test": "jest"
   },
   "dependencies": {
