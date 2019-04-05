@@ -64,11 +64,11 @@ interface ReactN extends TypeOfReact {
     callback?: Callback<GS>,
   ): Promise<GS>;
 
-  useGlobal<GS extends {} = {}>(): GlobalTuple<GS>;
-
-  useGlobal<GS extends {}, Property extends keyof GS>(
+  useGlobal<GS extends {} = {}, Property extends keyof GS = keyof GS>(
     property: Property,
   ): StateTuple<GS, Property>;
+
+  useGlobal<GS extends {} = {}>(): GlobalTuple<GS>;
 
   useGlobalReducer<GS extends {} = {}, R extends {} = {}, K extends keyof R = keyof R>(
     reducer: K,
