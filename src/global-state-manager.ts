@@ -25,25 +25,42 @@ interface FunctionalNewGlobalState<Shape> {
   (globalState: Shape): NewGlobalState<Shape>;
 }
 
-/*
-interface GlobalStateManagerClass {
-  new <GS, R>(initialGlobalState: GS, initialReducers: R):
-    GlobalStateManager<GS, R>;
-  new <GS>(initialGlobalState: GS): GlobalStateManager<GS, {}>;
-  new (): GlobalStateManager<{}, {}>;
-}
-*/
-
 export type NewGlobalState<Shape> =
   AsynchronousNewGlobalState<Shape> |
   FunctionalNewGlobalState<Shape> |
   SynchronousNewGlobalState<Shape>;
 
+type NoOp = <P extends any = any>(arg: P) => P;
+
 // type PartialState<Shape> = Shape extends {} ? Partial<Shape> : Shape;
 
 export type PropertyListener = () => void;
 
+interface ReduxDevToolsAction<GS> {
+  stateChange: Partial<GS>;
+  type: string;
+}
+
+type ReduxDevTools<GS> = (
+  action: ReduxDevToolsAction<GS>,
+  initialState: GS,
+  enhancer?: VoidFunction,
+) => void;
+
 type SynchronousNewGlobalState<Shape> = null | Partial<Shape> | void;
+
+interface ReduxDevToolsConfig {
+  instanceId?: number;
+  name?: string;
+}
+
+type VoidFunction = () => void;
+
+interface Window<GS> {
+  __REDUX_DEVTOOLS_EXTENSION__?: (config: ReduxDevToolsConfig) =>
+    (next: NoOp) =>
+      ReduxDevTools<GS>;
+}
 
 
 
@@ -56,6 +73,8 @@ const copyObject = <Shape>(obj: Shape): Shape =>
 export const INVALID_NEW_GLOBAL_STATE: Error = new Error(
   'ReactN global state must be a function, null, object, or Promise.',
 );
+
+declare const window: Window<any> | void;
 
 
 
@@ -73,6 +92,7 @@ export default class GlobalStateManager<
     new Map<keyof GS, Set<PropertyListener>>();
   private _queue: Map<keyof GS, GS[keyof GS]> =
     new Map<keyof GS, GS[keyof GS]>();
+  private _reduxDevTools: ReduxDevTools<GS> = null;
   private _state: GS;
 
 
@@ -81,6 +101,15 @@ export default class GlobalStateManager<
     initialState: GS = Object.create(null),
     initialReducers: R = Object.create(null),
   ) {
+    if (
+      typeof window === 'object' &&
+      window.__REDUX_DEVTOOLS_EXTENSION__
+    ) {
+      this._reduxDevTools =
+        (window as Window<GS>).__REDUX_DEVTOOLS_EXTENSION__({
+          name: 'ReactN state',
+        })((x: any): any => x);
+    }
     this._initialReducers = copyObject(initialReducers);
     this._initialState = copyObject(initialState);
     this._state = copyObject(initialState);
@@ -218,6 +247,10 @@ export default class GlobalStateManager<
     return this._propertyListeners;
   }
 
+  public get reduxDevTools(): ReduxDevTools<GS> {
+    return this._reduxDevTools;
+  }
+
   public removeCallback(callback: Callback<GS>): boolean {
     return this._callbacks.delete(callback);
   }
@@ -273,6 +306,14 @@ export default class GlobalStateManager<
 
     if (typeof newGlobalState === 'function') {
       return this.setFunction(newGlobalState);
+    }
+
+    // Redux Dev Tools
+    if(this.reduxDevTools) {
+      this.reduxDevTools({
+        stateChange: newGlobalState,
+        type: 'STATE_CHANGE',
+      }, this._initialState);
     }
 
     if (typeof newGlobalState === 'object') {

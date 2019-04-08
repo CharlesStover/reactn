@@ -7,13 +7,14 @@ import Props from './props';
 
 
 export default (
-  TestComponent: ComponentClass<Props, {}, GS, R>,
+  source: string,
+  TestComponent: ComponentClass,
   spyCwu: jest.Mock<void, []>,
 ): void => {
 
   const spy = spyOn('removePropertyListener');
 
-  it('should maintain componentWillUpdate behavior', (): void => {
+  it(`should maintain componentWillUpdate behavior on ${source}`, (): void => {
     expect(spyCwu).not.toHaveBeenCalled();
     const { unmount } = render(<TestComponent />);
     expect(spyCwu).not.toHaveBeenCalled();
@@ -21,7 +22,7 @@ export default (
     expect(spyCwu).toHaveBeenCalledTimes(1);
   });
 
-  it('should unsubscribe when unmounting', (): void => {
+  it(`should unsubscribe when unmounting on ${source}`, (): void => {
     expect(spy.removePropertyListener).not.toHaveBeenCalled();
     const { unmount } = render(<TestComponent />);
     expect(spy.removePropertyListener).not.toHaveBeenCalled();
