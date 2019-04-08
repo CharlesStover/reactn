@@ -3,6 +3,7 @@ import { ReactNComponentClass } from './components';
 import {
   // createReactNGetDerivedStateFromProps,
   ReactNComponentWillUnmount,
+  ReactNComponentWillUpdate,
   ReactNDispatch,
   ReactNGlobal,
   ReactNGlobalCallback,
@@ -28,25 +29,30 @@ const componentName = (DecoratedComponent: ComponentClass): string =>
 
 // @reactn
 export default function ReactN<
-  P extends {} = {},
-  S extends {} = {},
   GS extends {} = {},
   R extends {} = {},
+  P extends {} = {},
+  S extends {} = {},
   SS = any,
 >(
   DecoratedComponent: ComponentClass<P, S>,
 ): ReactNComponentClass<P, S, GS, R, SS> {
-  class ReactNComponent extends DecoratedComponent {
+  class DecoratedReactNComponent extends DecoratedComponent {
 
     public static displayName: string =
       `${componentName(DecoratedComponent)}-ReactN`;
 
     public componentWillUnmount(): void {
-      ReactNComponentWillUnmount(this._globalCallback);
-
-      // componentWillUnmount
+      ReactNComponentWillUnmount(this);
       if (super.componentWillUnmount) {
         super.componentWillUnmount();
+      }
+    }
+
+    public componentWillUpdate(...args: [ P, S, any ]): void {
+      ReactNComponentWillUpdate(this);
+      if (super.componentWillUpdate) {
+        super.componentWillUpdate(...args);
       }
     }
 
@@ -55,7 +61,7 @@ export default function ReactN<
     }
 
     public get global(): Readonly<GS> {
-      return ReactNGlobal<GS>(this._globalCallback);
+      return ReactNGlobal<GS>(this);
     }
 
     public setGlobal(
@@ -82,5 +88,5 @@ export default function ReactN<
   }
   */
 
-  return ReactNComponent;
+  return DecoratedReactNComponent;
 };

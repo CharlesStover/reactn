@@ -4,7 +4,7 @@ import {
   createElement,
   FunctionComponent,
 } from 'react';
-import { ReactNPureComponent, ReactNPureComponentClass } from './components';
+import { ReactNComponent, ReactNComponentClass } from './components';
 import ReactNContext from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager, { NewGlobalState } from './global-state-manager';
@@ -32,10 +32,19 @@ export type WithGlobal<HP, LP> =
 
 
 
+// Get the name of a Component.
+const componentName = (Component: LowerOrderComponent): string =>
+  typeof Component === 'string' ?
+    Component :
+    Component.displayName ||
+    Component.name;
+
 // TODO -- https://github.com/CharlesStover/reactn/issues/14
 const isComponentDidMount = false;
 const isComponentDidUpdate = false;
 const isSetGlobalCallback = false;
+
+
 
 /*
 Creates a Higher-Order Component that passes the global state
@@ -50,16 +59,6 @@ const hoc = withGlobal(
 );
 hoc(MyComponent);
 */
-
-// Get the name of a Component.
-const componentName = (Component: LowerOrderComponent): string =>
-  typeof Component === 'string' ?
-    Component :
-    Component.displayName ||
-    Component.name;
-
-
-
 export default function withGlobal<
   GS extends {} = {},
   HP extends {} = {},
@@ -71,13 +70,13 @@ export default function withGlobal<
 ): WithGlobal<HP, LP> {
   return function ReactNWithGlobal(
     Component: LowerOrderComponent<LP>,
-  ): ReactNPureComponentClass<HP, {}, GS> {
+  ): ReactNComponentClass<HP, {}, GS> {
 
     // If a Global State was provided, use it.
     // Otherwise, if a Provider was mounted, use its global state.
     // Otherwise, use the default global state.
 
-    return class ReactNComponent extends ReactNPureComponent<HP, {}, GS> {
+    return class ReactNHOC extends ReactNComponent<HP, {}, GS> {
 
       // Context knows it provides a GlobalStateManager,
       //   but not the shape <GS> of the GlobalState that it holds.
@@ -88,7 +87,7 @@ export default function withGlobal<
 
       public get global(): GS {
         return ReactNGlobal<GS>(
-          this._globalCallback,
+          this,
           globalStateManager || this.context || defaultGlobalStateManager
         );
       }

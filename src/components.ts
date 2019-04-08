@@ -2,6 +2,7 @@ import { Component, ComponentClass, PureComponent } from 'react';
 import { NewGlobalState, PropertyListener } from './global-state-manager';
 import {
   ReactNComponentWillUnmount,
+  ReactNComponentWillUpdate,
   ReactNDispatch,
   ReactNGlobal,
   ReactNGlobalCallback,
@@ -11,6 +12,9 @@ import Callback from './typings/callback';
 import { Dispatchers } from './typings/reducer';
 
 
+
+type ComponentWillUpdate<P extends {} = {}, S extends {} = {}> =
+  (nextProps: P, nextState: S, context: any) => void;
 
 export interface ReactNComponentClass<
   P extends {} = {},
@@ -42,14 +46,13 @@ const isComponentDidUpdate = false;
 const isSetGlobalCallback = false;
 
 // this.componentWillUnmount on instance
-const componentWillMountInstance = (
+const componentWillUnmountInstance = (
   that: ReactNComponent | ReactNPureComponent,
-  propertyListener: PropertyListener,
 ): boolean => {
   if (Object.prototype.hasOwnProperty.call(that, 'componentWillUnmount')) {
     const instanceCwu: VoidFunction = that.componentWillUnmount;
     that.componentWillUnmount = (): void => {
-      ReactNComponentWillUnmount(propertyListener);
+      ReactNComponentWillUnmount(that);
       instanceCwu();
     };
     return true;
@@ -58,20 +61,85 @@ const componentWillMountInstance = (
 };
 
 // this.componentWillUnmount on prototype
-const componentWillMountPrototype = (
+const componentWillUnmountPrototype = (
   that: ReactNComponent | ReactNPureComponent,
-  propertyListener: PropertyListener,
 ): boolean => {
   const proto: ReactNComponent | ReactNPureComponent =
     Object.getPrototypeOf(that);
   if (Object.prototype.hasOwnProperty.call(proto, 'componentWillUnmount')) {
     that.componentWillUnmount = (): void => {
-      ReactNComponentWillUnmount(propertyListener);
+      ReactNComponentWillUnmount(that);
       proto.componentWillUnmount.bind(that)();
     };
     return true;
   }
   return false;
+};
+
+// this.componentWillUpdate on instance
+const componentWillUpdateInstance = <P extends {} = {}, S extends {} = {}>(
+  that: ReactNComponent<P, S> | ReactNPureComponent<P, S>,
+): boolean => {
+  if (Object.prototype.hasOwnProperty.call(that, 'componentWillUpdate')) {
+    const instanceCwu: ComponentWillUpdate<P, S> = that.componentWillUpdate;
+    that.componentWillUpdate = (...args: [ P, S, any ]): void => {
+      ReactNComponentWillUpdate(that);
+      instanceCwu(...args);
+    };
+    return true;
+  }
+  return false;
+};
+
+// this.componentWillUpdate on prototype
+const componentWillUpdatePrototype = <P extends {} = {}, S extends {} = {}>(
+  that: ReactNComponent<P, S> | ReactNPureComponent<P, S>,
+): boolean => {
+  const proto: ReactNComponent | ReactNPureComponent =
+    Object.getPrototypeOf(that);
+  if (Object.prototype.hasOwnProperty.call(proto, 'componentWillUpdate')) {
+    that.componentWillUpdate = (...args: [ P, S, any ]): void => {
+      ReactNComponentWillUpdate(that);
+      proto.componentWillUpdate.bind(that)(...args);
+    };
+    return true;
+  }
+  return false;
+};
+
+
+/**
+ * Hack:
+ * If we didn't find a lifecycle method on the instance, attempt to find it
+ *   again after the sub class finishes its constructor.
+ * Disabled because it makes me uncomfortable and doesn't pass synchronous unit
+ *   tests anyway.
+ */
+const bindLifecycleMethods = (
+  that: ReactNComponent | ReactNPureComponent,
+): void => {
+
+  if (
+    !componentWillUnmountInstance(that) &&
+    !componentWillUnmountPrototype(that)
+  ) {
+    /*
+    setTimeout((): void => {
+      componentWillUnmountInstance(this);
+    }, 0);
+    */
+  }
+
+  if (
+    !componentWillUpdateInstance(that) &&
+    !componentWillUpdatePrototype(that)
+  ) {
+    /*
+    setTimeout((): void => {
+      componentWillUpdateInstance(this);
+    }, 0);
+    */
+  }
 };
 
 
@@ -83,32 +151,10 @@ export class ReactNComponent<
   R extends {} = {},
   SS = any,
 > extends Component<P, S, SS> {
+
   public constructor(props: Readonly<P>, context?: any) {
     super(props, context);
-
-    // this.componentWillUnmount on instance
-    if (
-      !componentWillMountInstance(this, this._globalCallback) &&
-      !componentWillMountPrototype(this, this._globalCallback)
-    ) {
-
-      /**
-       * Hack:
-       * If we didn't find componentWillMount on the instance, attempt to
-       *   find it again after the sub class finishes its constructor.
-       * Disabled because it makes me uncomfortable and doesn't pass
-       *   synchronous unit tests anyway.
-       */
-      /*
-      setTimeout((): void => {
-        componentWillMountInstance(this);
-      }, 0);
-      */
-    }
-  }
-
-  public componentWillUnmount(): void {
-    return ReactNComponentWillUnmount(this._globalCallback);
+    bindLifecycleMethods(this);
   }
 
   public get dispatch(): Readonly<Dispatchers<GS, R>> {
@@ -116,7 +162,7 @@ export class ReactNComponent<
   }
 
   public get global(): Readonly<GS> {
-    return ReactNGlobal<GS>(this._globalCallback);
+    return ReactNGlobal<GS>(this);
   }
 
   public setGlobal(
@@ -143,32 +189,10 @@ export class ReactNPureComponent<
   R extends {} = {},
   SS = any,
 > extends PureComponent<P, S, SS> {
+
   public constructor(props: Readonly<P>, context?: any) {
     super(props, context);
-
-    // this.componentWillUnmount on instance
-    if (
-      !componentWillMountInstance(this, this._globalCallback) &&
-      !componentWillMountPrototype(this, this._globalCallback)
-    ) {
-
-      /**
-       * Hack:
-       * If we didn't find componentWillMount on the instance, attempt to
-       *   find it again after the sub class finishes its constructor.
-       * Disabled because it makes me uncomfortable and doesn't pass
-       *   synchronous unit tests anyway.
-       */
-      /*
-      setTimeout((): void => {
-        componentWillMountInstance(this);
-      }, 0);
-      */
-    }
-  }
-
-  public componentWillUnmount(): void {
-    return ReactNComponentWillUnmount(this._globalCallback);
+    bindLifecycleMethods(this);
   }
 
   public get dispatch(): Readonly<Dispatchers<GS, R>> {
@@ -176,7 +200,7 @@ export class ReactNPureComponent<
   }
 
   public get global(): Readonly<GS> {
-    return ReactNGlobal<GS>(this._globalCallback);
+    return ReactNGlobal<GS>(this);
   }
 
   public setGlobal(
