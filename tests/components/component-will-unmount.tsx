@@ -1,8 +1,6 @@
 import { render } from 'react-testing-library';
 import React, { ComponentClass } from '../../build';
-import { GS, R } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
-import Props from './props';
 
 
 
