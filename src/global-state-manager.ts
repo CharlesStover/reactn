@@ -1,3 +1,13 @@
+import {
+  Action as ReduxAction,
+  AnyAction as ReduxAnyAction,
+  DeepPartial as ReduxDeepPartial,
+  Dispatch as ReduxDispatch,
+  Reducer as ReduxReducer,
+  StoreEnhancer as ReduxStoreEnhancer,
+  StoreEnhancerStoreCreator as ReduxStoreEnhancerStoreCreator,
+} from 'redux';
+import { devToolsEnhancer } from 'redux-devtools-extension/developmentOnly';
 import Callback from './typings/callback';
 import Reducer, {
   AdditionalDispatchers,
@@ -30,36 +40,18 @@ export type NewGlobalState<Shape> =
   FunctionalNewGlobalState<Shape> |
   SynchronousNewGlobalState<Shape>;
 
-type NoOp = <P extends any = any>(arg: P) => P;
-
 // type PartialState<Shape> = Shape extends {} ? Partial<Shape> : Shape;
 
 export type PropertyListener = () => void;
 
-interface ReduxDevToolsAction<GS> {
+interface ReduxDevToolsAction<GS, T = 'STATE_CHANGE'> extends ReduxAction<T> {
   stateChange: Partial<GS>;
-  type: string;
 }
-
-type ReduxDevTools<GS> = (
-  action: ReduxDevToolsAction<GS>,
-  initialState: GS,
-  enhancer?: VoidFunction,
-) => void;
 
 type SynchronousNewGlobalState<Shape> = null | Partial<Shape> | void;
 
-interface ReduxDevToolsConfig {
-  instanceId?: number;
-  name?: string;
-}
-
-type VoidFunction = () => void;
-
 interface Window<GS> {
-  __REDUX_DEVTOOLS_EXTENSION__?: (config: ReduxDevToolsConfig) =>
-    (next: NoOp) =>
-      ReduxDevTools<GS>;
+  __REDUX_DEVTOOLS_EXTENSION__?: typeof devToolsEnhancer;
 }
 
 
@@ -92,7 +84,8 @@ export default class GlobalStateManager<
     new Map<keyof GS, Set<PropertyListener>>();
   private _queue: Map<keyof GS, GS[keyof GS]> =
     new Map<keyof GS, GS[keyof GS]>();
-  private _reduxDevTools: ReduxDevTools<GS> = null;
+  private _reduxDevToolsDispatch: ReduxDispatch<ReduxDevToolsAction<GS>> =
+    null;
   private _state: GS;
 
 
@@ -105,10 +98,30 @@ export default class GlobalStateManager<
       typeof window === 'object' &&
       window.__REDUX_DEVTOOLS_EXTENSION__
     ) {
-      this._reduxDevTools =
+      const enhancer: ReduxStoreEnhancer<GS> =
         (window as Window<GS>).__REDUX_DEVTOOLS_EXTENSION__({
           name: 'ReactN state',
-        })((x: any): any => x);
+        });
+      const enhancerStoreCreator: ReduxStoreEnhancerStoreCreator<{}, GS> = <
+        S = any,
+        A extends ReduxAnyAction = ReduxAnyAction,
+      >(
+        _reducer: ReduxReducer<S, A>,
+        _preloadedState: ReduxDeepPartial<S>,
+      ) => ({
+        dispatch: <T extends ReduxAnyAction>(action: T): T => action,
+        getState: (): any => this.state,
+        replaceReducer: () => null,
+        subscribe: () => null,
+      });
+      this._reduxDevToolsDispatch =
+        enhancer(enhancerStoreCreator)(
+          // Using `GS` instead of `any` results in TypeScript error:
+          //   Type instantiation is excessively deep and possibly infinite.
+          (): any => this.state,
+          initialState,
+        )
+          .dispatch;
     }
     this._initialReducers = copyObject(initialReducers);
     this._initialState = copyObject(initialState);
@@ -247,8 +260,8 @@ export default class GlobalStateManager<
     return this._propertyListeners;
   }
 
-  public get reduxDevTools(): ReduxDevTools<GS> {
-    return this._reduxDevTools;
+  public get reduxDevToolsDispatch(): ReduxDispatch<ReduxDevToolsAction<GS>> {
+    return this._reduxDevToolsDispatch;
   }
 
   public removeCallback(callback: Callback<GS>): boolean {
@@ -309,11 +322,12 @@ export default class GlobalStateManager<
     }
 
     // Redux Dev Tools
-    if(this.reduxDevTools) {
-      this.reduxDevTools({
+    const reduxDevToolsDispatch = this.reduxDevToolsDispatch;
+    if(reduxDevToolsDispatch) {
+      reduxDevToolsDispatch({
         stateChange: newGlobalState,
         type: 'STATE_CHANGE',
-      }, this._initialState);
+      });
     }
 
     if (typeof newGlobalState === 'object') {
