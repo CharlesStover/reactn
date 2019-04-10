@@ -31,6 +31,7 @@ export default function GitHubBanner() {
       className="github-banner"
       href="https://github.com/CharlesStover/reactn"
       rel="nofollower nofollower noopener"
+      target="_blank"
       title="ReactN on GitHub"
     >
       <svg
