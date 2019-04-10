@@ -154,6 +154,7 @@ export class ReactNComponent<
 
   public constructor(props: Readonly<P>, context?: any) {
     super(props, context);
+    this._globalCallback = this._globalCallback.bind(this);
     bindLifecycleMethods(this);
   }
 
@@ -192,6 +193,7 @@ export class ReactNPureComponent<
 
   public constructor(props: Readonly<P>, context?: any) {
     super(props, context);
+    this._globalCallback = this._globalCallback.bind(this);
     bindLifecycleMethods(this);
   }
 

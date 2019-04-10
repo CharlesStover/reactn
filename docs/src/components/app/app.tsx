@@ -12,7 +12,9 @@ export default class App extends React.Component {
       <div className="app">
         <Header />
         <main>
-          ReactN is coming soon.
+          <strong>ReactN</strong>{' '}
+          is a global state management solution for{' '}
+          <strong>ReactJS</strong>.
         </main>
       </div>
     );

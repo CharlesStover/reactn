@@ -1,10 +1,10 @@
-import React from 'reactn';
+import React, { useGlobal } from 'reactn';
 import './github-banner.scss';
 
 
 
 interface G {
-  color: string;
+  rainbow: string;
 }
 
 
@@ -24,30 +24,30 @@ const SIZE: number = 80;
 
 
 
-export default class GitHubBanner extends React.Component<{}, {}, G> {
-  render() {
-    return (
-      <a
-        className="github-banner"
-        href="https://github.com/CharlesStover/reactn"
-        rel="nofollower nofollower noopener"
-        title="ReactN on GitHub"
+export default function GitHubBanner() {
+  const [ fill ] = useGlobal<G>('rainbow');
+  return (
+    <a
+      className="github-banner"
+      href="https://github.com/CharlesStover/reactn"
+      rel="nofollower nofollower noopener"
+      title="ReactN on GitHub"
+    >
+      <svg
+        fill={BACKGROUND_COLOR}
+        height={SIZE}
+        width={SIZE}
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 250 250"
       >
-        <svg
-          fill={BACKGROUND_COLOR}
-          height={SIZE}
-          width={SIZE}
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 250 250"
-        >
-          <path
-            d="M0 0l115 115h15l12 27 108 108V0z"
-            fill={this.global.color}
-          />
-          <path className="github-banner-arm" d={arm} />
-          <path d={body} />
-        </svg>
-      </a>
-    );
-  }
+        <path
+          className="github-banner-background"
+          d="M0 0l115 115h15l12 27 108 108V0z"
+          style={{ fill }}
+        />
+        <path className="github-banner-arm" d={arm} />
+        <path d={body} />
+      </svg>
+    </a>
+  );
 }

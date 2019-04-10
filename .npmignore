@@ -1,10 +1,11 @@
-/.babelrc
 /.git
+/.vscode
 /jest
 /docs
 /node_modules
 /src
 /tests
+/.babelrc
 /.eslintrc.js
 /.gitignore
 /.npmignore

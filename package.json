@@ -5,7 +5,7 @@
   "description": "React, but with built-in global state management.",
   "homepage": "https://github.com/CharlesStover/reactn#readme",
   "license": "MIT",
-  "main": "index.js",
+  "main": "./build/index.js",
   "repository": "github:CharlesStover/reactn",
   "types": "./build/index.d.ts",
   "bugs": {
@@ -17,8 +17,7 @@
     "test": "tests"
   },
   "files": [
-    "index.d.ts",
-    "index.js",
+    "build",
     "package.json"
   ],
   "scripts": {

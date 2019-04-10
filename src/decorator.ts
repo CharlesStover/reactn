@@ -42,6 +42,11 @@ export default function ReactN<
     public static displayName: string =
       `${componentName(DecoratedComponent)}-ReactN`;
 
+    public constructor(props: Readonly<P>, context?: any) {
+      super(props, context);
+      this._globalCallback = this._globalCallback.bind(this);
+    }
+
     public componentWillUnmount(): void {
       ReactNComponentWillUnmount(this);
       if (super.componentWillUnmount) {
