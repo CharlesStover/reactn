@@ -1,6 +1,7 @@
 /.babelrc
 /.git
 /jest
+/docs
 /node_modules
 /src
 /tests
