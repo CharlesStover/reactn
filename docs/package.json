@@ -12,26 +12,27 @@
     "extends": "react-app"
   },
   "scripts": {
-    "build": "yarn symlink && react-scripts build",
+    "build": "react-scripts build",
     "eject": "react-scripts eject",
-    "start": "yarn symlink && react-scripts start",
-    "symlink": "[ ! -d \"./node_modules/reactn\" ] && yarn symlink-force || exit 0",
-    "symlink-force": "ln -s ../../build ./node_modules/reactn",
-    "test": "yarn symlink && react-scripts test"
+    "start": "react-scripts start",
+    "test": "react-scripts test"
   },
   "dependencies": {
-    "@types/jest": "24.0.11",
-    "@types/node": "11.13.2",
-    "@types/react": "16.8.13",
-    "@types/react-dom": "16.8.3",
+    "react": "link:../node_modules/react",
+    "react-dom": "link:../node_modules/react-dom",
+    "react-router": "^5.0.0",
+    "react-router-dom": "^5.0.0",
+    "reactn": "link:../"
+  },
+  "devDependencies": {
+    "@types/jest": "link:../node_modules/@types/jest",
+    "@types/node": "link:../node_modules/@types/node",
+    "@types/react": "link:../node_modules/@types/react",
+    "@types/react-dom": "^16.8.3",
     "@types/react-router": "^4.4.5",
     "@types/react-router-dom": "^4.3.1",
     "node-sass": "^4.11.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-router": "^5.0.0",
-    "react-router-dom": "^5.0.0",
     "react-scripts": "2.1.8",
-    "typescript": "3.4.3"
+    "typescript": "link:../node_modules/typescript"
   }
 }

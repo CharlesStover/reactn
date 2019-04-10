@@ -1,6 +1,6 @@
+/.vscode
 /build
 /docs/build
 /docs/node_modules
 /jest
 /node_modules
-/yarn-error.lock

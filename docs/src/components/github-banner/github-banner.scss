@@ -1,3 +1,5 @@
+@import "../../assets/styles/rainbow.scss";
+
 .github-banner {
   position: absolute;
   right: 0;
@@ -8,4 +10,10 @@
 .github-banner-arm {
   -webkit-transform-origin: 130px 106px;
   transform-origin: 130px 106px
+}
+
+.github-banner-background {
+  transition-duration: $rainbow-duration;
+  transition-property: fill;
+  transition-timing-function: linear;
 }

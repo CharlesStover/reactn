@@ -1,3 +1,5 @@
+@import "../../assets/styles/rainbow.scss";
+
 $height: 120px;
 $width: 185px;
 
@@ -5,9 +7,14 @@ $multiplier: 64 / 120;
 
 .header {
   align-items: flex-start;
+  background-image:
+    linear-gradient(to right, #202020, transparent, #202020);
   display: flex;
   height: 80px;
   justify-content: center;
+  transition-duration: $rainbow-duration;
+  transition-property: background-color;
+  transition-timing-function: linear;
   width: 100%;
 
   > div {
