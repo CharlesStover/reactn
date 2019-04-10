@@ -1,0 +1,45 @@
+$height: 120px;
+$width: 185px;
+
+$multiplier: 64 / 120;
+
+.header {
+  align-items: flex-start;
+  display: flex;
+  height: 80px;
+  justify-content: center;
+  width: 100%;
+
+  > div {
+    align-items: center;
+    background-color: #202020;
+    display: flex;
+    height: calc(100% - 2px);
+    justify-content: center;
+    width: 100%;
+
+    > h1 {
+      margin: 0;
+
+      > a {
+        align-items: center;
+        background-image: url("../../assets/images/logo.jpg");
+        background-position: right center;
+        background-repeat: no-repeat;
+        background-size: auto 100%;
+        color: #404040;
+        display: inline-flex;
+        font-family: "Roboto", sans-serif;
+        justify-content: flex-end;
+        font-size: ($height - 5px) * $multiplier;
+        height: $height * $multiplier;
+        padding-right: ($width - 25px) * $multiplier;
+        text-decoration: none;
+
+        > span {
+          display: none;
+        }
+      }
+    }
+  }
+}
