@@ -1,0 +1,11 @@
+.github-banner {
+  position: absolute;
+  right: 0;
+  top: 0;
+  user-select: none;
+}
+
+.github-banner-arm {
+  -webkit-transform-origin: 130px 106px;
+  transform-origin: 130px 106px
+}

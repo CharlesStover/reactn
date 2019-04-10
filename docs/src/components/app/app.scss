@@ -1,0 +1,16 @@
+$max-width: 44rem;
+
+.app {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  justify-content: flex-start;
+  margin: 0 auto;
+  max-width: $max-width;
+  width: 100%;
+
+  > main {
+    width: 100%;
+  }
+}
