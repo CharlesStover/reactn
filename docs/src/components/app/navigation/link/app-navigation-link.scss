@@ -1,0 +1,18 @@
+.app-navigation-link {
+  display: flex;
+  flex-direction: column;
+
+  > strong {
+
+    > a {
+      color: #F0F0F0;
+      text-decoration: none;
+    }
+  }
+
+  > ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0 0 0.25em 0.5em;
+  }
+}

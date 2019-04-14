@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import React, { useGlobal } from 'reactn';
-import GitHubBanner from '../github-banner';
+import GitHubBanner from './github-banner';
 import './header.scss';
+import ReactLogo from './react-logo';
 
 
 
@@ -12,19 +13,23 @@ interface G {
 
 
 export default function Header() {
-  const [ backgroundColor ] = useGlobal<G>('rainbow');
+  const [ color ] = useGlobal<G>('rainbow');
   return (
     <header
       className="header"
       style={{
-        backgroundColor,
+        backgroundColor: color,
       }}
     >
       <div>
         <h1>
           <Link title="ReactN Documentation" to="/">
             React
-            <span>N</span>
+            <ReactLogo
+              className="header-react-logo"
+              fill={color}
+            />
+            N
           </Link>
         </h1>
       </div>

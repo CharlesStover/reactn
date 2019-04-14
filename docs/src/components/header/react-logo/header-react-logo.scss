@@ -1,0 +1,12 @@
+@import "../../../assets/styles/rainbowify.scss";
+
+.header-react-logo {
+
+  > g {
+    > circle,
+    > path,
+    > polygon {
+      @include rainbowify(fill);
+    }
+  }
+}

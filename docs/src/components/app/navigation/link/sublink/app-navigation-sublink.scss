@@ -1,0 +1,13 @@
+.app-navigation-sublink {
+
+  &-selected {
+    padding: 0.125em 0;
+  }
+
+  > a {
+    color: #F0F0F0;
+    display: inline-block;
+    padding: 0.125em 0;
+    text-decoration: none;
+  }
+}

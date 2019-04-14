@@ -1,22 +1,29 @@
-import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import React from 'reactn';
 import Header from '../header';
+import About from '../routes/about';
+import Install from '../routes/install';
 import './app.scss';
+import Navigation from './navigation';
 
-interface G {
-  name: string;
-}
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <div className="app">
-        <Header />
+
+export default function App() {
+  return (
+    <div className="app">
+      <Header />
+      <div>
         <main>
-          <strong>ReactN</strong>{' '}
-          is a global state management solution for{' '}
-          <strong>ReactJS</strong>.
+          <Switch>
+            <Route
+              component={Install}
+              path="/install"
+            />
+            <Route component={About} />
+          </Switch>
         </main>
+        <Navigation />
       </div>
-    );
-  }
+    </div>
+  );
 }
