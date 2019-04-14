@@ -6,7 +6,6 @@ cache: yarn
 install: yarn
 script:
 - yarn build
-- yarn lint
 - yarn test
 - cd docs
 - yarn test

@@ -1,3 +1,4 @@
+import { Reducers, State } from '../default';
 import { ComponentClass } from 'react';
 import { ReactNComponentClass } from './components';
 import {
@@ -11,7 +12,7 @@ import {
 } from './methods';
 import { NewGlobalState } from './global-state-manager';
 import Callback from './typings/callback';
-import { AdditionalDispatchers, Dispatchers } from './typings/reducer';
+import { AdditionalDispatchers, DispatcherMap } from './typings/reducer';
 
 
 
@@ -29,14 +30,14 @@ const componentName = (DecoratedComponent: ComponentClass): string =>
 
 // @reactn
 export default function ReactN<
-  GS extends {} = {},
-  R extends {} = {},
+  G extends {} = State,
+  R extends {} = Reducers,
   P extends {} = {},
   S extends {} = {},
   SS = any,
 >(
   DecoratedComponent: ComponentClass<P, S>,
-): ReactNComponentClass<P, S, GS, R, SS> {
+): ReactNComponentClass<P, S, G, R, SS> {
   class DecoratedReactNComponent extends DecoratedComponent {
 
     public static displayName: string =
@@ -61,19 +62,19 @@ export default function ReactN<
       }
     }
 
-    public get dispatch(): Dispatchers<GS, R> & AdditionalDispatchers<GS> {
-      return ReactNDispatch<GS, R>();
+    public get dispatch(): DispatcherMap<G, R> & AdditionalDispatchers<G> {
+      return ReactNDispatch<G, R>();
     }
 
-    public get global(): Readonly<GS> {
-      return ReactNGlobal<GS>(this);
+    public get global(): Readonly<G> {
+      return ReactNGlobal<G>(this);
     }
 
     public setGlobal(
-      newGlobalState: NewGlobalState<GS>,
-      callback: Callback<GS> | null = null,
-    ): Promise<GS> {
-      return ReactNSetGlobal<GS>(
+      newGlobalState: NewGlobalState<G>,
+      callback: Callback<G> | null = null,
+    ): Promise<G> {
+      return ReactNSetGlobal<G>(
         newGlobalState, callback,
         !isComponentDidMount &&
         !isComponentDidUpdate &&

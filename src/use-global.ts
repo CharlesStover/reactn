@@ -1,5 +1,6 @@
 import { useContext, useEffect } from 'react';
 import useForceUpdate from 'use-force-update';
+import { State } from '../default';
 import Context from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager, { NewGlobalState } from './global-state-manager';
@@ -14,16 +15,16 @@ export type GlobalTuple<GS> = [
   (newGlobalState: NewGlobalState<GS>, callback?: Callback<GS>) => Promise<GS>,
 ];
 
-type Setter<GS extends {}, P extends keyof GS> =
-  (newValue: GS[P], callback?: Callback<GS>) => Promise<GS>;
+type Setter<G extends {}, P extends keyof G> =
+  (newValue: G[P], callback?: Callback<G>) => Promise<G>;
 
-export type StateTuple<GS extends {}, P extends keyof GS> = [
-  GS[P],
-  Setter<GS, P>,
+export type StateTuple<G extends {}, P extends keyof G> = [
+  G[P],
+  Setter<G, P>,
 ];
 
-export type UseGlobal<GS extends {}, Property extends keyof GS> =
-  GlobalTuple<GS> | StateTuple<GS, Property>;
+export type UseGlobal<G extends {}, Property extends keyof G> =
+  GlobalTuple<G> | StateTuple<G, Property>;
 
 type VoidFunction = () => void;
 
@@ -34,39 +35,37 @@ type VoidFunction = () => void;
 
 
 // useGlobal()
-export default function useGlobal<
-  GS extends {} = {},
->(
-  overrideGlobalStateManager: GlobalStateManager<GS> | null,
-): GlobalTuple<GS>;
+export default function useGlobal<G extends {} = State>(
+  overrideGlobalStateManager: GlobalStateManager<G> | null,
+): GlobalTuple<G>;
 
 // useGlobal('property')
 export default function useGlobal<
-  GS extends {}, // = {}
-  Property extends keyof GS,
+  G extends {} = State,
+  Property extends keyof G = keyof G,
 >(
-  overrideGlobalStateManager: GlobalStateManager<GS> | null,
+  overrideGlobalStateManager: GlobalStateManager<G> | null,
   property: Property,
-): StateTuple<GS, Property>;
+): StateTuple<G, Property>;
 
 // Implementation
 export default function useGlobal<
-  GS extends {} = {},
-  Property extends keyof GS = keyof GS,
+  G extends {} = State,
+  Property extends keyof G = keyof G,
 >(
-  overrideGlobalStateManager: GlobalStateManager<GS> | null,
+  overrideGlobalStateManager: GlobalStateManager<G> | null,
   property?: Property,
-): UseGlobal<GS, Property> {
+): UseGlobal<G, Property> {
 
   // Require hooks.
   if (!useContext) {
     throw REACT_HOOKS_ERROR;
   }
 
-  const globalStateManager: GlobalStateManager<GS> =
+  const globalStateManager: GlobalStateManager<G> =
     overrideGlobalStateManager ||
-    (useContext(Context) as GlobalStateManager<GS>) ||
-    (defaultGlobalStateManager as GlobalStateManager<GS>);
+    (useContext(Context) as GlobalStateManager<G>) ||
+    (defaultGlobalStateManager as GlobalStateManager<G>);
 
   const forceUpdate = useForceUpdate();
 
@@ -80,9 +79,9 @@ export default function useGlobal<
   if (typeof property === 'undefined') {
 
     const globalStateSetter = (
-      newGlobalState: NewGlobalState<GS>,
-      callback: Callback<GS> | null = null,
-    ): Promise<GS> =>
+      newGlobalState: NewGlobalState<G>,
+      callback: Callback<G> | null = null,
+    ): Promise<G> =>
       setGlobal(globalStateManager, newGlobalState, callback);
 
     return [
@@ -92,10 +91,10 @@ export default function useGlobal<
   }
 
   const globalPropertySetter = (
-    value: GS[Property],
-    callback: Callback<GS> | null = null,
-  ): Promise<GS> => {
-    const newGlobalState: Partial<GS> = Object.create(null);
+    value: G[Property],
+    callback: Callback<G> | null = null,
+  ): Promise<G> => {
+    const newGlobalState: Partial<G> = Object.create(null);
     newGlobalState[property] = value;
     return setGlobal(globalStateManager, newGlobalState, callback);
   };

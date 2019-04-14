@@ -10,5 +10,5 @@ interface TrueContext<T> extends Context<T> {
 type RSA = Record<number | string, any>;
 
 export default (
-  createContext<GlobalStateManager<RSA, RSA>>(defaultGlobalStateManager)
-) as TrueContext<GlobalStateManager<RSA, RSA>>;
+  createContext<GlobalStateManager<any, any>>(defaultGlobalStateManager)
+) as TrueContext<GlobalStateManager<any, any>>;

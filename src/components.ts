@@ -1,5 +1,6 @@
+import { Reducers, State } from '../default';
 import { Component, ComponentClass, PureComponent } from 'react';
-import { NewGlobalState, PropertyListener } from './global-state-manager';
+import { NewGlobalState } from './global-state-manager';
 import {
   ReactNComponentWillUnmount,
   ReactNComponentWillUpdate,
@@ -9,7 +10,7 @@ import {
   ReactNSetGlobal,
 } from './methods';
 import Callback from './typings/callback';
-import { Dispatchers } from './typings/reducer';
+import { DispatcherMap } from './typings/reducer';
 
 
 
@@ -19,21 +20,21 @@ type ComponentWillUpdate<P extends {} = {}, S extends {} = {}> =
 export interface ReactNComponentClass<
   P extends {} = {},
   S extends {} = {},
-  GS extends {} = {},
-  R extends {} = {},
+  G extends {} = State,
+  R extends {} = Reducers,
   SS = any,
 > extends ComponentClass<P, S> {
-  new (props: P, context?: any): ReactNComponent<P, S, GS, R, SS>;
+  new (props: P, context?: any): ReactNComponent<P, S, G, R, SS>;
 }
 
 export interface ReactNPureComponentClass<
   P extends {} = {},
   S extends {} = {},
-  GS extends {} = {},
-  R extends {} = {},
+  G extends {} = State,
+  R extends {} = Reducers,
   SS = any,
 > extends ComponentClass<P, S> {
-  new (props: P, context?: any): ReactNPureComponent<P, S, GS, R, SS>;
+  new (props: P, context?: any): ReactNPureComponent<P, S, G, R, SS>;
 }
 
 type VoidFunction = () => void;
@@ -147,8 +148,8 @@ const bindLifecycleMethods = (
 export class ReactNComponent<
   P extends {} = {},
   S extends {} = {},
-  GS extends {} = {},
-  R extends {} = {},
+  G extends {} = State,
+  R extends {} = Reducers,
   SS = any,
 > extends Component<P, S, SS> {
 
@@ -158,19 +159,19 @@ export class ReactNComponent<
     bindLifecycleMethods(this);
   }
 
-  public get dispatch(): Readonly<Dispatchers<GS, R>> {
-    return ReactNDispatch<GS, R>();
+  public get dispatch(): Readonly<DispatcherMap<G, R>> {
+    return ReactNDispatch<G, R>();
   }
 
-  public get global(): Readonly<GS> {
-    return ReactNGlobal<GS>(this);
+  public get global(): Readonly<G> {
+    return ReactNGlobal<G>(this);
   }
 
   public setGlobal(
-    newGlobalState: NewGlobalState<GS>,
-    callback: Callback<GS> | null = null
-  ): Promise<Readonly<GS>> {
-    return ReactNSetGlobal<GS>(
+    newGlobalState: NewGlobalState<G>,
+    callback: Callback<G> | null = null
+  ): Promise<Readonly<G>> {
+    return ReactNSetGlobal<G>(
       newGlobalState, callback,
       !isComponentDidMount &&
       !isComponentDidUpdate &&
@@ -186,8 +187,8 @@ export class ReactNComponent<
 export class ReactNPureComponent<
   P extends {} = {},
   S extends {} = {},
-  GS extends {} = {},
-  R extends {} = {},
+  G extends {} = State,
+  R extends {} = Reducers,
   SS = any,
 > extends PureComponent<P, S, SS> {
 
@@ -197,19 +198,19 @@ export class ReactNPureComponent<
     bindLifecycleMethods(this);
   }
 
-  public get dispatch(): Readonly<Dispatchers<GS, R>> {
-    return ReactNDispatch<GS, R>();
+  public get dispatch(): Readonly<DispatcherMap<G, R>> {
+    return ReactNDispatch<G, R>();
   }
 
-  public get global(): Readonly<GS> {
-    return ReactNGlobal<GS>(this);
+  public get global(): Readonly<G> {
+    return ReactNGlobal<G>(this);
   }
 
   public setGlobal(
-    newGlobalState: NewGlobalState<GS>,
-    callback: Callback<GS> | null = null
-  ): Promise<Readonly<GS>> {
-    return ReactNSetGlobal<GS>(
+    newGlobalState: NewGlobalState<G>,
+    callback: Callback<G> | null = null
+  ): Promise<Readonly<G>> {
+    return ReactNSetGlobal<G>(
       newGlobalState, callback,
       !isComponentDidMount &&
       !isComponentDidUpdate &&

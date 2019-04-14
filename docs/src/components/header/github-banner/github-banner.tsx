@@ -3,12 +3,6 @@ import './github-banner.scss';
 
 
 
-interface G {
-  rainbow: string;
-}
-
-
-
 const arm: string =
   'M128 109c-15-9-9-19-9-19 3-7 2-11 2-11-1-7 3-2 3-2 4 5 2 11 2 11-3 10 5 ' +
   '15 9 16';
@@ -25,7 +19,7 @@ const SIZE: number = 80;
 
 
 export default function GitHubBanner() {
-  const [ fill ] = useGlobal<G>('rainbow');
+  const [ fill ] = useGlobal('rainbow');
   return (
     <a
       className="github-banner"
