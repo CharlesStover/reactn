@@ -1,0 +1,6 @@
+@mixin rainbowify($property) {
+  transition-delay: 0s;
+  transition-duration: 30s;
+  transition-property: $property;
+  transition-timing-function: linear;
+}

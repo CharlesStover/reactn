@@ -4,22 +4,13 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './components/app';
 import './index.scss';
 
-const rand = (): number =>
-  Math.floor(Math.random() * 256);
-
-const rainbowify = () =>
-  setGlobal({
-    rainbow: `rgb(${rand()}, ${rand()}, ${rand()})`,
-  });
-
-rainbowify().then((): void => {
-  setTimeout(rainbowify, 0);
-  setInterval(rainbowify, 30000);
+setGlobal({
+  rainbow: '#61DAFB',
 });
 
 ReactDOM.render(
   <BrowserRouter>
     <App />
   </BrowserRouter>,
-  document.getElementById('root')
+  document.getElementById('root'),
 );

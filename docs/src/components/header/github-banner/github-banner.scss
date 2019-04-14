@@ -1,4 +1,4 @@
-@import "../../assets/styles/rainbow.scss";
+@import "../../../assets/styles/rainbowify.scss";
 
 .github-banner {
   position: absolute;
@@ -13,7 +13,5 @@
 }
 
 .github-banner-background {
-  transition-duration: $rainbow-duration;
-  transition-property: fill;
-  transition-timing-function: linear;
+  @include rainbowify(fill);
 }

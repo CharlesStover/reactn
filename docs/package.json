@@ -22,7 +22,8 @@
     "react-dom": "link:../node_modules/react-dom",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
-    "reactn": "link:../"
+    "reactn": "link:../",
+    "use-react-router": "^1.0.5"
   },
   "devDependencies": {
     "@types/jest": "link:../node_modules/@types/jest",
