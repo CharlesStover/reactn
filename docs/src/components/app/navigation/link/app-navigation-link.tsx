@@ -5,10 +5,6 @@ import './app-navigation-link.scss';
 
 
 
-interface G {
-  rainbow: string;
-}
-
 interface Props {
   children?: JSX.Element | JSX.Element[];
   to?: string;
@@ -20,7 +16,7 @@ interface Props {
 export default function AppNavigationLink(
   { children, title, to }: Props
 ): JSX.Element {
-  const [ global ] = useGlobal<G>();
+  const [ global ] = useGlobal();
   const { location } = useReactRouter();
 
   // If the user is on this page,

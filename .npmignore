@@ -1,7 +1,7 @@
 /.git
 /.vscode
-/jest
 /docs
+/jest
 /node_modules
 /src
 /tests

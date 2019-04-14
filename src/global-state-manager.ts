@@ -1,9 +1,11 @@
+import { Reducers, State } from '../default';
 import {
   Action as ReduxAction,
   AnyAction as ReduxAnyAction,
   DeepPartial as ReduxDeepPartial,
   Dispatch as ReduxDispatch,
   Reducer as ReduxReducer,
+  Store as ReduxStore,
   StoreEnhancer as ReduxStoreEnhancer,
   StoreEnhancerStoreCreator as ReduxStoreEnhancerStoreCreator,
 } from 'redux';
@@ -12,7 +14,7 @@ import Callback from './typings/callback';
 import Reducer, {
   AdditionalDispatchers,
   Dispatcher,
-  Dispatchers,
+  DispatcherMap,
   ExtractA,
 } from './typings/reducer';
 import objectGetListener from './utils/object-get-listener';
@@ -71,44 +73,44 @@ declare const window: Window<any> | void;
 
 
 export default class GlobalStateManager<
-  GS extends {} = {},
-  R extends {} = {},
+  G extends {} = State,
+  R extends {} = Reducers,
 > {
 
-  private _callbacks: Set<Callback<GS>> = new Set<Callback<GS>>();
-  private _dispatchers: Dispatchers<GS, R> & AdditionalDispatchers<GS> =
+  private _callbacks: Set<Callback<G>> = new Set<Callback<G>>();
+  private _dispatchers: DispatcherMap<G, R> & AdditionalDispatchers<G> =
     Object.create(null);
   private _initialReducers: R;
-  private _initialState: GS;
-  private _propertyListeners: Map<keyof GS, Set<PropertyListener>> =
-    new Map<keyof GS, Set<PropertyListener>>();
-  private _queue: Map<keyof GS, GS[keyof GS]> =
-    new Map<keyof GS, GS[keyof GS]>();
-  private _reduxDevToolsDispatch: ReduxDispatch<ReduxDevToolsAction<GS>> =
+  private _initialState: G;
+  private _propertyListeners: Map<keyof G, Set<PropertyListener>> =
+    new Map<keyof G, Set<PropertyListener>>();
+  private _queue: Map<keyof G, G[keyof G]> =
+    new Map<keyof G, G[keyof G]>();
+  private _reduxDevToolsDispatch: ReduxDispatch<ReduxDevToolsAction<G>> =
     null;
-  private _state: GS;
+  private _state: G;
 
 
 
   public constructor(
-    initialState: GS = Object.create(null),
+    initialState: G = Object.create(null),
     initialReducers: R = Object.create(null),
   ) {
     if (
       typeof window === 'object' &&
       window.__REDUX_DEVTOOLS_EXTENSION__
     ) {
-      const enhancer: ReduxStoreEnhancer<GS> =
-        (window as Window<GS>).__REDUX_DEVTOOLS_EXTENSION__({
+      const enhancer: ReduxStoreEnhancer<G> =
+        (window as Window<G>).__REDUX_DEVTOOLS_EXTENSION__({
           name: 'ReactN state',
         });
-      const enhancerStoreCreator: ReduxStoreEnhancerStoreCreator<{}, GS> = <
+      const enhancerStoreCreator: ReduxStoreEnhancerStoreCreator<{}, G> = <
         S = any,
         A extends ReduxAnyAction = ReduxAnyAction,
       >(
         _reducer: ReduxReducer<S, A>,
         _preloadedState: ReduxDeepPartial<S>,
-      ) => ({
+      ): ReduxStore<S & G, A> => ({
         dispatch: <T extends ReduxAnyAction>(action: T): T => action,
         getState: (): any => this.state,
         replaceReducer: () => null,
@@ -131,7 +133,7 @@ export default class GlobalStateManager<
 
 
 
-  public addCallback(callback: Callback<GS>): BooleanFunction {
+  public addCallback(callback: Callback<G>): BooleanFunction {
     this._callbacks.add(callback);
     return (): boolean =>
       this.removeCallback(callback);
@@ -139,7 +141,7 @@ export default class GlobalStateManager<
 
   // Map component instance to a state property.
   public addPropertyListener(
-    property: keyof GS,
+    property: keyof G,
     propertyListener: PropertyListener,
   ): void {
 
@@ -158,14 +160,14 @@ export default class GlobalStateManager<
 
   public addDispatcher<A extends any[] = any[]>(
     name: string,
-    reducer: Reducer<GS, A>,
+    reducer: Reducer<G, A>,
   ): BooleanFunction {
     this._dispatchers[name] = this.createDispatcher(reducer);
     return (): boolean =>
       this.removeDispatcher(name);
   }
 
-  public addDispatchers(reducers: AdditionalReducers<GS>): void {
+  public addDispatchers(reducers: AdditionalReducers<G>): void {
     for (const [ name, reducer ] of Object.entries(reducers)) {
       this.addDispatcher(name, reducer);
     }
@@ -176,21 +178,21 @@ export default class GlobalStateManager<
   }
 
   public createDispatcher<A extends any[] = []>(
-    reducer: Reducer<GS, A>,
-  ): Dispatcher<GS, A> {
-    return (...args: A): Promise<GS> =>
+    reducer: Reducer<G, A>,
+  ): Dispatcher<G, A> {
+    return (...args: A): Promise<G> =>
       this.set(
         reducer(this.state, ...args),
       );
   }
 
-  public get dispatchers(): Dispatchers<GS, R> & AdditionalDispatchers<GS> {
+  public get dispatchers(): DispatcherMap<G, R> & AdditionalDispatchers<G> {
     return copyObject(this._dispatchers);
   }
 
-  public enqueue<Property extends keyof GS>(
+  public enqueue<Property extends keyof G>(
     property: Property,
-    value: GS[Property],
+    value: G[Property],
   ): void {
     this._queue.set(property, value);
   }
@@ -226,14 +228,14 @@ export default class GlobalStateManager<
 
   public getDispatcher<K extends keyof R>(
     name: K,
-  ): Dispatcher<GS, ExtractA<R[K]>> {
+  ): Dispatcher<G, ExtractA<R[K]>> {
     if (this.hasDispatcher(name)) {
       return this._dispatchers[name];
     }
     throw new Error(`Cannot return unknown ReactN reducer \`${name}\`.`);
   }
 
-  public hasCallback(callback: Callback<GS>): boolean {
+  public hasCallback(callback: Callback<G>): boolean {
     return this._callbacks.has(callback);
   }
 
@@ -252,19 +254,19 @@ export default class GlobalStateManager<
     return false;
   }
 
-  public get queue(): Map<keyof GS, GS[keyof GS]> {
+  public get queue(): Map<keyof G, G[keyof G]> {
     return this._queue;
   }
 
-  public get propertyListeners(): Map<keyof GS, Set<PropertyListener>> {
+  public get propertyListeners(): Map<keyof G, Set<PropertyListener>> {
     return this._propertyListeners;
   }
 
-  public get reduxDevToolsDispatch(): ReduxDispatch<ReduxDevToolsAction<GS>> {
+  public get reduxDevToolsDispatch(): ReduxDispatch<ReduxDevToolsAction<G>> {
     return this._reduxDevToolsDispatch;
   }
 
-  public removeCallback(callback: Callback<GS>): boolean {
+  public removeCallback(callback: Callback<G>): boolean {
     return this._callbacks.delete(callback);
   }
 
@@ -303,7 +305,7 @@ export default class GlobalStateManager<
   }
 
   // Set any type of state change.
-  public set(newGlobalState: NewGlobalState<GS>): Promise<GS> {
+  public set(newGlobalState: NewGlobalState<G>): Promise<G> {
 
     // No changes, e.g. getDerivedGlobalFromProps.
     if (
@@ -337,15 +339,15 @@ export default class GlobalStateManager<
     throw INVALID_NEW_GLOBAL_STATE;
   }
 
-  public setFunction(f: FunctionalNewGlobalState<GS>): Promise<GS> {
+  public setFunction(f: FunctionalNewGlobalState<G>): Promise<G> {
     return this.set(f(this.state));
   }
 
   // Set the state's property-value pairs via an object.
-  public setObject<O extends Partial<GS> = Partial<GS>>(obj: O): Promise<GS> {
-    const properties: (keyof GS)[] = Object.keys(obj) as (keyof GS)[];
+  public setObject<O extends Partial<G> = Partial<G>>(obj: O): Promise<G> {
+    const properties: (keyof G)[] = Object.keys(obj) as (keyof G)[];
     for (const property of properties) {
-      const value: GS[keyof GS] = obj[property] as GS[keyof GS];
+      const value: G[keyof G] = obj[property] as G[keyof G];
       this.enqueue(property, value);
     }
     this.flush();
@@ -354,26 +356,26 @@ export default class GlobalStateManager<
 
   // Set the state's property-value pairs via a promise.
   public setPromise(
-    promise: Promise<NewGlobalState<GS>>
-  ): Promise<GS> {
+    promise: Promise<NewGlobalState<G>>
+  ): Promise<G> {
     return promise
-      .then((result: NewGlobalState<GS>): Promise<GS> =>
+      .then((result: NewGlobalState<G>): Promise<G> =>
         this.set(result)
       );
   }
 
-  public spyState(propertyListener: PropertyListener): GS {
+  public spyState(propertyListener: PropertyListener): G {
 
     // When this._state is read, execute the listener.
     return objectGetListener(
       this._state,
-      (property: keyof GS) => {
+      (property: keyof G) => {
         this.addPropertyListener(property, propertyListener);
       }
     );
   }
 
-  public get state(): Readonly<GS> {
+  public get state(): Readonly<G> {
     return copyObject(this._state);
   }
 };

@@ -6,14 +6,8 @@ import ReactLogo from './react-logo';
 
 
 
-interface G {
-  rainbow: string;
-}
-
-
-
 export default function Header() {
-  const [ color ] = useGlobal<G>('rainbow');
+  const [ color ] = useGlobal('rainbow');
   return (
     <header
       className="header"

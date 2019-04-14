@@ -1,3 +1,4 @@
+import { Reducers, State } from '../default';
 import * as React from 'react';
 import Context from './context';
 import addReducer from './add-reducer';
@@ -8,9 +9,9 @@ import Callback from './typings/callback';
 import Reducer, {
   AdditionalDispatchers,
   Dispatcher,
-  Dispatchers,
+  DispatcherMap,
   ExtractA,
-  Reducers,
+  ReducerMap,
 } from './typings/reducer';
 import useGlobal, { GlobalTuple, StateTuple, UseGlobal } from './use-global';
 import useGlobalReducer, { UseGlobalReducer } from './use-global-reducer';
@@ -21,38 +22,38 @@ import withGlobal, { Getter, Setter, WithGlobal } from './with-global';
 type BooleanFunction = () => boolean;
 
 export interface ReactNProvider<
-  GS extends {} = {},
-  R extends {} = {},
+  G extends {} = State,
+  R extends {} = Reducers,
 > {
-  addCallback(callback: Callback<GS>): BooleanFunction;
+  addCallback(callback: Callback<G>): BooleanFunction;
   addReducer<A extends any[] = any[]>(
     name: string,
-    reducer: Reducer<GS, A>,
+    reducer: Reducer<G, A>,
   ): BooleanFunction;
-  addReducers(reducers: Reducers<GS>): BooleanFunction;
-  dispatch: Dispatchers<GS, R> & AdditionalDispatchers<GS>;
-  getDispatch(): Dispatchers<GS, R> & AdditionalDispatchers<GS>;
-  getGlobal(): GS;
-  global: GS;
-  removeCallback(callback: Callback<GS>): boolean;
+  addReducers(reducers: ReducerMap<G>): BooleanFunction;
+  dispatch: DispatcherMap<G, R> & AdditionalDispatchers<G>;
+  getDispatch(): DispatcherMap<G, R> & AdditionalDispatchers<G>;
+  getGlobal(): G;
+  global: G;
+  removeCallback(callback: Callback<G>): boolean;
   reset(): void;
   setGlobal(
-    newGlobalState: NewGlobalState<GS>,
-    callback?: Callback<GS>,
-  ): Promise<GS>;
-  useGlobal(): GlobalTuple<GS>;
-  useGlobal<Property extends keyof GS>(
+    newGlobalState: NewGlobalState<G>,
+    callback?: Callback<G>,
+  ): Promise<G>;
+  useGlobal(): GlobalTuple<G>;
+  useGlobal<Property extends keyof G>(
     property: Property,
-  ): StateTuple<GS, Property>;
+  ): StateTuple<G, Property>;
   useGlobalReducer<A extends any[] = any[]>(
-    reducer: Reducer<GS, A>,
-  ): Dispatcher<GS, A>;
+    reducer: Reducer<G, A>,
+  ): Dispatcher<G, A>;
   useGlobalReducer<K extends keyof R = keyof R>(
     reducer: K,
-  ): Dispatcher<GS, ExtractA<R[K]>>;
+  ): Dispatcher<G, ExtractA<R[K]>>;
   withGlobal<HP, LP>(
-    getter: Getter<GS, HP, LP>,
-    setter: Setter<GS, HP, LP>,
+    getter: Getter<G, HP, LP>,
+    setter: Setter<G, HP, LP>,
   ): WithGlobal<HP, LP>;
   new (props: {}, context?: any): React.Component<{}, {}>;
 }
@@ -60,54 +61,54 @@ export interface ReactNProvider<
 
 
 export default function createProvider<
-  GS extends {} = {},
-  R extends {} = {},
+  G extends {} = State,
+  R extends {} = Reducers,
 >(
-  initialState: GS = Object.create(null),
+  initialState: G = Object.create(null),
   initialReducers: R = Object.create(null),
-): ReactNProvider<GS, R> {
+): ReactNProvider<G, R> {
 
-  const globalStateManager = new GlobalStateManager<GS, R>(
+  const globalStateManager = new GlobalStateManager<G, R>(
     initialState,
     initialReducers,
   );
 
   return class ReactNProvider extends React.Component<{}, {}> {
 
-    public static addCallback(f: Callback<GS>): BooleanFunction {
+    public static addCallback(f: Callback<G>): BooleanFunction {
       return globalStateManager.addCallback(f);
     }
 
     public static addReducer<A extends any[] = any[]>(
       name: string,
-      reducer: Reducer<GS, A>,
+      reducer: Reducer<G, A>,
     ): BooleanFunction {
-      return addReducer<GS>(globalStateManager, name, reducer);
+      return addReducer<G>(globalStateManager, name, reducer);
     }
 
-    public static addReducers(reducers: Reducers<GS>): BooleanFunction {
-      return addReducers<GS>(globalStateManager, reducers);
+    public static addReducers(reducers: ReducerMap<G>): BooleanFunction {
+      return addReducers<G>(globalStateManager, reducers);
     }
 
     public static get dispatch(
-    ): Dispatchers<GS, R> & AdditionalDispatchers<GS> {
+    ): DispatcherMap<G, R> & AdditionalDispatchers<G> {
       return globalStateManager.dispatchers;
     }
 
     public static getDispatch(
-    ): Dispatchers<GS, R> & AdditionalDispatchers<GS> {
+    ): DispatcherMap<G, R> & AdditionalDispatchers<G> {
       return globalStateManager.dispatchers;
     }
 
-    public static getGlobal(): GS {
+    public static getGlobal(): G {
       return globalStateManager.state;
     }
 
-    public static get global(): GS {
+    public static get global(): G {
       return globalStateManager.state;
     }
 
-    public static removeCallback(callback: Callback<GS>): boolean {
+    public static removeCallback(callback: Callback<G>): boolean {
       return globalStateManager.removeCallback(callback);
     }
 
@@ -116,54 +117,50 @@ export default function createProvider<
     }
 
     public static setGlobal(
-      newGlobalState: NewGlobalState<GS>,
-      callback: Callback<GS> | null = null,
-    ): Promise<GS> {
-      return setGlobal<GS>(globalStateManager, newGlobalState, callback);
+      newGlobalState: NewGlobalState<G>,
+      callback: Callback<G> | null = null,
+    ): Promise<G> {
+      return setGlobal<G>(globalStateManager, newGlobalState, callback);
     }
 
-    public static useGlobal(): GlobalTuple<GS>;
-    public static useGlobal<Property extends keyof GS>(
+    public static useGlobal(): GlobalTuple<G>;
+    public static useGlobal<Property extends keyof G>(
       property: Property,
-    ): StateTuple<GS, Property>;
-    public static useGlobal<Property extends keyof GS>(
+    ): StateTuple<G, Property>;
+    public static useGlobal<Property extends keyof G>(
       property?: Property,
-    ): UseGlobal<GS, Property> {
+    ): UseGlobal<G, Property> {
       return useGlobal(globalStateManager, property);
     }
 
     public static useGlobalReducer<A extends any[] = any[]>(
-      reducer: Reducer<GS, A>,
-    ): Dispatcher<GS, A>;
+      reducer: Reducer<G, A>,
+    ): Dispatcher<G, A>;
     public static useGlobalReducer<K extends keyof R = keyof R>(
       reducer: K,
-    ): Dispatcher<GS, ExtractA<R[K]>>;
+    ): Dispatcher<G, ExtractA<R[K]>>;
     public static useGlobalReducer<K extends keyof R = keyof R, A extends any[] = any[]>(
-      reducer: K | Reducer<GS, A>,
-    ): UseGlobalReducer<GS, R, K, A> {
+      reducer: K | Reducer<G, A>,
+    ): UseGlobalReducer<G, R, K, A> {
 
       // TypeScript required this be an if-else block with the exact same
       //   function call.
       // The generics were added to make the best of an inefficient situation.
       if (typeof reducer === 'function') {
-        return useGlobalReducer<GS, A>(globalStateManager, reducer);
+        return useGlobalReducer<G, A>(globalStateManager, reducer);
       }
-      return useGlobalReducer<GS, R>(globalStateManager, reducer);
+      return useGlobalReducer<G, R>(globalStateManager, reducer);
     }
 
     public static withGlobal<HP, LP>(
-      getter: Getter<GS, HP, LP> = (globalState: GS): GS => globalState,
-      setter: Setter<GS, HP, LP> = (): null => null,
+      getter: Getter<G, HP, LP> = (globalState: G): G => globalState,
+      setter: Setter<G, HP, LP> = (): null => null,
     ): WithGlobal<HP, LP> {
-      return withGlobal<GS, HP, LP>(globalStateManager, getter, setter);
+      return withGlobal<G, HP, LP>(globalStateManager, getter, setter);
     }
 
     public render(): JSX.Element {
       return (
-        // @ts-ignore: Type 'GlobalStateManager<GS, R>' is not assignable to
-        //   type 'GlobalStateManager<Record<ReactText, any>, Record<ReactText,
-        //   any>>'.
-        // Type 'Record<ReactText, any>' is not assignable to type 'GS'.
         <Context.Provider value={globalStateManager}>
           {this.props.children}
         </Context.Provider>

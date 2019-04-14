@@ -1,14 +1,17 @@
+import { Reducers, State } from '../default';
 import { ReactNComponent, ReactNPureComponent } from './components';
 import Context from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager, { NewGlobalState } from './global-state-manager';
 import Callback from './typings/callback';
-import { AdditionalDispatchers, Dispatchers } from './typings/reducer';
+import { AdditionalDispatchers, DispatcherMap } from './typings/reducer';
 
-const getGlobalStateManager = <GS extends {} = {}, R extends {} = {}>(
-): GlobalStateManager<GS, R> =>
-  (Context._currentValue2 as GlobalStateManager<GS, R>) ||
-  (defaultGlobalStateManager as GlobalStateManager<GS, R>);
+const getGlobalStateManager = <
+  G extends {} = State,
+  R extends {} = Reducers,
+>(): GlobalStateManager<G, R> =>
+  (Context._currentValue2 as GlobalStateManager<G, R>) ||
+  (defaultGlobalStateManager as GlobalStateManager<G, R>);
 
 // Accurately define React components as having an updater member variable.
 interface TrueComponent extends ReactNComponent {
@@ -45,33 +48,33 @@ export function createReactNGetDerivedStateFromProps<P>(
 
 
 // this.componentWillUnmount
-export function ReactNComponentWillUnmount<GS extends {} = {}>(
-  that: ReactNComponent<any, any, GS> | ReactNPureComponent<any, any, GS>,
+export function ReactNComponentWillUnmount<G extends {} = State>(
+  that: ReactNComponent<any, any, G> | ReactNPureComponent<any, any, G>,
 ): void {
 
   // No longer re-render this component on global state change.
-  getGlobalStateManager<GS>().removePropertyListener(that._globalCallback);
+  getGlobalStateManager<G>().removePropertyListener(that._globalCallback);
 }
 
 
 
 // this.componentWillUnmount
-export function ReactNComponentWillUpdate<GS extends {} = {}>(
-  that: ReactNComponent<any, any, GS> | ReactNPureComponent<any, any, GS>,
+export function ReactNComponentWillUpdate<G extends {} = State>(
+  that: ReactNComponent<any, any, G> | ReactNPureComponent<any, any, G>,
 ): void {
 
   // No longer re-render this component on global state change.
-  getGlobalStateManager<GS>().removePropertyListener(that._globalCallback);
+  getGlobalStateManager<G>().removePropertyListener(that._globalCallback);
 }
 
 
 
 // this.dispatch
 export function ReactNDispatch<
-  GS extends {} = {},
-  R extends {} = {},
->(): Dispatchers<GS, R> & AdditionalDispatchers<GS> {
-  return getGlobalStateManager<GS, R>().dispatchers;
+  G extends {} = State,
+  R extends {} = Reducers,
+>(): DispatcherMap<G, R> & AdditionalDispatchers<G> {
+  return getGlobalStateManager<G, R>().dispatchers;
 }
 
 
@@ -91,31 +94,31 @@ export function ReactNGlobalCallback(
 
 // this.global
 // Provider.withGlobal passes its own global state instance.
-export function ReactNGlobal<GS>(
-  that: ReactNComponent<any, any, GS>,
-  globalStateManager: GlobalStateManager<GS> = getGlobalStateManager<GS>(),
-): Readonly<GS> {
+export function ReactNGlobal<G extends {} = State>(
+  that: ReactNComponent<any, any, G>,
+  globalStateManager: GlobalStateManager<G> = getGlobalStateManager<G>(),
+): Readonly<G> {
   return globalStateManager.spyState(that._globalCallback);
 }
 
 
 
 // this.setGlobal
-export function ReactNSetGlobal<GS>(
-  newGlobalState: NewGlobalState<GS>,
-  callback: Callback<GS> | null,
+export function ReactNSetGlobal<G extends {} = State>(
+  newGlobalState: NewGlobalState<G>,
+  callback: Callback<G> | null,
   _sync: boolean,
-  globalStateManager: GlobalStateManager<GS> = getGlobalStateManager<GS>(),
-): Promise<GS> {
+  globalStateManager: GlobalStateManager<G> = getGlobalStateManager<G>(),
+): Promise<G> {
   if (!callback) {
     return globalStateManager.set(newGlobalState);
   }
-  let globalState: GS;
+  let globalState: G;
   return globalStateManager.set(newGlobalState)
-    .then((gs: GS): GS => {
+    .then((gs: G): G => {
       globalState = gs;
       return gs;
     })
     .then(callback)
-    .then((): GS => globalState);
+    .then((): G => globalState);
 }

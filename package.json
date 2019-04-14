@@ -18,6 +18,7 @@
   },
   "files": [
     "build",
+    "default.d.ts",
     "package.json"
   ],
   "scripts": {

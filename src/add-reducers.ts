@@ -1,6 +1,7 @@
+import { State } from '../default';
 import addReducer from './add-reducer';
 import GlobalStateManager from './global-state-manager';
-import { Reducers } from './typings/reducer';
+import { ReducerMap } from './typings/reducer';
 
 
 
@@ -8,11 +9,9 @@ type BooleanFunction = () => boolean;
 
 
 
-export default function addReducers<
-  GS extends {} = {},
->(
-  globalStateManager: GlobalStateManager<GS>,
-  reducers: Reducers<GS>,
+export default function addReducers<G extends {} = State>(
+  globalStateManager: GlobalStateManager<G>,
+  reducers: ReducerMap<G>,
 ): BooleanFunction {
 
   // Amalgamate all the functions to remove these reducers.
@@ -25,7 +24,7 @@ export default function addReducers<
 
   // Return a function that will remove these reducers.
   return (): boolean => {
-    let success: boolean = true;
+    let success = true;
     for (const removeReducer of removeReducers) {
       success = success && removeReducer();
     }

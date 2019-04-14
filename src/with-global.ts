@@ -4,6 +4,7 @@ import {
   createElement,
   FunctionComponent,
 } from 'react';
+import { State } from '../default';
 import { ReactNComponent, ReactNComponentClass } from './components';
 import ReactNContext from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
@@ -13,18 +14,18 @@ import Callback from './typings/callback';
 
 
 
-export type Getter<GS, HP, LP> = (globalState: GS, props: HP) =>
+export type Getter<G extends {}, HP, LP> = (globalState: G, props: HP) =>
   null | Partial<LP> | void;
 
 type LowerOrderComponent<P = {}> =
   ComponentClass<P> | FunctionComponent<P> | string;
 
-type SetGlobal<GS> = (
-  newGlobalState: NewGlobalState<GS>,
-  callback?: Callback<GS>,
-) => Promise<GS>;
+type SetGlobal<G extends {} = State> = (
+  newGlobalState: NewGlobalState<G>,
+  callback?: Callback<G>,
+) => Promise<G>;
 
-export type Setter<GS, HP, LP> = (setGlobal: SetGlobal<GS>, props: HP) =>
+export type Setter<G, HP, LP> = (setGlobal: SetGlobal<G>, props: HP) =>
   null | Partial<LP> | void;
 
 export type WithGlobal<HP, LP> =
@@ -60,43 +61,43 @@ const hoc = withGlobal(
 hoc(MyComponent);
 */
 export default function withGlobal<
-  GS extends {} = {},
+  G extends {} = State,
   HP extends {} = {},
   LP extends {} = {},
 >(
-  globalStateManager: GlobalStateManager<GS> | null = null,
-  getter: Getter<GS, HP, LP> = (globalState: GS): GS => globalState,
-  setter: Setter<GS, HP, LP> = (): null => null,
+  globalStateManager: GlobalStateManager<G> | null = null,
+  getter: Getter<G, HP, LP> = (globalState: G): G => globalState,
+  setter: Setter<G, HP, LP> = (): null => null,
 ): WithGlobal<HP, LP> {
   return function ReactNWithGlobal(
     Component: LowerOrderComponent<LP>,
-  ): ReactNComponentClass<HP, {}, GS> {
+  ): ReactNComponentClass<HP, {}, G> {
 
     // If a Global State was provided, use it.
     // Otherwise, if a Provider was mounted, use its global state.
     // Otherwise, use the default global state.
 
-    return class ReactNHOC extends ReactNComponent<HP, {}, GS> {
+    return class ReactNHOC extends ReactNComponent<HP, {}, G> {
 
       // Context knows it provides a GlobalStateManager,
       //   but not the shape <GS> of the GlobalState that it holds.
-      public static contextType: Context<GlobalStateManager<GS>> =
-        ReactNContext as Context<GlobalStateManager<GS>>;
+      public static contextType: Context<GlobalStateManager<G>> =
+        ReactNContext as Context<GlobalStateManager<G>>;
 
       public static displayName = `${componentName(Component)}-ReactN`;
 
-      public get global(): GS {
-        return ReactNGlobal<GS>(
+      public get global(): G {
+        return ReactNGlobal<G>(
           this,
           globalStateManager || this.context || defaultGlobalStateManager
         );
       }
 
       public setGlobal = (
-        newGlobalState: NewGlobalState<GS>,
-        callback: Callback<GS> = null,
-      ): Promise<GS> =>
-        ReactNSetGlobal<GS>(
+        newGlobalState: NewGlobalState<G>,
+        callback: Callback<G> = null,
+      ): Promise<G> =>
+        ReactNSetGlobal<G>(
           newGlobalState, callback,
           !isComponentDidMount &&
           !isComponentDidUpdate &&

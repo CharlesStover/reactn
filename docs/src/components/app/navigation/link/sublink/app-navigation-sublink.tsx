@@ -5,10 +5,6 @@ import './app-navigation-sublink.scss';
 
 
 
-interface G {
-  rainbow: string;
-}
-
 interface Props {
   children: string;
   to: string;
@@ -19,7 +15,7 @@ interface Props {
 export default function AppNavigationLink(
   { children, to }: Props
 ): JSX.Element {
-  const [ global ] = useGlobal<G>();
+  const [ global ] = useGlobal();
   const { location } = useReactRouter();
   if (location.pathname.substring(1) === to) {
     return (

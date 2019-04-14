@@ -4,14 +4,8 @@ import Link, { Sublink } from './link';
 
 
 
-interface G {
-  rainbow: string;
-}
-
-
-
 export default function AppNavigation() {
-  const [ backgroundColor ] = useGlobal<G>('rainbow');
+  const [ backgroundColor ] = useGlobal('rainbow');
   return (
     <nav
       className="app-navigation"
