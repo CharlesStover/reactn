@@ -1,0 +1,11 @@
+import { Reducers, State } from '../default';
+import { ReactNComponent, ReactNPureComponent } from './components';
+import GlobalStateManager, { NewGlobalState } from './global-state-manager';
+import Callback from './typings/callback';
+import { AdditionalDispatchers, DispatcherMap } from './typings/reducer';
+export declare function ReactNComponentWillUnmount<G extends {} = State>(that: ReactNComponent<any, any, G> | ReactNPureComponent<any, any, G>): void;
+export declare function ReactNComponentWillUpdate<G extends {} = State>(that: ReactNComponent<any, any, G> | ReactNPureComponent<any, any, G>): void;
+export declare function ReactNDispatch<G extends {} = State, R extends {} = Reducers>(): DispatcherMap<G, R> & AdditionalDispatchers<G>;
+export declare function ReactNGlobalCallback(that: ReactNComponent | ReactNPureComponent): void;
+export declare function ReactNGlobal<G extends {} = State>(that: ReactNComponent<any, any, G>, globalStateManager?: GlobalStateManager<G>): Readonly<G>;
+export declare function ReactNSetGlobal<G extends {} = State>(newGlobalState: NewGlobalState<G>, callback: Callback<G> | null, _sync: boolean, globalStateManager?: GlobalStateManager<G>): Promise<G>;
