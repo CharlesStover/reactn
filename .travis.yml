@@ -3,12 +3,14 @@ node_js: 10.15.3
 branches:
   only: master
 cache: yarn
-install: yarn
+install:
+- yarn
+- cd docs
+- yarn
 script:
 - yarn build
 - yarn test
 - cd docs
-- yarn
 - yarn test
 - yarn build
 deploy:
