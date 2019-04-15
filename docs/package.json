@@ -1,0 +1,39 @@
+{
+  "name": "reactn-docs",
+  "version": "2.0.0",
+  "private": true,
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "scripts": {
+    "build": "react-scripts build",
+    "eject": "react-scripts eject",
+    "start": "react-scripts start",
+    "test": "react-scripts test"
+  },
+  "dependencies": {
+    "react": "link:../node_modules/react",
+    "react-dom": "link:../node_modules/react-dom",
+    "react-router": "^5.0.0",
+    "react-router-dom": "^5.0.0",
+    "reactn": "link:../",
+    "use-react-router": "^1.0.5"
+  },
+  "devDependencies": {
+    "@types/jest": "link:../node_modules/@types/jest",
+    "@types/node": "link:../node_modules/@types/node",
+    "@types/react": "link:../node_modules/@types/react",
+    "@types/react-dom": "^16.8.3",
+    "@types/react-router": "^4.4.5",
+    "@types/react-router-dom": "^4.3.1",
+    "node-sass": "^4.11.0",
+    "react-scripts": "2.1.8",
+    "typescript": "link:../node_modules/typescript"
+  }
+}

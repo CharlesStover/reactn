@@ -1,4 +1,6 @@
-/.nyc_output
+/.vscode
+/build
+/docs/build
+/docs/node_modules
+/jest
 /node_modules
-/index.js
-/yarn-error.lock

@@ -1,0 +1,48 @@
+@import "../../assets/styles/rainbowify.scss";
+
+$height: 120px;
+$width: 185px;
+
+$multiplier: 64 / 120;
+
+.header {
+  @include rainbowify(background-color);
+  align-items: flex-start;
+  background-image: linear-gradient(90deg, #202020, transparent, #202020);
+  display: flex;
+  height: 80px;
+  justify-content: center;
+  width: 100%;
+
+  > div {
+    align-items: center;
+    background-color: #202020;
+    display: flex;
+    height: calc(100% - 2px);
+    justify-content: center;
+    width: 100%;
+
+    > h1 {
+      margin: 0;
+
+      > a {
+        align-items: center;
+        background-position: right center;
+        background-repeat: no-repeat;
+        background-size: auto 100%;
+        color: #F0F0F0;
+        display: inline-flex;
+        font-family: "Roboto", sans-serif;
+        justify-content: flex-end;
+        font-size: ($height - 5px) * $multiplier;
+        height: $height * $multiplier;
+        text-decoration: none;
+
+        > svg {
+          margin: 0 -0.25em;
+          z-index: 1;
+        }
+      }
+    }
+  }
+}

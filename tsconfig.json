@@ -1,8 +1,19 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": false,
+    "declaration": true,
+    "downlevelIteration": true,
+    "esModuleInterop": false,
     "experimentalDecorators": true,
     "jsx": "react",
-    "lib": [ "es2015" ],
-  }
+    "lib": [ "es2015", "es2017.object" ],
+    "module": "commonjs",
+    "outDir": "./build",
+    "removeComments": true,
+    "strictBindCallApply": true,
+    "target": "es5"
+  },
+  "files": [
+    "./src/index.ts"
+  ]
 }

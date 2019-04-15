@@ -1,0 +1,22 @@
+body {
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  background-color: #202020;
+  color: #F0F0F0;
+  display: flex;
+  font-family: "Roboto", sans-serif;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  height: 100%;
+}
+
+#root {
+  display: flex;
+  flex-grow: 1;
+  overflow: auto;
+}
