@@ -1,5 +1,5 @@
 language: node_js
-node_js: 8.9.1
+node_js: 10.15.3
 branches:
   only: master
 cache: yarn
