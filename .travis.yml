@@ -7,6 +7,7 @@ install:
 - yarn
 - cd docs
 - yarn
+- cd ../
 script:
 - yarn build
 - yarn test
