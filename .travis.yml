@@ -8,6 +8,7 @@ script:
 - yarn build
 - yarn test
 - cd docs
+- yarn
 - yarn test
 - yarn build
 deploy:
