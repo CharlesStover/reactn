@@ -25,7 +25,7 @@ deploy:
 - github-token:
     secure: YHTCjBwGiVZuTCJ2NQlPLiTYN59EB82X76l7/ipy3Vv0UtnILbbxXpSEiZpN9loC3wQ8xkqNuDqu4MqL4rNKt4UvVUmHmKusrPcw16JAJdwVtRiVXqy1W+wyBgnkfhTfT7eQ5zSlJxgHZ0iv/AWzA/z3HwfnMEAJM0fFChIzJWjXJ0J/lg4lswX3XJLjpNFPjut3XCKILr9x7N9UtGdqVEJgTdvOpm6jElyJJig5Aw3n23+LE/TWCSzIbbB5xT2W6Mhc80vuXeCWRFD2Otygiu+YNICiCARV3EL2rBcIIjKfX7Vuxru42TeuRMNaF57ru1F7dA/8bGHao33ARDdrG1ynNy0DRI1QL7N5cXEaGNuOhl0+zM1r+zsaF7CpqLr/WlcD+UcqFK7YSzgPpVRzvKCU2CzRD2J8cH+HD3P9Nkapj3wvQvvP25hXcyL9Ib4OXslSDCFk1lOeGb8Y8W7X43UOHe3RMkW9sPZNdCzYxwjTjs1pdtnk6QlBLvfIJ5q4o+AvcyOYxkaZQrzZwazDNzOP2PEUQ0MsV7hZWYeSH7r3H3KQR9Ne+uh/2Uy5/3X8JIn1cgz+DP+5FhpQOhWUVg696gEdjFCWSMXDUD2+r1+1pq/bK1IiD7gj59J9FhaonWlwWqCvvk35OtebbrT6HIUhGqvyA/tGrYMYKFI+0DE=
   keep-history: true
-  local-dir: build
+  local-dir: docs/build
   on:
     branch: master
   provider: pages
