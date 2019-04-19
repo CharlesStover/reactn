@@ -63,6 +63,7 @@ export default function AppNavigationListItem(
                 return (
                   <li
                     className={SUBLINK_SELECTED_CLASS_NAME}
+                    key={url}
                     style={{ color: global.rainbow }}
                   >
                     ⮞ {title}
@@ -72,6 +73,7 @@ export default function AppNavigationListItem(
               return (
                 <li className={SUBLINK_CLASS_NAME}>
                   <Link
+                    key={url}
                     title={`${title} - ReactN Documentation`}
                     to={`/${url}`}
                   >
