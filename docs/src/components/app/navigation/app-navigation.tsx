@@ -1,6 +1,34 @@
 import React, { useGlobal } from 'reactn';
 import './app-navigation.scss';
-import Link, { Sublink } from './link';
+import ListItem from './list-item';
+
+
+
+type Page = [ string, string ];
+
+
+
+const PAGES: { [key: string]: Page[] } = {
+  API: [
+    [ 'addCallback', 'addCallback' ],
+    [ 'addReducer', 'addReducer' ],
+    [ 'createProvider', 'createProvider' ],
+    [ 'getGlobal', 'getGlobal' ],
+    [ 'setGlobal', 'setGlobal' ],
+    [ 'useGlobal', 'useGlobal' ],
+    [ 'useGlobalReducer', 'useGlobalReducer' ],
+    [ 'withGlobal', 'withGlobal' ],
+  ],
+  EXAMPLES: [
+    [ 'async-example', 'Asynchronous' ],
+    [ 'counter-example', 'Counter' ],
+    [ 'shopping-cart-example', 'Shopping Cart' ],
+    [ 'todo-example', 'TODO' ],
+  ],
+  GETTING_STARTED: [
+    [ 'install', 'Installation' ],
+  ],
+};
 
 
 
@@ -12,43 +40,21 @@ export default function AppNavigation() {
       style={{ backgroundColor }}
     >
       <ul>
-        <li>
-          <Link
-            title="About"
-            to=""
-          />
-        </li>
-        <li>
-          <Link title="Getting Started">
-            <Sublink to="install">Installation</Sublink>
-          </Link>
-        </li>
-        <li>
-          <Link title="API">
-            <Sublink to="addCallback">addCallback</Sublink>
-            <Sublink to="addReducer">addReducer</Sublink>
-            <Sublink to="createProvider">createProvider</Sublink>
-            <Sublink to="getGlobal">getGlobal</Sublink>
-            <Sublink to="setGlobal">setGlobal</Sublink>
-            <Sublink to="useGlobal">useGlobal</Sublink>
-            <Sublink to="useGlobalReducer">useGlobalReducer</Sublink>
-            <Sublink to="withGlobal">withGlobal</Sublink>
-          </Link>
-        </li>
-        <li>
-          <Link title="Examples">
-            <Sublink to="async-example">Asynchronous</Sublink>
-            <Sublink to="counter-example">Counter</Sublink>
-            <Sublink to="shopping-cart-example">Shopping Cart</Sublink>
-            <Sublink to="todo-example">TODO</Sublink>
-          </Link>
-        </li>
-        <li>
-          <Link
-            title="Support"
-            to="support"
-          />
-        </li>
+        <ListItem to="">
+          About
+        </ListItem>
+        <ListItem pages={PAGES.GETTING_STARTED}>
+          Getting Started
+        </ListItem>
+        <ListItem pages={PAGES.API}>
+          API
+        </ListItem>
+        <ListItem pages={PAGES.EXAMPLES}>
+          Examples
+        </ListItem>
+        <ListItem to="support">
+          Support
+        </ListItem>
       </ul>
     </nav>
   );

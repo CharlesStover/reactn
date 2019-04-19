@@ -1,3 +1,5 @@
+@import "../../assets/styles/media.scss";
+
 .app {
   align-items: center;
   display: flex;
@@ -12,6 +14,11 @@
     display: flex;
     flex-direction: row;
     width: 100%;
+
+    @include mobile {
+      flex-direction: column;
+      flex-flow: column-reverse;
+    }
 
     > main {
       flex-basis: 0;

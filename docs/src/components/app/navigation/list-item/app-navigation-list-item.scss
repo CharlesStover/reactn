@@ -1,0 +1,32 @@
+.app-navigation-list-item {
+  display: flex;
+  flex-direction: column;
+
+  > strong {
+
+    > a {
+      color: #F0F0F0;
+      text-decoration: none;
+    }
+  }
+
+  > ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0 0 0.25em 0.5em;
+  }
+}
+
+.app-navigation-list-item-sublink {
+
+  &-selected {
+    padding: 0.125em 0;
+  }
+
+  > a {
+    color: #F0F0F0;
+    display: inline-block;
+    padding: 0.125em 0;
+    text-decoration: none;
+  }
+}

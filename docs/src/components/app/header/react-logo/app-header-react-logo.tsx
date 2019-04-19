@@ -1,4 +1,5 @@
 import React from 'reactn';
+import './app-header-react-logo.scss';
 
 
 
@@ -68,7 +69,7 @@ const VIEW_BOX_RIGHT: number = INNER_WIDTH + PADDING_X;
 
 
 
-export default function HeaderReactLogo({ className, fill }: Props) {
+export default function AppHeaderReactLogo({ className, fill }: Props) {
   const style: Style = { fill };
   return (
     <svg

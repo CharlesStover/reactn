@@ -1,5 +1,5 @@
 import React, { useGlobal } from 'reactn';
-import './github-banner.scss';
+import './app-header-github-banner.scss';
 
 
 
@@ -14,15 +14,15 @@ const body: string =
   '12-11 0 0 5 3 7 16 4 2 8 5 12 9s7 8 9 12c14 3 17 7 17 7-4 8-9 11-11 11 0 ' +
   '6-2 11-7 16-16 16-30 10-41 2 0 3-1 7-5 11l-12 11c-1 1 1 5 1 5z';
 
-const SIZE: number = 80;
+const SIZE: number = 69; // nice
 
 
 
-export default function GitHubBanner() {
+export default function AppHeaderGitHubBanner() {
   const [ fill ] = useGlobal('rainbow');
   return (
     <a
-      className="github-banner"
+      className="app-header-github-banner"
       href="https://github.com/CharlesStover/reactn"
       rel="nofollower nofollower noopener"
       target="_blank"
@@ -36,11 +36,11 @@ export default function GitHubBanner() {
         viewBox="0 0 250 250"
       >
         <path
-          className="github-banner-background"
+          className="app-header-github-banner-background"
           d="M0 0l115 115h15l12 27 108 108V0z"
           style={{ fill }}
         />
-        <path className="github-banner-arm" d={arm} />
+        <path className="app-header-github-banner-arm" d={arm} />
         <path d={body} />
       </svg>
     </a>
