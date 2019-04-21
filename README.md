@@ -67,7 +67,7 @@ with deeply nested objects, a
   * [Examples](#examples)
     * [Class Components](#class-components)
     * [Class Components (with Decorator)](#class-components-with-decorator)
-    * [Functional Components](#functional-components)
+    * [Function Components](#function-components)
     * [Helper Functions](#helper-functions)
       * [addCallback](#addcallback)
       * [addReducer](#addreducer)
@@ -223,7 +223,7 @@ export default class Cards extends React.PureComponent {
 }
 ```
 
-#### Functional Components
+#### Function Components
 
 Using [React Hooks](https://reactjs.org/docs/hooks-intro.html) in version 16.8
 (or above), you can harness `useGlobal` to access the global state.
@@ -476,7 +476,7 @@ alert(getGlobal().value); // undefined
 
 Use `setGlobal` to initialize or update your global state. This is analogous to
 calling `this.setGlobal` in a class component or `useGlobal()[1]` in a
-functional component.
+function component.
 
 The first parameter is the new global state that you want to set.
 
