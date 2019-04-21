@@ -1,3 +1,5 @@
+@import "../../../../assets/styles/media.scss";
+
 .app-navigation-list-item {
   display: flex;
   flex-direction: column;
@@ -14,19 +16,64 @@
     list-style-type: none;
     margin: 0;
     padding: 0 0 0.25em 0.5em;
+
+    > li {
+
+      &.app-navigation-list-item-selected {
+        padding: 0.125em 0;
+      }
+
+      > a {
+        color: #F0F0F0;
+        display: inline-block;
+        padding: 0.125em 0;
+        text-decoration: none;
+      }
+    }
   }
-}
 
-.app-navigation-list-item-sublink {
+  @include mobile {
+    $sublinks-height: 2em;
 
-  &-selected {
-    padding: 0.125em 0;
-  }
+    padding-bottom: $sublinks-height;
 
-  > a {
-    color: #F0F0F0;
-    display: inline-block;
-    padding: 0.125em 0;
-    text-decoration: none;
+    &:not(:first-child) {
+      padding-left: 0.5em;
+    }
+
+    &:not(:last-child) {
+      padding-right: 0.5em;
+    }
+
+    &.app-navigation-list-item-selected {
+      display: flex;
+      flex-direction: column;
+
+      > ul {
+        bottom: 0;
+        display: flex;
+        flex-direction: row;
+        left: 0;
+        overflow: auto;
+        position: absolute;
+        right: 0;
+
+        > li {
+          max-height: $sublinks-height;
+          min-height: $sublinks-height;
+          line-height: $sublinks-height;
+          padding-bottom: 0;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    &.app-navigation-list-item-unselected > ul {
+      display: none;
+    }
+
+    > ul {
+      padding: 0 0.5em;
+    }
   }
 }

@@ -23,10 +23,7 @@ const CLASS_NAME = 'app-navigation-list-item';
 
 const SELECTED_CLASS_NAME = `${CLASS_NAME} ${CLASS_NAME}-selected`;
 
-const SUBLINK_CLASS_NAME = 'app-navigation-list-item-sublink';
-
-const SUBLINK_SELECTED_CLASS_NAME =
-  `${SUBLINK_CLASS_NAME} ${SUBLINK_CLASS_NAME}-selected`;
+const UNSELECTED_CLASS_NAME = `${CLASS_NAME} ${CLASS_NAME}-unselected`;
 
 const hasPages = (
   props: PropsSingle | PropsMultiple,
@@ -54,15 +51,22 @@ export default function AppNavigationListItem(
   if (hasPages(props)) {
     const selected = isPageSelected(props.pages, location.pathname);
     return (
-      <div className={selected ? SELECTED_CLASS_NAME : CLASS_NAME}>
-        <strong>{props.children}</strong>
+      <li className={selected ? SELECTED_CLASS_NAME : UNSELECTED_CLASS_NAME}>
+        <strong>
+          <Link
+            title={`${props.pages[0][1]} - ReactN Documentation`}
+            to={`/${props.pages[0][0]}`}
+          >
+            {props.children}
+          </Link>
+        </strong>
         <ul>
           {
             props.pages.map(([ url, title ]): JSX.Element => {
               if (location.pathname.substring(1) === url) {
                 return (
                   <li
-                    className={SUBLINK_SELECTED_CLASS_NAME}
+                    className={SELECTED_CLASS_NAME}
                     key={url}
                     style={{ color: global.rainbow }}
                   >
@@ -71,7 +75,10 @@ export default function AppNavigationListItem(
                 );
               }
               return (
-                <li className={SUBLINK_CLASS_NAME}>
+                <li
+                  className={UNSELECTED_CLASS_NAME}
+                  key={url}
+                >
                   <Link
                     key={url}
                     title={`${title} - ReactN Documentation`}
@@ -85,22 +92,22 @@ export default function AppNavigationListItem(
             })
           }
         </ul>
-      </div>
+      </li>
     );
   }
 
   // If this category is a link, and the user is at this location,
   if (location.pathname.substring(1) === props.to) {
     return (
-      <div className={SELECTED_CLASS_NAME}>
+      <li className={SELECTED_CLASS_NAME}>
         <strong style={{ color: global.rainbow }}>⮞ {props.children}</strong>
-      </div>
+      </li>
     );
   }
 
   // If this category is a link, and the user is not at this location,
   return (
-    <div className={CLASS_NAME}>
+    <li className={UNSELECTED_CLASS_NAME}>
       <strong>
         <Link
           title={`${props.children} - ReactN Documentation`}
@@ -109,6 +116,6 @@ export default function AppNavigationListItem(
           {props.children}
         </Link>
       </strong>
-    </div>
+    </li>
   );
 }
