@@ -5,6 +5,8 @@ import AddCallback from '../routes/add-callback';
 import AddReducer from '../routes/add-reducer';
 import CreateProvider from '../routes/create-provider';
 import GetGlobal from '../routes/get-global';
+import RemoveCallback from '../routes/remove-callback';
+import ResetGlobal from '../routes/reset-global';
 import SetGlobal from '../routes/set-global';
 import UseGlobal from '../routes/use-global';
 import UseGlobalReducer from '../routes/use-global-reducer';
@@ -46,6 +48,14 @@ export default function App() {
             <Route
               component={GetGlobal}
               path="/getGlobal"
+            />
+            <Route
+              component={RemoveCallback}
+              path="/removeCallback"
+            />
+            <Route
+              component={ResetGlobal}
+              path="/resetGlobal"
             />
             <Route
               component={SetGlobal}
