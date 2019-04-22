@@ -14,6 +14,8 @@ const PAGES: { [key: string]: Page[] } = {
     [ 'addReducer', 'addReducer' ],
     [ 'createProvider', 'createProvider' ],
     [ 'getGlobal', 'getGlobal' ],
+    [ 'removeCallback', 'removeCallback' ],
+    [ 'resetGlobal', 'resetGlobal' ],
     [ 'setGlobal', 'setGlobal' ],
     [ 'useGlobal', 'useGlobal' ],
     [ 'useGlobalReducer', 'useGlobalReducer' ],
