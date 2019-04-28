@@ -1,15 +1,15 @@
 import GlobalStateManager from '../../src/global-state-manager';
-import { GS, INITIAL_STATE } from '../utils/initial';
+import { G, INITIAL_STATE } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
 
-const MOCK_STATE: Partial<GS> = {
+const MOCK_STATE: Partial<G> = {
   x: true,
   y: 1,
 };
 
-const PROPERTY: keyof GS = 'x';
+const PROPERTY: keyof G = 'x';
 
 const PROPERTY_LISTENER = (): void => { };
 
@@ -17,10 +17,10 @@ const PROPERTY_LISTENER = (): void => { };
 
 describe('GlobalStateManager.spyState', (): void => {
 
-  let globalStateManager: GlobalStateManager<GS>;
+  let globalStateManager: GlobalStateManager<G>;
   const spy = spyOn('addPropertyListener');
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
+    globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
   });
 
 

@@ -1,5 +1,5 @@
 import GlobalStateManager from '../../src/global-state-manager';
-import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 
 
 
@@ -9,9 +9,9 @@ const DISPATCHER_NAME: keyof R = 'increment';
 
 describe('GlobalStateManager.removeDispatcher', (): void => {
 
-  let globalStateManager: GlobalStateManager<GS, R>;
+  let globalStateManager: GlobalStateManager<G, R>;
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS, R>(
+    globalStateManager = new GlobalStateManager<G, R>(
       INITIAL_STATE,
       INITIAL_REDUCERS,
     );

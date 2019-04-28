@@ -1,13 +1,13 @@
 import createProvider, { ReactNProvider } from '../../src/create-provider';
 import Reducer from '../../src/typings/reducer';
-import { GS, INITIAL_REDUCERS, INITIAL_STATE } from '../utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
 
 const REDUCER_NAMES: string[] = Object.keys(INITIAL_REDUCERS);
 
-const REDUCERS: [ string, Reducer<GS> ][] = Object.entries(INITIAL_REDUCERS);
+const REDUCERS: [ string, Reducer<G> ][] = Object.entries(INITIAL_REDUCERS);
 
 
 
@@ -15,9 +15,9 @@ describe('Provider.addReducers', (): void => {
 
   const spy = spyOn('addDispatcher', 'removeDispatcher');
 
-  let Provider: ReactNProvider<GS>;
+  let Provider: ReactNProvider<G>;
   beforeEach((): void => {
-    Provider = createProvider<GS>(INITIAL_STATE);
+    Provider = createProvider<G>(INITIAL_STATE);
   });
 
 

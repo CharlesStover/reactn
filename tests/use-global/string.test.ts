@@ -4,21 +4,21 @@ import useGlobal, { StateTuple } from '../../src/use-global';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
 import deleteHooks from '../utils/delete-hooks';
 import HookTest from '../utils/hook-test';
-import { GS, INITIAL_STATE } from '../utils/initial';
+import { G, INITIAL_STATE } from '../utils/initial';
 
 
 
-type P = [ keyof GS ];
+type P = [ keyof G ];
 
-type R = StateTuple<GS, P[0]>;
+type R = StateTuple<G, P[0]>;
 
 
 
-const PROPERTY: keyof GS = 'z';
+const PROPERTY: keyof G = 'z';
 
-const NEW_VALUE: GS[typeof PROPERTY] = 'any';
+const NEW_VALUE: G[typeof PROPERTY] = 'any';
 
-const NEW_STATE: GS = {
+const NEW_STATE: G = {
   ...INITIAL_STATE,
   [PROPERTY]: NEW_VALUE,
 };
@@ -27,11 +27,11 @@ const NEW_STATE: GS = {
 
 describe('useGlobal(string)', (): void => {
 
-  let globalStateManager: GlobalStateManager<GS>;
+  let globalStateManager: GlobalStateManager<G>;
   let testUseGlobal: HookTest<P, R>;
 
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
+    globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
     testUseGlobal =
       new HookTest<P, R>(
         (property: P[0]): R => useGlobal(globalStateManager, property)
@@ -68,7 +68,7 @@ describe('useGlobal(string)', (): void => {
     it(
       'should not subscribe to unrelated state changes',
       async (): Promise<void> => {
-        const STATE_CHANGE: Partial<GS> = {
+        const STATE_CHANGE: Partial<G> = {
           x: true,
         };
         expect(testUseGlobal.renders).toBe(0);
@@ -101,17 +101,17 @@ describe('useGlobal(string)', (): void => {
   describe('setter', (): void => {
 
     describe('with callback', (): void => {
-      const CALLBACK: jest.Mock<void, [ GS ]> = jest.fn();
+      const CALLBACK: jest.Mock<void, [ G ]> = jest.fn();
 
       it(
         'should return a Promise of the new global state',
         async (): Promise<void> => {
           testUseGlobal.render(PROPERTY);
           const [ , setValue ]: R = testUseGlobal.value;
-          let set: Promise<GS>;
+          let set: Promise<G>;
           set = setValue(NEW_VALUE, CALLBACK);
           expect(set).toBeInstanceOf(Promise);
-          let value: GS;
+          let value: G;
           value = await set;
           expect(value).toEqual(NEW_STATE);
         }
@@ -140,10 +140,10 @@ describe('useGlobal(string)', (): void => {
         async (): Promise<void> => {
           testUseGlobal.render(PROPERTY);
           const [ , setValue ]: R = testUseGlobal.value;
-          let set: Promise<GS>;
+          let set: Promise<G>;
           set = setValue(NEW_VALUE);
           expect(set).toBeInstanceOf(Promise);
-          let value: GS;
+          let value: G;
           value = await set;
           expect(value).toEqual(NEW_STATE);
         }

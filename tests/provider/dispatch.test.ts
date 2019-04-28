@@ -1,5 +1,5 @@
 import createProvider, { ReactNProvider } from '../../src/create-provider';
-import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 
 
 
@@ -11,7 +11,7 @@ INITIAL_REDUCERS_KEYS.sort();
 
 describe('Provider.dispatch', (): void => {
 
-  let Provider: ReactNProvider<GS, R>;
+  let Provider: ReactNProvider<G, R>;
   beforeEach((): void => {
     Provider = createProvider(INITIAL_STATE, INITIAL_REDUCERS);
   });

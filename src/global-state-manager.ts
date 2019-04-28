@@ -1,15 +1,4 @@
 import { Reducers, State } from '../default';
-import {
-  Action as ReduxAction,
-  AnyAction as ReduxAnyAction,
-  DeepPartial as ReduxDeepPartial,
-  Dispatch as ReduxDispatch,
-  Reducer as ReduxReducer,
-  Store as ReduxStore,
-  StoreEnhancer as ReduxStoreEnhancer,
-  StoreEnhancerStoreCreator as ReduxStoreEnhancerStoreCreator,
-} from 'redux';
-import { devToolsEnhancer } from 'redux-devtools-extension/developmentOnly';
 import Callback from './typings/callback';
 import Reducer, {
   AdditionalDispatchers,
@@ -18,6 +7,11 @@ import Reducer, {
   ExtractA,
 } from './typings/reducer';
 import objectGetListener from './utils/object-get-listener';
+import {
+  createReduxEnhancedStore,
+  ReduxEnhancedStore,
+  Window,
+} from './utils/redux-dev-tools';
 
 
 
@@ -46,15 +40,9 @@ export type NewGlobalState<Shape> =
 
 export type PropertyListener = () => void;
 
-interface ReduxDevToolsAction<GS, T = 'STATE_CHANGE'> extends ReduxAction<T> {
-  stateChange: Partial<GS>;
-}
-
 type SynchronousNewGlobalState<Shape> = null | Partial<Shape> | void;
 
-interface Window<GS> {
-  __REDUX_DEVTOOLS_EXTENSION__?: typeof devToolsEnhancer;
-}
+
 
 
 
@@ -68,7 +56,7 @@ export const INVALID_NEW_GLOBAL_STATE: Error = new Error(
   'ReactN global state must be a function, null, object, or Promise.',
 );
 
-declare const window: Window<any> | void;
+declare const window: Window | void;
 
 
 
@@ -86,45 +74,17 @@ export default class GlobalStateManager<
     new Map<keyof G, Set<PropertyListener>>();
   private _queue: Map<keyof G, G[keyof G]> =
     new Map<keyof G, G[keyof G]>();
-  private _reduxEnhancedStore: ReduxStore<G & any, ReduxDevToolsAction<G>> =
-    null;
+  private _reduxEnhancedStore: ReduxEnhancedStore<G> = null;
   private _state: G;
 
   public constructor(
     initialState: G = Object.create(null),
     initialReducers: R = Object.create(null),
   ) {
-    if (
-      typeof window === 'object' &&
-      window.__REDUX_DEVTOOLS_EXTENSION__
-    ) {
-      const enhancer: ReduxStoreEnhancer<G> =
-        (window as Window<G>).__REDUX_DEVTOOLS_EXTENSION__({
-          name: 'ReactN state',
-        });
-      const enhancerStoreCreator: ReduxStoreEnhancerStoreCreator<{}, G> = <
-        S = any,
-        A extends ReduxAnyAction = ReduxDevToolsAction<G>,
-      >(
-        _reducer: ReduxReducer<S, A>,
-        _preloadedState: ReduxDeepPartial<S>,
-      ): ReduxStore<S & G, A> => ({
-        dispatch: <T extends ReduxAnyAction>(action: T): T => action,
-        getState: (): any => this.state,
-        replaceReducer: () => null,
-        subscribe: () => null,
-      });
-      this._reduxEnhancedStore =
-        enhancer(enhancerStoreCreator)(
-          // Using `G` instead of `any` results in TypeScript error:
-          //   Type instantiation is excessively deep and possibly infinite.
-          (): any => this.state,
-          initialState,
-        );
-    }
     this._initialReducers = copyObject(initialReducers);
     this._initialState = copyObject(initialState);
     this._state = copyObject(initialState);
+    this._reduxEnhancedStore = createReduxEnhancedStore(this);
     this.addDispatchers(initialReducers);
   }
 
@@ -257,8 +217,7 @@ export default class GlobalStateManager<
     return this._propertyListeners;
   }
 
-  public get reduxEnhancedStore(
-  ): ReduxStore<G & any, ReduxDevToolsAction<G>> {
+  public get reduxEnhancedStore(): null | ReduxEnhancedStore<G> {
     return this._reduxEnhancedStore;
   }
 
@@ -298,6 +257,7 @@ export default class GlobalStateManager<
     // Prepopulate.
     this.addDispatchers(this._initialReducers);
     this._state = copyObject(this._initialState);
+    this._reduxEnhancedStore = createReduxEnhancedStore(this);
   }
 
   // Set any type of state change.

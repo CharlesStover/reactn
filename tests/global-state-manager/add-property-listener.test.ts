@@ -1,18 +1,11 @@
-import GlobalStateManager, { PropertyListener } from '../../src/global-state-manager';
+import GlobalStateManager, {
+  PropertyListener,
+} from '../../src/global-state-manager';
+import { G, INITIAL_STATE } from '../utils/initial';
 
 
 
-interface GS {
-  x: boolean;
-}
-
-
-
-const INITIAL_STATE: GS = {
-  x: false,
-};
-
-const PROPERTY: keyof GS = 'x';
+const PROPERTY: keyof G = 'x';
 
 const PROPERTY_LISTENER: PropertyListener = (): void => { };
 
@@ -20,9 +13,9 @@ const PROPERTY_LISTENER: PropertyListener = (): void => { };
 
 describe('GlobalStateManager.addPropertyListener', (): void => {
 
-  let globalStateManager: GlobalStateManager<GS>;
+  let globalStateManager: GlobalStateManager<G>;
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
+    globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
   });
 
 

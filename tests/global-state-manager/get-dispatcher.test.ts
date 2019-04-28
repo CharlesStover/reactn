@@ -1,14 +1,14 @@
 import GlobalStateManager from '../../src/global-state-manager';
 import { Dispatcher } from '../../src/typings/reducer';
-import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 
 
 
 describe('GlobalStateManager.getDispatcher', (): void => {
 
-  let globalStateManager: GlobalStateManager<GS, R>;
+  let globalStateManager: GlobalStateManager<G, R>;
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS, R>(
+    globalStateManager = new GlobalStateManager<G, R>(
       INITIAL_STATE,
       INITIAL_REDUCERS,
     );
@@ -22,7 +22,7 @@ describe('GlobalStateManager.getDispatcher', (): void => {
   });
 
   it('should return a dispatcher if one exists', (): void => {
-    const dispatcher: Dispatcher<GS, string[]> =
+    const dispatcher: Dispatcher<G, string[]> =
       globalStateManager.getDispatcher('append');
     expect(dispatcher).toBeInstanceOf(Function);
   });

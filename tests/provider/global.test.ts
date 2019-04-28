@@ -1,12 +1,12 @@
 import createProvider, { ReactNProvider } from '../../src/create-provider';
-import { GS, INITIAL_STATE } from '../utils/initial';
+import { G, INITIAL_STATE } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
 
 describe('Provider.global', (): void => {
 
-  let Provider: ReactNProvider<GS>;
+  let Provider: ReactNProvider<G>;
   const spy = spyOn('state');
   beforeEach((): void => {
     Provider = createProvider(INITIAL_STATE);
@@ -33,7 +33,7 @@ describe('Provider.global', (): void => {
   });
 
   it('should return a copy of the state', (): void => {
-    const state: GS = Provider.global;
+    const state: G = Provider.global;
     expect(state).toEqual(INITIAL_STATE);
     expect(state).not.toBe(INITIAL_STATE);
   });

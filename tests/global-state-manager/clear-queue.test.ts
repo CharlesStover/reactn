@@ -1,22 +1,13 @@
 import GlobalStateManager from '../../src/global-state-manager';
-
-
-
-interface GS {
-  x: boolean;
-}
-
-const INITIAL_STATE: GS = {
-  x: false,
-};
+import { G, INITIAL_STATE } from '../utils/initial';
 
 
 
 describe('GlobalStateManager.clearQueue', (): void => {
 
-  let globalStateManager: GlobalStateManager<GS, {}>;
+  let globalStateManager: GlobalStateManager<G>;
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS, {}>(INITIAL_STATE);
+    globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
   });
 
 

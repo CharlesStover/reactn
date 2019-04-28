@@ -1,15 +1,15 @@
 import GlobalStateManager from '../../src/global-state-manager';
 import { Dispatcher } from '../../src/typings/reducer';
-import { GS, INITIAL_REDUCERS, INITIAL_STATE } from '../utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
 
 describe('GlobalStateManager.createDispatcher', (): void => {
 
-  let globalStateManager: GlobalStateManager<GS>;
+  let globalStateManager: GlobalStateManager<G>;
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
+    globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
   });
 
 
@@ -32,7 +32,7 @@ describe('GlobalStateManager.createDispatcher', (): void => {
      *   the build.
      */
     it('should be a function', (): void => {
-      const dispatch: Dispatcher<GS, []> =
+      const dispatch: Dispatcher<G, []> =
         globalStateManager.createDispatcher(INITIAL_REDUCERS.reset);
       expect(dispatch).toBeInstanceOf(Function);
     });
@@ -40,10 +40,10 @@ describe('GlobalStateManager.createDispatcher', (): void => {
     it('should auto-fill the global state argument', (): void => {
 
       const REDUCER_WITH_ARGS =
-        (_gs: GS, _1: boolean, _2: number): null => null;
+        (_gs: G, _1: boolean, _2: number): null => null;
       const spy = jest.fn(REDUCER_WITH_ARGS);
 
-      const dispatch: Dispatcher<GS, [ boolean, number ]> =
+      const dispatch: Dispatcher<G, [ boolean, number ]> =
         globalStateManager.createDispatcher(spy);
       dispatch(true, 1);
       expect(spy).toHaveBeenCalledTimes(1);
@@ -52,11 +52,11 @@ describe('GlobalStateManager.createDispatcher', (): void => {
 
     const spy = spyOn('set');
     it('should call GlobalStateManager.set', (): void => {
-      const NEW_STATE: Partial<GS> = {
+      const NEW_STATE: Partial<G> = {
         x: true,
       };
-      const REDUCER = (): Partial<GS> => NEW_STATE;
-      const dispatch: Dispatcher<GS, []> =
+      const REDUCER = (): Partial<G> => NEW_STATE;
+      const dispatch: Dispatcher<G, []> =
         globalStateManager.createDispatcher(REDUCER);
       dispatch();
       expect(spy.set).toHaveBeenCalledTimes(1);
@@ -67,13 +67,13 @@ describe('GlobalStateManager.createDispatcher', (): void => {
 
     describe('return value', (): void => {
 
-      const REDUCER = (): GS => ({
+      const REDUCER = (): G => ({
         x: true,
         y: 1,
         z: 'any',
       });
 
-      let dispatch: Dispatcher<GS, []>;
+      let dispatch: Dispatcher<G, []>;
       beforeEach((): void => {
         dispatch = globalStateManager.createDispatcher(REDUCER);
       });
@@ -85,7 +85,7 @@ describe('GlobalStateManager.createDispatcher', (): void => {
       });
 
       it('should resolve to the new global state', async (): Promise<void> => {
-        const value: GS = await dispatch();
+        const value: G = await dispatch();
         expect(value).toStrictEqual(globalStateManager.state);
       });
     });

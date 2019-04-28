@@ -1,17 +1,17 @@
 import getGlobal from '../src/get-global';
 import GlobalStateManager from '../src/global-state-manager';
-import { GS, INITIAL_STATE } from './utils/initial';
+import { G, INITIAL_STATE } from './utils/initial';
 import spyOn from './utils/spy-on-global-state-manager';
 
 
 
 describe('getGlobal', (): void => {
 
-  let globalStateManager: GlobalStateManager<GS>;
+  let globalStateManager: GlobalStateManager<G>;
   const spy = spyOn('state');
 
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
+    globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
   });
 
 
@@ -28,7 +28,7 @@ describe('getGlobal', (): void => {
   });
 
   it('should return a copy of the state', (): void => {
-    const state: GS = getGlobal(globalStateManager);
+    const state: G = getGlobal(globalStateManager);
     expect(state).toEqual(INITIAL_STATE);
     expect(state).not.toBe(INITIAL_STATE);
   });

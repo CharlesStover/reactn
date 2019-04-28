@@ -1,12 +1,12 @@
 import GlobalStateManager, {
   INVALID_NEW_GLOBAL_STATE,
 } from '../../src/global-state-manager';
-import { GS, INITIAL_STATE } from '../utils/initial';
+import { G, INITIAL_STATE } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
 
-const NEW_STATE: GS = {
+const NEW_STATE: G = {
   ...INITIAL_STATE,
   x: true,
 };
@@ -15,10 +15,10 @@ const NEW_STATE: GS = {
 
 describe('GlobalStateManager.set', (): void => {
 
-  let globalStateManager: GlobalStateManager<GS>;
+  let globalStateManager: GlobalStateManager<G>;
   const spy = spyOn('setFunction', 'setObject', 'setPromise');
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
+    globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
   });
 
 
@@ -53,7 +53,7 @@ describe('GlobalStateManager.set', (): void => {
     'should call setFunction if the new state is a function',
     async (): Promise<void> => {
       const FUNC = (): null => null;
-      const set: Promise<GS> = globalStateManager.set(FUNC);
+      const set: Promise<G> = globalStateManager.set(FUNC);
       expect(spy.setFunction).toHaveBeenCalledTimes(1);
       expect(spy.setFunction).toHaveBeenCalledWith(FUNC);
       await set;
@@ -63,10 +63,10 @@ describe('GlobalStateManager.set', (): void => {
   it(
     'should call setObject if the new state is an object',
     async (): Promise<void> => {
-      const OBJ: Partial<GS> = {
+      const OBJ: Partial<G> = {
         x: true,
       };
-      const set: Promise<GS> = globalStateManager.set(OBJ);
+      const set: Promise<G> = globalStateManager.set(OBJ);
       expect(spy.setObject).toHaveBeenCalledTimes(1);
       expect(spy.setObject).toHaveBeenCalledWith(OBJ);
       await set;
@@ -76,10 +76,10 @@ describe('GlobalStateManager.set', (): void => {
   it(
     'should call setPromise if the new state is a Promise',
     async (): Promise<void> => {
-      const PROMISE: Promise<Partial<GS>> = Promise.resolve({
+      const PROMISE: Promise<Partial<G>> = Promise.resolve({
         x: true,
       });
-      const set: Promise<GS> = globalStateManager.set(PROMISE);
+      const set: Promise<G> = globalStateManager.set(PROMISE);
       expect(spy.setPromise).toHaveBeenCalledTimes(1);
       expect(spy.setPromise).toHaveBeenCalledWith(PROMISE);
       await set;
@@ -91,21 +91,21 @@ describe('GlobalStateManager.set', (): void => {
   describe('returned Promise of the new state', (): void => {
 
     it('should exist if the new state is null', async (): Promise<void> => {
-      const set: Promise<GS> = globalStateManager.set(null);
+      const set: Promise<G> = globalStateManager.set(null);
       expect(set).toBeInstanceOf(Promise);
-      const globalState: GS = await set;
+      const globalState: G = await set;
       expect(globalState).toEqual(INITIAL_STATE);
     });
 
     it(
       'should exist if the new state is a function',
       async (): Promise<void> => {
-        const FUNC = (): Partial<GS> => ({
+        const FUNC = (): Partial<G> => ({
           x: true,
         });
-        const set: Promise<GS> = globalStateManager.set(FUNC);
+        const set: Promise<G> = globalStateManager.set(FUNC);
         expect(set).toBeInstanceOf(Promise);
-        const globalState: GS = await set;
+        const globalState: G = await set;
         expect(globalState).toEqual(NEW_STATE);
       }
     );
@@ -113,11 +113,11 @@ describe('GlobalStateManager.set', (): void => {
     it(
       'should exist if the new state is an object',
       async (): Promise<void> => {
-        const set: Promise<GS> = globalStateManager.set({
+        const set: Promise<G> = globalStateManager.set({
           x: true,
         });
         expect(set).toBeInstanceOf(Promise);
-        const globalState: GS = await set;
+        const globalState: G = await set;
         expect(globalState).toEqual(NEW_STATE);
       }
     );
@@ -125,11 +125,11 @@ describe('GlobalStateManager.set', (): void => {
     it(
       'should exist if the new state is a Promise',
       async (): Promise<void> => {
-        const set: Promise<GS> = globalStateManager.set(Promise.resolve({
+        const set: Promise<G> = globalStateManager.set(Promise.resolve({
           x: true,
         }));
         expect(set).toBeInstanceOf(Promise);
-        const globalState: GS = await set;
+        const globalState: G = await set;
         expect(globalState).toEqual(NEW_STATE);
       }
     );

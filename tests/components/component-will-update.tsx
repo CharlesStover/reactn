@@ -1,6 +1,6 @@
 import { render } from 'react-testing-library';
 import React, { ComponentClass } from '../../build';
-import { GS, R } from '../utils/initial';
+import { G, R } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 import Props from './props';
 
@@ -8,7 +8,7 @@ import Props from './props';
 
 export default (
   source: string,
-  TestComponent: ComponentClass<Props, {}, GS, R>,
+  TestComponent: ComponentClass<Props, {}, G, R>,
   spyCwu: jest.Mock<void, []>,
 ): void => {
 

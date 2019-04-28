@@ -4,7 +4,7 @@ import useGlobalReducer from '../../src/use-global-reducer';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
 import deleteHooks from '../utils/delete-hooks';
 import HookTest from '../utils/hook-test';
-import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
@@ -13,7 +13,7 @@ type A = string[];
 
 type P = [ keyof R ];
 
-type V = Dispatcher<GS, A>;
+type V = Dispatcher<G, A>;
 
 
 
@@ -23,12 +23,12 @@ const REDUCER: keyof R = 'append';
 
 describe('useGlobalReducer(string)', (): void => {
 
-  let globalStateManager: GlobalStateManager<GS, R>;
+  let globalStateManager: GlobalStateManager<G, R>;
   let testUseGlobalReducer: HookTest<P, V>;
   const spy = spyOn('getDispatcher', 'set');
 
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS, R>(
+    globalStateManager = new GlobalStateManager<G, R>(
       INITIAL_STATE,
       INITIAL_REDUCERS,
     );
@@ -63,7 +63,7 @@ describe('useGlobalReducer(string)', (): void => {
 
   describe('the returned function', (): void => {
 
-    let reducer: Dispatcher<GS, A>;
+    let reducer: Dispatcher<G, A>;
     beforeEach((): void => {
       testUseGlobalReducer.render(REDUCER);
       reducer = testUseGlobalReducer.value;

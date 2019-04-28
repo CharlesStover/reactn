@@ -6,7 +6,7 @@ import reactn from '../../src/decorator';
 import defaultGlobalStateManager from '../../src/default-global-state-manager';
 import resetGlobal from '../../src/reset-global';
 import setGlobal from '../../src/set-global';
-import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 import testComponentWillUnmount from './component-will-unmount';
 import testComponentWillUpdate from './component-will-update';
 import testMount from './mount';
@@ -23,7 +23,7 @@ const testComponent = (
 ): VoidFunction => (): void => {
 
   testMount(
-    class TestMount extends _Super<Props, {}, GS, R> {
+    class TestMount extends _Super<Props, {}, G, R> {
       render() { return null; }
     }
   );
@@ -64,7 +64,7 @@ const testComponent = (
   const spyUpdatePrototype = jest.fn();
   testComponentWillUpdate(
     'prototype',
-    class TestUpdatePrototype extends _Super<Props, {}, GS, R> {
+    class TestUpdatePrototype extends _Super<Props, {}, G, R> {
       componentWillUpdate() { spyUpdatePrototype(); }
       render() { return null; }
     },
@@ -83,7 +83,7 @@ const testComponent = (
   const spyUpdateInstance = jest.fn();
   testComponentWillUpdate(
     'instance',
-    class TestCwuInstance extends _Super<Props, {}, GS, R> {
+    class TestCwuInstance extends _Super<Props, {}, G, R> {
       componentWillUpdate = spyUpdateInstance;
       render() { return null; }
     },

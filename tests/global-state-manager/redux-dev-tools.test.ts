@@ -1,38 +1,27 @@
 import {
-  AnyAction as ReduxAnyAction,
-  compose,
-  DeepPartial as ReduxDeepPartial,
-  Reducer as ReduxReducer,
-  StoreEnhancer as ReduxStoreEnhancer,
-  StoreEnhancerStoreCreator as ReduxStoreEnhancerStoreCreator,
-} from 'redux';
-import {
   composeWithDevTools,
   devToolsEnhancer,
   EnhancerOptions,
 } from 'redux-devtools-extension/developmentOnly';
 import GlobalStateManager from '../../src/global-state-manager';
-import { GS, INITIAL_STATE } from '../utils/initial';
+import { G, INITIAL_STATE } from '../utils/initial';
+import { Window } from '../../src/utils/redux-dev-tools';
 
 
 
-interface ReduxDevTools {
-  __REDUX_DEVTOOLS_EXTENSION__: typeof devToolsEnhancer;
-  __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: (options: EnhancerOptions) =>
-    typeof compose;
-}
+declare const global: { window: Window };
 
-
-
-declare const global: { window: ReduxDevTools };
+const REDUX_DEVTOOLS_OPTIONS: EnhancerOptions = {
+  name: 'ReactN state',
+};
 
 
 
 describe('Redux DevTools', (): void => {
 
   it('should not be supported by default', (): void => {
-    const globalStateManager: GlobalStateManager<GS> =
-      new GlobalStateManager<GS>(INITIAL_STATE);
+    const globalStateManager: GlobalStateManager<G> =
+      new GlobalStateManager<G>(INITIAL_STATE);
     expect(globalStateManager.reduxEnhancedStore).toBe(null);
   });
 
@@ -54,54 +43,34 @@ describe('Redux DevTools', (): void => {
 
 
     it('should exist', (): void => {
-      const globalStateManager: GlobalStateManager<GS> =
-        new GlobalStateManager<GS>(INITIAL_STATE);
+      const globalStateManager: GlobalStateManager<G> =
+        new GlobalStateManager<G>(INITIAL_STATE);
       expect(global.window.__REDUX_DEVTOOLS_EXTENSION__)
         .toHaveBeenCalledTimes(1);
-      expect(global.window.__REDUX_DEVTOOLS_EXTENSION__).toHaveBeenCalledWith({
-        name: 'ReactN state',
-      });
+      expect(global.window.__REDUX_DEVTOOLS_EXTENSION__).toHaveBeenCalledWith(
+        REDUX_DEVTOOLS_OPTIONS,
+      );
       expect(globalStateManager.reduxEnhancedStore)
         .toBeInstanceOf(Object);
       expect(globalStateManager.reduxEnhancedStore.dispatch)
         .toBeInstanceOf(Function);
     });
 
-    describe('with mock', (): void => {
-
-      let dispatch: <T extends ReduxAnyAction>(action: T) => T;
-      beforeEach((): void => {
-        dispatch = jest.fn(<T extends ReduxAnyAction>(action: T): T => action);
-        global.window.__REDUX_DEVTOOLS_EXTENSION__ = jest.fn(
-          (): ReduxStoreEnhancer =>
-            (_next: ReduxStoreEnhancerStoreCreator) =>
-              <
-                S = any,
-                A extends ReduxAnyAction = ReduxAnyAction,
-              >(
-                _reducer: ReduxReducer<S, A>,
-                _preloadedState: ReduxDeepPartial<S>,
-              ) => ({
-                dispatch,
-                getState: (): any => this.state,
-                replaceReducer: () => null,
-                subscribe: () => null,
-              })
-        );
-      });
-
-      it('should be called', (): void => {
-        const globalStateManager: GlobalStateManager<GS> =
-          new GlobalStateManager<GS>(INITIAL_STATE);
-        const STATE_CHANGE: Partial<GS> = {
-          x: true,
-        };
-        globalStateManager.set(STATE_CHANGE);
-        expect(dispatch).toHaveBeenCalledTimes(1);
-        expect(dispatch).toHaveBeenCalledWith({
-          stateChange: STATE_CHANGE,
-          type: 'STATE_CHANGE',
-        });
+    it('should be called', (): void => {
+      const globalStateManager: GlobalStateManager<G> =
+        new GlobalStateManager<G>(INITIAL_STATE);
+      const dispatch = jest.spyOn(
+        globalStateManager.reduxEnhancedStore,
+        'dispatch',
+      );
+      const STATE_CHANGE: Partial<G> = {
+        x: true,
+      };
+      globalStateManager.set(STATE_CHANGE);
+      expect(dispatch).toHaveBeenCalledTimes(1);
+      expect(dispatch).toHaveBeenCalledWith({
+        stateChange: STATE_CHANGE,
+        type: 'STATE_CHANGE',
       });
     });
   });

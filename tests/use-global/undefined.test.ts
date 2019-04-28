@@ -3,21 +3,21 @@ import useGlobal, { GlobalTuple } from '../../src/use-global';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
 import deleteHooks from '../utils/delete-hooks';
 import HookTest from '../utils/hook-test';
-import { GS, INITIAL_STATE } from '../utils/initial';
+import { G, INITIAL_STATE } from '../utils/initial';
 
 
 
 type P = [ ];
 
-type R = GlobalTuple<GS>;
+type R = GlobalTuple<G>;
 
 
 
-const STATE_CHANGE: Partial<GS> = {
+const STATE_CHANGE: Partial<G> = {
   x: true,
 };
 
-const NEW_STATE: GS = {
+const NEW_STATE: G = {
   ...INITIAL_STATE,
   ...STATE_CHANGE,
 };
@@ -26,11 +26,11 @@ const NEW_STATE: GS = {
 
 describe('useGlobal()', (): void => {
 
-  let globalStateManager: GlobalStateManager<GS>;
+  let globalStateManager: GlobalStateManager<G>;
   let testUseGlobal: HookTest<P, R>;
 
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
+    globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
 
     testUseGlobal =
       new HookTest<P, R>(
@@ -58,7 +58,7 @@ describe('useGlobal()', (): void => {
       async (): Promise<void> => {
         expect(testUseGlobal.renders).toBe(0);
         testUseGlobal.render();
-        const [ global, setGlobal ]: GlobalTuple<GS> = testUseGlobal.value;
+        const [ global, setGlobal ]: GlobalTuple<G> = testUseGlobal.value;
         expect(testUseGlobal.renders).toBe(1);
         global.x;
         await setGlobal(STATE_CHANGE);
@@ -71,7 +71,7 @@ describe('useGlobal()', (): void => {
       async (): Promise<void> => {
         expect(testUseGlobal.renders).toBe(0);
         testUseGlobal.render();
-        const [ global, setGlobal ]: GlobalTuple<GS> = testUseGlobal.value;
+        const [ global, setGlobal ]: GlobalTuple<G> = testUseGlobal.value;
         expect(testUseGlobal.renders).toBe(1);
         global.y;
         await setGlobal(STATE_CHANGE);
@@ -101,17 +101,17 @@ describe('useGlobal()', (): void => {
   describe('setter', (): void => {
 
     describe('with callback', (): void => {
-      const CALLBACK: jest.Mock<void, [ GS ]> = jest.fn();
+      const CALLBACK: jest.Mock<void, [ G ]> = jest.fn();
 
       it(
         'should return a Promise of the new global state',
         async (): Promise<void> => {
           testUseGlobal.render();
-          const [ , setGlobal ]: GlobalTuple<GS> = testUseGlobal.value;
-          let set: Promise<GS>;
+          const [ , setGlobal ]: GlobalTuple<G> = testUseGlobal.value;
+          let set: Promise<G>;
           set = setGlobal(STATE_CHANGE, CALLBACK);
           expect(set).toBeInstanceOf(Promise);
-          let value: GS;
+          let value: G;
           value = await set;
           expect(value).toEqual(NEW_STATE);
         }
@@ -119,14 +119,14 @@ describe('useGlobal()', (): void => {
 
       it('should update the state', async (): Promise<void> => {
         testUseGlobal.render();
-        const [ , setGlobal ]: GlobalTuple<GS> = testUseGlobal.value;
+        const [ , setGlobal ]: GlobalTuple<G> = testUseGlobal.value;
         await setGlobal(STATE_CHANGE, CALLBACK);
         expect(globalStateManager.state).toEqual(NEW_STATE);
       });
 
       it('should execute the callback', async (): Promise<void> => {
         testUseGlobal.render();
-        const [ , setGlobal ]: GlobalTuple<GS> = testUseGlobal.value;
+        const [ , setGlobal ]: GlobalTuple<G> = testUseGlobal.value;
         await setGlobal(STATE_CHANGE, CALLBACK);
         expect(CALLBACK).toHaveBeenCalledTimes(1);
         expect(CALLBACK).toHaveBeenCalledWith(NEW_STATE);
@@ -139,11 +139,11 @@ describe('useGlobal()', (): void => {
         'should return a Promise of the new global state',
         async (): Promise<void> => {
           testUseGlobal.render();
-          const [ , setGlobal ]: GlobalTuple<GS> = testUseGlobal.value;
-          let set: Promise<GS>;
+          const [ , setGlobal ]: GlobalTuple<G> = testUseGlobal.value;
+          let set: Promise<G>;
           set = setGlobal(STATE_CHANGE);
           expect(set).toBeInstanceOf(Promise);
-          let value: GS;
+          let value: G;
           value = await set;
           expect(value).toEqual(NEW_STATE);
         }
@@ -151,7 +151,7 @@ describe('useGlobal()', (): void => {
 
       it('should update the state', async (): Promise<void> => {
         testUseGlobal.render();
-        const [ , setGlobal ]: GlobalTuple<GS> = testUseGlobal.value;
+        const [ , setGlobal ]: GlobalTuple<G> = testUseGlobal.value;
         await setGlobal(STATE_CHANGE);
         expect(globalStateManager.state).toEqual(NEW_STATE);
       });

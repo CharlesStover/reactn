@@ -1,13 +1,13 @@
 import GlobalStateManager from '../../src/global-state-manager';
-import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 
 
 
 describe('GlobalStateManager.reset', (): void => {
 
-  let globalStateManager: GlobalStateManager<GS, R>;
+  let globalStateManager: GlobalStateManager<G, R>;
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS, R>(
+    globalStateManager = new GlobalStateManager<G, R>(
       INITIAL_STATE,
       INITIAL_REDUCERS,
     );
@@ -41,7 +41,7 @@ describe('GlobalStateManager.reset', (): void => {
   });
 
   it('should remove property listeners', (): void => {
-    const PROPERTY: keyof GS = 'x';
+    const PROPERTY: keyof G = 'x';
     const PROPERTY_LISTENER = (): void => { };
     globalStateManager.addPropertyListener(PROPERTY, PROPERTY_LISTENER);
     expect(globalStateManager.hasPropertyListener(PROPERTY_LISTENER))

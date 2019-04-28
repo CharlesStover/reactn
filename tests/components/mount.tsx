@@ -1,10 +1,10 @@
 import { render } from 'react-testing-library';
 import React, { ComponentClass } from '../../build';
-import { GS, R } from '../utils/initial';
+import { G, R } from '../utils/initial';
 
 
 
-export default (TestComponent: ComponentClass<{}, {}, GS, R>): void => {
+export default (TestComponent: ComponentClass<{}, {}, G, R>): void => {
 
   it('should mount without error', (): void => {
     render(<TestComponent />);

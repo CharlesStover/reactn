@@ -2,22 +2,22 @@ import addCallback from '../src/add-callback';
 import GlobalStateManager from '../src/global-state-manager';
 import removeCallback from '../src/remove-callback';
 import Callback from '../src/typings/callback';
-import { GS, INITIAL_STATE } from './utils/initial';
+import { G, INITIAL_STATE } from './utils/initial';
 import spyOn from './utils/spy-on-global-state-manager';
 
 
 
-const CALLBACK: Callback<GS> = (): void => { };
+const CALLBACK: Callback<G> = (): void => { };
 
 
 
 describe('removeCallback', (): void => {
 
-  let globalStateManager: GlobalStateManager<GS>;
+  let globalStateManager: GlobalStateManager<G>;
   const spy = spyOn('removeCallback');
 
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
+    globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
   });
 
 

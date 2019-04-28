@@ -1,6 +1,6 @@
 import addReducers from '../src/add-reducers';
 import GlobalStateManager from '../src/global-state-manager';
-import { GS, INITIAL_REDUCERS, INITIAL_STATE } from './utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE } from './utils/initial';
 import spyOn from './utils/spy-on-global-state-manager';
 
 
@@ -13,11 +13,11 @@ const REDUCERS = Object.entries(INITIAL_REDUCERS);
 
 describe('addReducers', (): void => {
 
-  let globalStateManager: GlobalStateManager<GS>;
+  let globalStateManager: GlobalStateManager<G>;
   const spy = spyOn('addDispatcher', 'removeDispatcher');
 
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
+    globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
   });
 
 

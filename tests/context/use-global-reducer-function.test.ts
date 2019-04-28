@@ -3,16 +3,16 @@ import createProvider, { ReactNProvider } from '../../src/create-provider';
 import defaultGlobalStateManager from '../../src/default-global-state-manager';
 import Reducer, { Dispatcher } from '../../src/typings/reducer';
 import HookTest from '../utils/hook-test';
-import { GS, INITIAL_REDUCERS, INITIAL_STATE } from '../utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
 
 type A = string[];
 
-type P = [ Reducer<GS, A> ];
+type P = [ Reducer<G, A> ];
 
-type V = Dispatcher<GS, A>;
+type V = Dispatcher<G, A>;
 
 
 
@@ -20,14 +20,14 @@ const ARGS: string[] = [ 'te', 'st' ];
 
 const EMPTY_STATE: {} = Object.create(null);
 
-const Provider: ReactNProvider<GS> = createProvider<GS>(INITIAL_STATE);
+const Provider: ReactNProvider<G> = createProvider<G>(INITIAL_STATE);
 
-const REDUCER: Reducer<GS, A> = INITIAL_REDUCERS.append;
+const REDUCER: Reducer<G, A> = INITIAL_REDUCERS.append;
 
-const STATE_CHANGE: Partial<GS> =
-  REDUCER(INITIAL_STATE, ...ARGS) as Partial<GS>;
+const STATE_CHANGE: Partial<G> =
+  REDUCER(INITIAL_STATE, ...ARGS) as Partial<G>;
 
-const NEW_STATE: GS = {
+const NEW_STATE: G = {
   ...INITIAL_STATE,
   ...STATE_CHANGE,
 };
@@ -36,14 +36,14 @@ const NEW_STATE: GS = {
 
 describe('Context useGlobalReducer(Function)', (): void => {
 
-  let reducer: Dispatcher<GS, A>;
+  let reducer: Dispatcher<G, A>;
   let testUseGlobalReducer: HookTest<P, V>;
   const spy = spyOn('set');
 
   beforeEach((): void => {
     testUseGlobalReducer =
       new HookTest<P, V>(
-        (reducer: Reducer<GS, A>): V => ReactN.useGlobalReducer<GS, A>(reducer)
+        (reducer: Reducer<G, A>): V => ReactN.useGlobalReducer<G, A>(reducer)
       )
         .addParent(Provider);
     testUseGlobalReducer.render(REDUCER);

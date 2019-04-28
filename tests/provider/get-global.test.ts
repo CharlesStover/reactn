@@ -1,11 +1,11 @@
 import createProvider, { ReactNProvider } from '../../src/create-provider';
-import { GS, INITIAL_STATE } from '../utils/initial';
+import { G, INITIAL_STATE } from '../utils/initial';
 
 
 
 describe('Provider.getGlobal', (): void => {
 
-  let Provider: ReactNProvider<GS>;
+  let Provider: ReactNProvider<G>;
   beforeEach((): void => {
     Provider = createProvider(INITIAL_STATE);
   });

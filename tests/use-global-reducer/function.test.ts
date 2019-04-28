@@ -4,27 +4,27 @@ import useGlobalReducer from '../../src/use-global-reducer';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
 import deleteHooks from '../utils/delete-hooks';
 import HookTest from '../utils/hook-test';
-import { GS, INITIAL_REDUCERS, INITIAL_STATE } from '../utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
 
 type A = string[];
 
-type P = [ Reducer<GS, A> ];
+type P = [ Reducer<G, A> ];
 
-type V = Dispatcher<GS, A>;
+type V = Dispatcher<G, A>;
 
 
 
 const ARGS: string[] = [ 'te', 'st' ];
 
-const REDUCER: Reducer<GS, A> = INITIAL_REDUCERS.append;
+const REDUCER: Reducer<G, A> = INITIAL_REDUCERS.append;
 
-const STATE_CHANGE: Partial<GS> =
-  REDUCER(INITIAL_STATE, ...ARGS) as Partial<GS>;
+const STATE_CHANGE: Partial<G> =
+  REDUCER(INITIAL_STATE, ...ARGS) as Partial<G>;
 
-const NEW_STATE: GS = {
+const NEW_STATE: G = {
   ...INITIAL_STATE,
   ...STATE_CHANGE,
 };
@@ -33,15 +33,15 @@ const NEW_STATE: GS = {
 
 describe('useGlobalReducer(Function)', (): void => {
 
-  let globalStateManager: GlobalStateManager<GS>;
+  let globalStateManager: GlobalStateManager<G>;
   let testUseGlobalReducer: HookTest<P, V>;
   const spy = spyOn('set');
 
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
+    globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
     testUseGlobalReducer =
       new HookTest<P, V>(
-        (reducer: Reducer<GS, A>): V =>
+        (reducer: Reducer<G, A>): V =>
           useGlobalReducer(globalStateManager, reducer)
       );
   });
@@ -58,7 +58,7 @@ describe('useGlobalReducer(Function)', (): void => {
 
   describe('the returned function', (): void => {
 
-    let reducer: Dispatcher<GS, A>;
+    let reducer: Dispatcher<G, A>;
     beforeEach((): void => {
       testUseGlobalReducer.render(REDUCER);
       reducer = testUseGlobalReducer.value;
@@ -67,9 +67,9 @@ describe('useGlobalReducer(Function)', (): void => {
     it(
       'should return a Promise of the new global state',
       async (): Promise<void> => {
-        const reduce: Promise<GS> = reducer(...ARGS);
+        const reduce: Promise<G> = reducer(...ARGS);
         expect(reduce).toBeInstanceOf(Promise);
-        const value: GS = await reduce;
+        const value: G = await reduce;
         expect(value).toEqual(NEW_STATE);
       }
     );

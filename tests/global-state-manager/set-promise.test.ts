@@ -1,23 +1,23 @@
 import GlobalStateManager from '../../src/global-state-manager';
-import { GS, INITIAL_STATE } from '../utils/initial';
+import { G, INITIAL_STATE } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
 
-const STATE_CHANGE: Partial<GS> = {
+const STATE_CHANGE: Partial<G> = {
   x: true,
 };
 
-const PROMISE: Promise<Partial<GS>> = Promise.resolve(STATE_CHANGE);
+const PROMISE: Promise<Partial<G>> = Promise.resolve(STATE_CHANGE);
 
 
 
 describe('GlobalStateManager.setPromise', (): void => {
 
-  let globalStateManager: GlobalStateManager<GS>;
+  let globalStateManager: GlobalStateManager<G>;
   const spy = spyOn('set');
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
+    globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
   });
 
 
@@ -38,13 +38,13 @@ describe('GlobalStateManager.setPromise', (): void => {
   describe('return value', (): void => {
 
     it('should be a Promise', async (): Promise<void> => {
-      const set: Promise<GS | void> = globalStateManager.setPromise(PROMISE);
+      const set: Promise<G | void> = globalStateManager.setPromise(PROMISE);
       expect(set).toBeInstanceOf(Promise);
       await set;
     });
 
     it('should resolve to the new global state', async (): Promise<void> => {
-      const set: Promise<GS> = globalStateManager.setPromise(PROMISE);
+      const set: Promise<G> = globalStateManager.setPromise(PROMISE);
       const value = await set;
       expect(value).toEqual({
         ...INITIAL_STATE,

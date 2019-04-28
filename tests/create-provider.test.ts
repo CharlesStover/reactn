@@ -1,6 +1,6 @@
 import { Component } from 'react';
 import createProvider, { ReactNProvider } from '../src/create-provider';
-import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from './utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from './utils/initial';
 
 
 
@@ -47,7 +47,7 @@ describe('createProvider', (): void => {
 
     describe('with an initial state', (): void => {
 
-      let Provider: ReactNProvider<GS>;
+      let Provider: ReactNProvider<G>;
       beforeEach((): void => {
         Provider = createProvider(INITIAL_STATE);
       });
@@ -69,7 +69,7 @@ describe('createProvider', (): void => {
 
     describe('with an initial state and reducers', (): void => {
 
-      let Provider: ReactNProvider<GS, R>;
+      let Provider: ReactNProvider<G, R>;
       beforeEach((): void => {
         Provider = createProvider(INITIAL_STATE, INITIAL_REDUCERS);
       });

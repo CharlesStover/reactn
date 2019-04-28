@@ -1,17 +1,17 @@
 import GlobalStateManager from '../src/global-state-manager';
 import setGlobal from '../src/set-global';
-import { GS, INITIAL_STATE } from './utils/initial';
+import { G, INITIAL_STATE } from './utils/initial';
 import spyOn from './utils/spy-on-global-state-manager';
 
 
 
 const CALLBACK: jest.Mock<void, []> = jest.fn();
 
-const STATE_CHANGE: Partial<GS> = {
+const STATE_CHANGE: Partial<G> = {
   x: true,
 };
 
-const NEW_STATE: GS = {
+const NEW_STATE: G = {
   ...INITIAL_STATE,
   ...STATE_CHANGE,
 };
@@ -20,9 +20,9 @@ const NEW_STATE: GS = {
 
 describe('setGlobal', (): void => {
 
-  let globalStateManager: GlobalStateManager<GS>;
+  let globalStateManager: GlobalStateManager<G>;
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<GS>(INITIAL_STATE);
+    globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
   });
 
 
@@ -35,7 +35,7 @@ describe('setGlobal', (): void => {
   it(
     'should return a Promise if there is no callback',
     async (): Promise<void> => {
-      const p = setGlobal<GS>(globalStateManager, STATE_CHANGE);
+      const p = setGlobal<G>(globalStateManager, STATE_CHANGE);
       expect(p).toBeInstanceOf(Promise);
       await p;
     }
@@ -44,7 +44,7 @@ describe('setGlobal', (): void => {
   it(
     'should return a Promise if there is a callback',
     async (): Promise<void> => {
-      const p = setGlobal<GS>(globalStateManager, STATE_CHANGE, CALLBACK);
+      const p = setGlobal<G>(globalStateManager, STATE_CHANGE, CALLBACK);
       expect(p).toBeInstanceOf(Promise);
       await p;
     }
@@ -53,7 +53,7 @@ describe('setGlobal', (): void => {
   it(
     'should call the callback with the new global state',
     async (): Promise<void> => {
-      await setGlobal<GS>(globalStateManager, STATE_CHANGE, CALLBACK);
+      await setGlobal<G>(globalStateManager, STATE_CHANGE, CALLBACK);
       expect(CALLBACK).toHaveBeenCalledTimes(1);
       expect(CALLBACK).toHaveBeenCalledWith(NEW_STATE);
     }
@@ -66,13 +66,13 @@ describe('setGlobal', (): void => {
     const spies = spyOn('set');
 
     it('should be called if there is no callback', async (): Promise<void> => {
-        await setGlobal<GS>(globalStateManager, STATE_CHANGE);
+        await setGlobal<G>(globalStateManager, STATE_CHANGE);
         expect(spies.set).toHaveBeenCalledTimes(1);
         expect(spies.set).toHaveBeenCalledWith(STATE_CHANGE);
     });
 
     it('should be called if there is a callback', async (): Promise<void> => {
-        await setGlobal<GS>(globalStateManager, STATE_CHANGE, CALLBACK);
+        await setGlobal<G>(globalStateManager, STATE_CHANGE, CALLBACK);
         expect(spies.set).toHaveBeenCalledTimes(1);
         expect(spies.set).toHaveBeenCalledWith(STATE_CHANGE);
     });

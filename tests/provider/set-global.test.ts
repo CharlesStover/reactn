@@ -1,14 +1,14 @@
 import createProvider, { ReactNProvider } from '../../src/create-provider';
-import { GS, INITIAL_STATE } from '../utils/initial';
+import { G, INITIAL_STATE } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
 
-const STATE_CHANGE: Partial<GS> = {
+const STATE_CHANGE: Partial<G> = {
   x: !INITIAL_STATE.x,
 };
 
-const NEW_STATE: GS = {
+const NEW_STATE: G = {
   ...INITIAL_STATE,
   ...STATE_CHANGE,
 };
@@ -17,9 +17,9 @@ const NEW_STATE: GS = {
 
 describe('Provider.setGlobal', (): void => {
 
-  let Provider: ReactNProvider<GS>;
+  let Provider: ReactNProvider<G>;
   beforeEach((): void => {
-    Provider = createProvider<GS>(INITIAL_STATE);
+    Provider = createProvider<G>(INITIAL_STATE);
   });
 
 
@@ -66,9 +66,9 @@ describe('Provider.setGlobal', (): void => {
     it(
       'should be a Promise of the new global state if there was a callback',
       async (): Promise<void> => {
-        const set: Promise<GS> = Provider.setGlobal(STATE_CHANGE);
+        const set: Promise<G> = Provider.setGlobal(STATE_CHANGE);
         expect(set).toBeInstanceOf(Promise);
-        const value: GS = await set;
+        const value: G = await set;
         expect(value).toEqual(NEW_STATE);
       }
     );
@@ -78,9 +78,9 @@ describe('Provider.setGlobal', (): void => {
       'if there was not a callback',
       async (): Promise<void> => {
         const NOOP = (): void => { };
-        const set: Promise<GS> = Provider.setGlobal(STATE_CHANGE, NOOP);
+        const set: Promise<G> = Provider.setGlobal(STATE_CHANGE, NOOP);
         expect(set).toBeInstanceOf(Promise);
-        const value: GS = await set;
+        const value: G = await set;
         expect(value).toEqual(NEW_STATE);
       }
     );

@@ -1,5 +1,5 @@
 import GlobalStateManager from '../../src/global-state-manager';
-import { GS, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 
 
 
@@ -24,14 +24,14 @@ describe('GlobalStateManager.constructor', (): void => {
   });
 
   it('should support an initial state', (): void => {
-    const globalStateManager: GlobalStateManager<GS> =
-      new GlobalStateManager<GS>(INITIAL_STATE);
+    const globalStateManager: GlobalStateManager<G> =
+      new GlobalStateManager<G>(INITIAL_STATE);
     expect(globalStateManager.state).toEqual(INITIAL_STATE);
   });
 
   it('should support initial dispatchers', (): void => {
-    const globalStateManager: GlobalStateManager<GS, R> =
-      new GlobalStateManager<GS, R>(INITIAL_STATE, INITIAL_REDUCERS);
+    const globalStateManager: GlobalStateManager<G, R> =
+      new GlobalStateManager<G, R>(INITIAL_STATE, INITIAL_REDUCERS);
     const dispatchers: string[] = Object.keys(globalStateManager.dispatchers);
     dispatchers.sort();
     expect(dispatchers).toStrictEqual(INITIAL_REDUCERS_KEYS);
