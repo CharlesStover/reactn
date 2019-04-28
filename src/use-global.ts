@@ -68,15 +68,17 @@ export default function useGlobal<
     (defaultGlobalStateManager as GlobalStateManager<G>);
 
   const forceUpdate = useForceUpdate();
-
-  // If this component ever updates or unmounts,
-  //   remove the force update listener.
-  useEffect((): VoidFunction => (): void => {
+  const removeForceUpdateListener = (): void => {
     globalStateManager.removePropertyListener(forceUpdate);
-  });
+  };
 
   // Return the entire global state.
   if (typeof property === 'undefined') {
+
+    
+    // If this component ever updates or unmounts, remove the force update
+    //   listener.
+    useEffect((): VoidFunction => removeForceUpdateListener);
 
     const globalStateSetter = (
       newGlobalState: NewGlobalState<G>,
@@ -90,6 +92,21 @@ export default function useGlobal<
     ];
   }
 
+  useEffect((): VoidFunction => {
+
+    // We add the listener as an effect, so that there are not race conditions
+    //   between subscribing and unsubscribing.
+    // Subscribing outside of useEffect via `spyState()[property]` will
+    //   cause the re-render subscription to occur before the unmount
+    //   unsubscription occurs. As a result, the unmount unsubscription
+    //   removes the re-rendered subscription.
+    globalStateManager.addPropertyListener(property, forceUpdate);
+
+    // If this component ever updates or unmounts, remove the force update
+    //   listener.
+    return removeForceUpdateListener;
+  });
+
   const globalPropertySetter = (
     value: G[Property],
     callback: Callback<G> | null = null,
@@ -101,7 +118,7 @@ export default function useGlobal<
 
   // Return both getter and setter.
   return [
-    globalStateManager.spyState(forceUpdate)[property],
+    globalStateManager.state[property],
     globalPropertySetter,
   ];
 };

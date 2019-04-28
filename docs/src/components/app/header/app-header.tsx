@@ -23,7 +23,7 @@ export default function AppHeader() {
           >
             React
             <ReactLogo
-              className="header-react-logo"
+              className="app-header-react-logo"
               fill={color}
             />
             N

@@ -1,8 +1,13 @@
 @import "../../../../assets/styles/media.scss";
+@import "../../../../assets/styles/rainbowify.scss";
 
 .app-navigation-list-item {
   display: flex;
   flex-direction: column;
+
+  &-selected {
+    @include rainbowify(color);
+  }
 
   > strong {
 
@@ -20,6 +25,7 @@
     > li {
 
       &.app-navigation-list-item-selected {
+        @include rainbowify(color);
         padding: 0.125em 0;
       }
 

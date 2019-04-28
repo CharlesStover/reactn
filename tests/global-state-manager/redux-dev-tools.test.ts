@@ -13,7 +13,6 @@ import {
 } from 'redux-devtools-extension/developmentOnly';
 import GlobalStateManager from '../../src/global-state-manager';
 import { GS, INITIAL_STATE } from '../utils/initial';
-import spyOn from '../utils/spy-on-global-state-manager';
 
 
 
@@ -34,14 +33,12 @@ describe('Redux DevTools', (): void => {
   it('should not be supported by default', (): void => {
     const globalStateManager: GlobalStateManager<GS> =
       new GlobalStateManager<GS>(INITIAL_STATE);
-    expect(globalStateManager.reduxDevToolsDispatch).toBe(null);
+    expect(globalStateManager.reduxEnhancedStore).toBe(null);
   });
 
 
 
   describe('with extension', (): void => {
-
-    const spy = spyOn('reduxDevToolsDispatch');
 
     beforeEach((): void => {
       global.window.__REDUX_DEVTOOLS_EXTENSION__ = jest.fn(devToolsEnhancer);
@@ -64,7 +61,9 @@ describe('Redux DevTools', (): void => {
       expect(global.window.__REDUX_DEVTOOLS_EXTENSION__).toHaveBeenCalledWith({
         name: 'ReactN state',
       });
-      expect(globalStateManager.reduxDevToolsDispatch)
+      expect(globalStateManager.reduxEnhancedStore)
+        .toBeInstanceOf(Object);
+      expect(globalStateManager.reduxEnhancedStore.dispatch)
         .toBeInstanceOf(Function);
     });
 
@@ -83,7 +82,7 @@ describe('Redux DevTools', (): void => {
                 _reducer: ReduxReducer<S, A>,
                 _preloadedState: ReduxDeepPartial<S>,
               ) => ({
-                dispatch: dispatch,
+                dispatch,
                 getState: (): any => this.state,
                 replaceReducer: () => null,
                 subscribe: () => null,
@@ -98,8 +97,6 @@ describe('Redux DevTools', (): void => {
           x: true,
         };
         globalStateManager.set(STATE_CHANGE);
-        expect(spy.reduxDevToolsDispatch).toHaveBeenCalledTimes(1);
-        expect(spy.reduxDevToolsDispatch).toHaveBeenCalledWith();
         expect(dispatch).toHaveBeenCalledTimes(1);
         expect(dispatch).toHaveBeenCalledWith({
           stateChange: STATE_CHANGE,

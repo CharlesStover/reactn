@@ -15,15 +15,12 @@ export default function spyOn(
       if (
         method === 'dispatchers' ||
         method === 'propertyListeners' ||
-        method === 'reduxDevToolsDispatch' ||
+        method === 'reduxEnhancedStore' ||
         method === 'queue' ||
         method === 'state'
       ) {
         spies[method] = jest.spyOn(
           GlobalStateManager.prototype,
-
-          // @ts-ignore: Getters are not accurately supported if they return
-          //   functions, i.e. reduxDevToolsDispatch.
           method,
           'get',
         );

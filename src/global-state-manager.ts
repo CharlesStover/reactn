@@ -86,11 +86,9 @@ export default class GlobalStateManager<
     new Map<keyof G, Set<PropertyListener>>();
   private _queue: Map<keyof G, G[keyof G]> =
     new Map<keyof G, G[keyof G]>();
-  private _reduxDevToolsDispatch: ReduxDispatch<ReduxDevToolsAction<G>> =
+  private _reduxEnhancedStore: ReduxStore<G & any, ReduxDevToolsAction<G>> =
     null;
   private _state: G;
-
-
 
   public constructor(
     initialState: G = Object.create(null),
@@ -106,7 +104,7 @@ export default class GlobalStateManager<
         });
       const enhancerStoreCreator: ReduxStoreEnhancerStoreCreator<{}, G> = <
         S = any,
-        A extends ReduxAnyAction = ReduxAnyAction,
+        A extends ReduxAnyAction = ReduxDevToolsAction<G>,
       >(
         _reducer: ReduxReducer<S, A>,
         _preloadedState: ReduxDeepPartial<S>,
@@ -116,22 +114,19 @@ export default class GlobalStateManager<
         replaceReducer: () => null,
         subscribe: () => null,
       });
-      this._reduxDevToolsDispatch =
+      this._reduxEnhancedStore =
         enhancer(enhancerStoreCreator)(
-          // Using `GS` instead of `any` results in TypeScript error:
+          // Using `G` instead of `any` results in TypeScript error:
           //   Type instantiation is excessively deep and possibly infinite.
           (): any => this.state,
           initialState,
-        )
-          .dispatch;
+        );
     }
     this._initialReducers = copyObject(initialReducers);
     this._initialState = copyObject(initialState);
     this._state = copyObject(initialState);
     this.addDispatchers(initialReducers);
   }
-
-
 
   public addCallback(callback: Callback<G>): BooleanFunction {
     this._callbacks.add(callback);
@@ -262,8 +257,9 @@ export default class GlobalStateManager<
     return this._propertyListeners;
   }
 
-  public get reduxDevToolsDispatch(): ReduxDispatch<ReduxDevToolsAction<G>> {
-    return this._reduxDevToolsDispatch;
+  public get reduxEnhancedStore(
+  ): ReduxStore<G & any, ReduxDevToolsAction<G>> {
+    return this._reduxEnhancedStore;
   }
 
   public removeCallback(callback: Callback<G>): boolean {
@@ -324,9 +320,9 @@ export default class GlobalStateManager<
     }
 
     // Redux Dev Tools
-    const reduxDevToolsDispatch = this.reduxDevToolsDispatch;
-    if(reduxDevToolsDispatch) {
-      reduxDevToolsDispatch({
+    const reduxEnhancedStore = this.reduxEnhancedStore;
+    if (reduxEnhancedStore) {
+      reduxEnhancedStore.dispatch({
         stateChange: newGlobalState,
         type: 'STATE_CHANGE',
       });
@@ -371,7 +367,7 @@ export default class GlobalStateManager<
       this._state,
       (property: keyof G) => {
         this.addPropertyListener(property, propertyListener);
-      }
+      },
     );
   }
 
