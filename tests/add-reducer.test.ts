@@ -13,7 +13,7 @@ const REDUCER_NAME = 'reducerName';
 describe('addReducer', (): void => {
 
   let globalStateManager: GlobalStateManager<{}, {}>;
-  const spy = spyOn('addDispatcher', 'removeDispatcher');
+  const spy = spyOn('addReducer', 'removeDispatcher');
 
   beforeEach((): void => {
     globalStateManager = new GlobalStateManager<{}, {}>();
@@ -26,10 +26,10 @@ describe('addReducer', (): void => {
     expect(addReducer).toHaveLength(3);
   });
 
-  it('should call GlobalStateManager.addDispatcher', (): void => {
+  it('should call GlobalStateManager.addReducer', (): void => {
     addReducer(globalStateManager, REDUCER_NAME, REDUCER);
-    expect(spy.addDispatcher).toHaveBeenCalledTimes(1);
-    expect(spy.addDispatcher).toHaveBeenCalledWith(REDUCER_NAME, REDUCER);
+    expect(spy.addReducer).toHaveBeenCalledTimes(1);
+    expect(spy.addReducer).toHaveBeenCalledWith(REDUCER_NAME, REDUCER);
   });
 
 

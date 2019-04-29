@@ -3,6 +3,7 @@ import { ReactNComponent, ReactNPureComponent } from './components';
 import Context from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager, { NewGlobalState } from './global-state-manager';
+import setGlobal from './set-global';
 import Callback from './typings/callback';
 import { Dispatchers } from './typings/reducer';
 
@@ -104,23 +105,11 @@ export function ReactNGlobal<G extends {} = State>(
 
 
 // this.setGlobal
-export function ReactNSetGlobal<G extends {} = State>(
+export function ReactNSetGlobal<G extends {} = State, R extends {} = Reducers>(
   newGlobalState: NewGlobalState<G>,
-  callback: Callback<G> | null,
+  callback: Callback<G, R> | null,
   _sync: boolean,
-  globalStateManager: GlobalStateManager<G> = getGlobalStateManager<G>(),
+  globalStateManager: GlobalStateManager<G, R> = getGlobalStateManager<G, R>(),
 ): Promise<G> {
-  if (!callback) {
-    return globalStateManager.set(newGlobalState);
-  }
-  let globalState: G;
-  return globalStateManager.set(newGlobalState)
-    .then((global: G): G => {
-      globalState = global;
-      return global;
-    })
-    .then((newGlobal: G) => {
-      callback(newGlobal, globalStateManager.dispatchers);
-    })
-    .then((): G => globalState);
+  return setGlobal(globalStateManager, newGlobalState, callback);
 }

@@ -1,6 +1,6 @@
 import GlobalStateManager from '../../src/global-state-manager';
 import { Dispatcher } from '../../src/typings/reducer';
-import { G, INITIAL_REDUCERS, INITIAL_STATE } from '../utils/initial';
+import { D, G, INITIAL_REDUCERS, INITIAL_STATE } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
@@ -40,14 +40,19 @@ describe('GlobalStateManager.createDispatcher', (): void => {
     it('should auto-fill the global state argument', (): void => {
 
       const REDUCER_WITH_ARGS =
-        (_gs: G, _1: boolean, _2: number): null => null;
+        (_global: G, _dispatch: D, _1: boolean, _2: number): null => null;
       const spy = jest.fn(REDUCER_WITH_ARGS);
 
       const dispatch: Dispatcher<G, [ boolean, number ]> =
         globalStateManager.createDispatcher(spy);
       dispatch(true, 1);
       expect(spy).toHaveBeenCalledTimes(1);
-      expect(spy).toHaveBeenCalledWith(globalStateManager.state, true, 1);
+      expect(spy).toHaveBeenCalledWith(
+        globalStateManager.state,
+        globalStateManager.dispatchers,
+        true,
+        1,
+      );
     });
 
     const spy = spyOn('set');

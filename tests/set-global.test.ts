@@ -1,6 +1,6 @@
 import GlobalStateManager from '../src/global-state-manager';
 import setGlobal from '../src/set-global';
-import { G, INITIAL_STATE } from './utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from './utils/initial';
 import spyOn from './utils/spy-on-global-state-manager';
 
 
@@ -20,9 +20,10 @@ const NEW_STATE: G = {
 
 describe('setGlobal', (): void => {
 
-  let globalStateManager: GlobalStateManager<G>;
+  let globalStateManager: GlobalStateManager<G, R>;
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
+    globalStateManager =
+      new GlobalStateManager(INITIAL_STATE, INITIAL_REDUCERS);
   });
 
 
@@ -55,7 +56,8 @@ describe('setGlobal', (): void => {
     async (): Promise<void> => {
       await setGlobal<G>(globalStateManager, STATE_CHANGE, CALLBACK);
       expect(CALLBACK).toHaveBeenCalledTimes(1);
-      expect(CALLBACK).toHaveBeenCalledWith(NEW_STATE);
+      expect(CALLBACK)
+        .toHaveBeenCalledWith(NEW_STATE, globalStateManager.dispatchers);
     }
   );
 
@@ -73,8 +75,9 @@ describe('setGlobal', (): void => {
 
     it('should be called if there is a callback', async (): Promise<void> => {
         await setGlobal<G>(globalStateManager, STATE_CHANGE, CALLBACK);
-        expect(spies.set).toHaveBeenCalledTimes(1);
-        expect(spies.set).toHaveBeenCalledWith(STATE_CHANGE);
+        expect(spies.set).toHaveBeenCalledTimes(2);
+        expect(spies.set).toHaveBeenNthCalledWith(1, STATE_CHANGE);
+        expect(spies.set).toHaveBeenNthCalledWith(2, undefined);
     });
   });
 

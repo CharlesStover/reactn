@@ -20,7 +20,7 @@ const ARGS: string[] = [ 'te', 'st' ];
 
 const EMPTY_STATE: {} = Object.create(null);
 
-const Provider: ReactNProvider<G> = createProvider<G, R>(
+const Provider: ReactNProvider<G, R> = createProvider<G, R>(
   INITIAL_STATE,
   INITIAL_REDUCERS,
 );
@@ -29,9 +29,9 @@ const REDUCER: keyof R = 'append';
 
 const STATE_CHANGE: Partial<G> = INITIAL_REDUCERS[REDUCER](
   INITIAL_STATE,
-  INITIAL_REDUCERS,
+  Provider.dispatch,
   ...ARGS,
-) as Partial<G>;
+);
 
 const NEW_STATE: G = {
   ...INITIAL_STATE,

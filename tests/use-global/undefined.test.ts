@@ -3,13 +3,14 @@ import useGlobal, { GlobalTuple } from '../../src/use-global';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
 import deleteHooks from '../utils/delete-hooks';
 import HookTest from '../utils/hook-test';
-import { G, INITIAL_STATE } from '../utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 
 
 
 type P = [ ];
 
-type R = GlobalTuple<G>;
+// T for Tuple
+type T = GlobalTuple<G>;
 
 
 
@@ -26,15 +27,16 @@ const NEW_STATE: G = {
 
 describe('useGlobal()', (): void => {
 
-  let globalStateManager: GlobalStateManager<G>;
-  let testUseGlobal: HookTest<P, R>;
+  let globalStateManager: GlobalStateManager<G, R>;
+  let testUseGlobal: HookTest<P, T>;
 
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
+    globalStateManager =
+      new GlobalStateManager(INITIAL_STATE, INITIAL_REDUCERS);
 
     testUseGlobal =
-      new HookTest<P, R>(
-        (): R => useGlobal(globalStateManager)
+      new HookTest(
+        (): T => useGlobal(globalStateManager),
       );
   });
 
@@ -58,7 +60,7 @@ describe('useGlobal()', (): void => {
       async (): Promise<void> => {
         expect(testUseGlobal.renders).toBe(0);
         testUseGlobal.render();
-        const [ global, setGlobal ]: GlobalTuple<G> = testUseGlobal.value;
+        const [ global, setGlobal ]: T = testUseGlobal.value;
         expect(testUseGlobal.renders).toBe(1);
         global.x;
         await setGlobal(STATE_CHANGE);
@@ -71,7 +73,7 @@ describe('useGlobal()', (): void => {
       async (): Promise<void> => {
         expect(testUseGlobal.renders).toBe(0);
         testUseGlobal.render();
-        const [ global, setGlobal ]: GlobalTuple<G> = testUseGlobal.value;
+        const [ global, setGlobal ]: T = testUseGlobal.value;
         expect(testUseGlobal.renders).toBe(1);
         global.y;
         await setGlobal(STATE_CHANGE);
@@ -107,7 +109,7 @@ describe('useGlobal()', (): void => {
         'should return a Promise of the new global state',
         async (): Promise<void> => {
           testUseGlobal.render();
-          const [ , setGlobal ]: GlobalTuple<G> = testUseGlobal.value;
+          const [ , setGlobal ]: T = testUseGlobal.value;
           let set: Promise<G>;
           set = setGlobal(STATE_CHANGE, CALLBACK);
           expect(set).toBeInstanceOf(Promise);
@@ -119,17 +121,18 @@ describe('useGlobal()', (): void => {
 
       it('should update the state', async (): Promise<void> => {
         testUseGlobal.render();
-        const [ , setGlobal ]: GlobalTuple<G> = testUseGlobal.value;
+        const [ , setGlobal ]: T = testUseGlobal.value;
         await setGlobal(STATE_CHANGE, CALLBACK);
         expect(globalStateManager.state).toEqual(NEW_STATE);
       });
 
       it('should execute the callback', async (): Promise<void> => {
         testUseGlobal.render();
-        const [ , setGlobal ]: GlobalTuple<G> = testUseGlobal.value;
+        const [ , setGlobal ]: T = testUseGlobal.value;
         await setGlobal(STATE_CHANGE, CALLBACK);
         expect(CALLBACK).toHaveBeenCalledTimes(1);
-        expect(CALLBACK).toHaveBeenCalledWith(NEW_STATE);
+        expect(CALLBACK)
+          .toHaveBeenCalledWith(NEW_STATE, globalStateManager.dispatchers);
       });
     });
 
@@ -139,7 +142,7 @@ describe('useGlobal()', (): void => {
         'should return a Promise of the new global state',
         async (): Promise<void> => {
           testUseGlobal.render();
-          const [ , setGlobal ]: GlobalTuple<G> = testUseGlobal.value;
+          const [ , setGlobal ]: T = testUseGlobal.value;
           let set: Promise<G>;
           set = setGlobal(STATE_CHANGE);
           expect(set).toBeInstanceOf(Promise);
@@ -151,7 +154,7 @@ describe('useGlobal()', (): void => {
 
       it('should update the state', async (): Promise<void> => {
         testUseGlobal.render();
-        const [ , setGlobal ]: GlobalTuple<G> = testUseGlobal.value;
+        const [ , setGlobal ]: T = testUseGlobal.value;
         await setGlobal(STATE_CHANGE);
         expect(globalStateManager.state).toEqual(NEW_STATE);
       });

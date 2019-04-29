@@ -11,7 +11,7 @@ const REDUCER_NAME = 'REDUCER_NAME';
 
 describe('Provider.addReducer', (): void => {
 
-  const spy = spyOn('addDispatcher', 'removeDispatcher');
+  const spy = spyOn('addReducer', 'removeDispatcher');
 
   let Provider: ReactNProvider<{}>;
   beforeEach((): void => {
@@ -25,10 +25,10 @@ describe('Provider.addReducer', (): void => {
     expect(Provider.addReducer).toHaveLength(2);
   });
 
-  it('should call GlobalStateManager.addDispatcher', (): void => {
+  it('should call GlobalStateManager.addReducer', (): void => {
     Provider.addReducer(REDUCER_NAME, REDUCER);
-    expect(spy.addDispatcher).toHaveBeenCalledTimes(1);
-    expect(spy.addDispatcher).toHaveBeenCalledWith(REDUCER_NAME, REDUCER);
+    expect(spy.addReducer).toHaveBeenCalledTimes(1);
+    expect(spy.addReducer).toHaveBeenCalledWith(REDUCER_NAME, REDUCER);
   });
 
 

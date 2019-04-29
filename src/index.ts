@@ -13,7 +13,7 @@ import removeCallback from './remove-callback';
 import resetGlobal from './reset-global';
 import setGlobal from './set-global';
 import Callback from './typings/callback';
-import Reducer, { Dispatcher, ExtractA, ReducerMap } from './typings/reducer';
+import Reducer, { AdditionalReducers, Dispatcher, ExtractA } from './typings/reducer';
 import useDispatch from './use-dispatch';
 import useGlobal, { GlobalTuple, StateTuple } from './use-global';
 import withGlobal, { Getter, Setter, WithGlobal } from './with-global';
@@ -37,8 +37,8 @@ interface ReactN extends TypeOfReact {
     reducer: Reducer<G>,
   ): BooleanFunction;
 
-  addReducers<G extends {} = State>(
-    reducers: ReducerMap<G>,
+  addReducers<G extends {} = State, R extends {} = Reducers>(
+    reducers: AdditionalReducers<G, R>,
   ): BooleanFunction;
 
   Component: typeof ReactNComponent;

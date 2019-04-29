@@ -32,7 +32,7 @@ describe('GlobalStateManager.reset', (): void => {
     const REDUCER = (): null => null;
     const REDUCER_NAME = 'reducerName';
 
-    globalStateManager.addDispatcher(REDUCER_NAME, REDUCER);
+    globalStateManager.addReducer(REDUCER_NAME, REDUCER);
     expect(globalStateManager.hasDispatcher('increment')).toBe(true);
     expect(globalStateManager.hasDispatcher(REDUCER_NAME)).toBe(true);
     globalStateManager.reset();

@@ -1,5 +1,5 @@
 import createProvider, { ReactNProvider } from '../../src/create-provider';
-import { G, INITIAL_STATE } from '../utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
@@ -17,9 +17,9 @@ const NEW_STATE: G = {
 
 describe('Provider.setGlobal', (): void => {
 
-  let Provider: ReactNProvider<G>;
+  let Provider: ReactNProvider<G, R>;
   beforeEach((): void => {
-    Provider = createProvider<G>(INITIAL_STATE);
+    Provider = createProvider(INITIAL_STATE, INITIAL_REDUCERS);
   });
 
 
@@ -35,7 +35,7 @@ describe('Provider.setGlobal', (): void => {
       const CALLBACK: jest.Mock<void, []> = jest.fn();
       await Provider.setGlobal(STATE_CHANGE, CALLBACK);
       expect(CALLBACK).toHaveBeenCalledTimes(1);
-      expect(CALLBACK).toHaveBeenCalledWith(NEW_STATE);
+      expect(CALLBACK).toHaveBeenCalledWith(NEW_STATE, Provider.dispatch);
     }
   );
 
@@ -54,8 +54,9 @@ describe('Provider.setGlobal', (): void => {
     it('should be called with a callback', async (): Promise<void> => {
       const NOOP = (): void => { };
       await Provider.setGlobal(STATE_CHANGE, NOOP);
-      expect(spy.set).toHaveBeenCalledTimes(1);
-      expect(spy.set).toHaveBeenCalledWith(STATE_CHANGE);
+      expect(spy.set).toHaveBeenCalledTimes(2);
+      expect(spy.set).toHaveBeenNthCalledWith(1, STATE_CHANGE);
+      expect(spy.set).toHaveBeenNthCalledWith(2, undefined);
     });
   });
 

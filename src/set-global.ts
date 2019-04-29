@@ -1,25 +1,26 @@
-import { State } from '../default';
+import { Reducers, State } from '../default';
 import GlobalStateManager, { NewGlobalState } from './global-state-manager';
 import Callback from './typings/callback';
 
 
 
-export default function setGlobal<G extends {} = State>(
-  globalStateManager: GlobalStateManager<G>,
+export default function setGlobal<
+  G extends {} = State,
+  R extends {} = Reducers,
+>(
+  globalStateManager: GlobalStateManager<G, R>,
   newGlobalState: NewGlobalState<G>,
-  callback: Callback<G> = null,
+  callback: Callback<G, R> = null,
 ): Promise<G> {
   if (callback === null) {
     return globalStateManager.set(newGlobalState);
   }
-  let globalState: G;
   return globalStateManager.set(newGlobalState)
-    .then((global: G) => {
-      globalState = global;
+    .then(async (global: G): Promise<G> => {
+      await setGlobal(
+        globalStateManager,
+        callback(global, globalStateManager.dispatchers),
+      );
       return global;
-    })
-    .then((newGlobal: G) => {
-      callback(newGlobal, globalStateManager.dispatchers);
-    })
-    .then((): G => globalState);
+    });
 };

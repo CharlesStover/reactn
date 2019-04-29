@@ -21,25 +21,26 @@ interface AdditionalReducers<G extends {} = State> {
 // AsynchronousNewGlobalState is an interface so that NewGlobalState does not
 //   circularly reference itself.
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface AsynchronousNewGlobalState<Shape>
-  extends Promise<NewGlobalState<Shape>> { }
+interface AsynchronousNewGlobalState<G extends {} = State>
+  extends Promise<NewGlobalState<G>> { }
 
 type BooleanFunction = () => boolean;
 
-interface FunctionalNewGlobalState<Shape> {
-  (globalState: Shape): NewGlobalState<Shape>;
+interface FunctionalNewGlobalState<G extends {} = State> {
+  (global: G): NewGlobalState<G>;
 }
 
-export type NewGlobalState<Shape> =
-  AsynchronousNewGlobalState<Shape> |
-  FunctionalNewGlobalState<Shape> |
-  SynchronousNewGlobalState<Shape>;
+export type NewGlobalState<G extends {} = State> =
+  AsynchronousNewGlobalState<G> |
+  FunctionalNewGlobalState<G> |
+  SynchronousNewGlobalState<G>;
 
 // type PartialState<Shape> = Shape extends {} ? Partial<Shape> : Shape;
 
 export type PropertyListener = () => void;
 
-type SynchronousNewGlobalState<Shape> = null | Partial<Shape> | void;
+type SynchronousNewGlobalState<G extends {} = State> =
+  null | Partial<G> | void;
 
 
 

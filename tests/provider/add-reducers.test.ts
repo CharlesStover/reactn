@@ -13,7 +13,7 @@ const REDUCERS: [ string, Reducer<G> ][] = Object.entries(INITIAL_REDUCERS);
 
 describe('Provider.addReducers', (): void => {
 
-  const spy = spyOn('addDispatcher', 'removeDispatcher');
+  const spy = spyOn('addReducer', 'removeDispatcher');
 
   let Provider: ReactNProvider<G>;
   beforeEach((): void => {
@@ -28,12 +28,12 @@ describe('Provider.addReducers', (): void => {
   });
 
   it(
-    'should call GlobalStateManager.addDispatcher for each reducer',
+    'should call GlobalStateManager.addReducer for each reducer',
     (): void => {
       Provider.addReducers(INITIAL_REDUCERS);
-      expect(spy.addDispatcher).toHaveBeenCalledTimes(REDUCERS.length);
+      expect(spy.addReducer).toHaveBeenCalledTimes(REDUCERS.length);
       for (const [ name, reducer ] of REDUCERS) {
-        expect(spy.addDispatcher).toHaveBeenCalledWith(name, reducer);
+        expect(spy.addReducer).toHaveBeenCalledWith(name, reducer);
       }
     }
   );

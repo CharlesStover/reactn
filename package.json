@@ -28,7 +28,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "use-force-update": "^1.0.0"
+    "use-force-update": "^1.0.5"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",

@@ -7,10 +7,10 @@ import GlobalStateManager, { NewGlobalState } from './global-state-manager';
 import setGlobal from './set-global';
 import Callback from './typings/callback';
 import Reducer, {
+  AdditionalReducers,
   Dispatcher,
   Dispatchers,
   ExtractA,
-  ReducerMap,
 } from './typings/reducer';
 import useDispatch, { UseDispatch } from './use-dispatch';
 import useGlobal, { GlobalTuple, StateTuple, UseGlobal } from './use-global';
@@ -29,7 +29,7 @@ export interface ReactNProvider<
     name: string,
     reducer: Reducer<G, R, A>,
   ): BooleanFunction;
-  addReducers(reducers: ReducerMap<G, R>): BooleanFunction;
+  addReducers(reducers: AdditionalReducers<G, R>): BooleanFunction;
   dispatch: Dispatchers<G, R>;
   getDispatch(): Dispatchers<G, R>;
   getGlobal(): G;
@@ -85,7 +85,9 @@ export default function createProvider<
       return addReducer<G>(globalStateManager, name, reducer);
     }
 
-    public static addReducers(reducers: ReducerMap<G>): BooleanFunction {
+    public static addReducers(
+      reducers: AdditionalReducers<G, R>,
+    ): BooleanFunction {
       return addReducers<G>(globalStateManager, reducers);
     }
 

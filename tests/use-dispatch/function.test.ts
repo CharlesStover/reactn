@@ -4,14 +4,16 @@ import useDispatch from '../../src/use-dispatch';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
 import deleteHooks from '../utils/delete-hooks';
 import HookTest from '../utils/hook-test';
-import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
 
 type A = string[];
 
-type P = [ Reducer<G, R, A> ];
+type AppendReducer = Reducer<G, {}, A, Partial<G>>;
+
+type P = [ AppendReducer ];
 
 type V = Dispatcher<G, A>;
 
@@ -19,10 +21,10 @@ type V = Dispatcher<G, A>;
 
 const ARGS: string[] = [ 'te', 'st' ];
 
-const REDUCER: Reducer<G, R, A> = INITIAL_REDUCERS.append;
+const REDUCER: AppendReducer = INITIAL_REDUCERS.append;
 
 const STATE_CHANGE: Partial<G> =
-  REDUCER(INITIAL_STATE, INITIAL_REDUCERS, ...ARGS) as Partial<G>;
+  REDUCER(INITIAL_STATE, {}, ...ARGS) as Partial<G>;
 
 const NEW_STATE: G = {
   ...INITIAL_STATE,
@@ -41,8 +43,8 @@ describe('useDispatch(Function)', (): void => {
     globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
     testUseDispatch =
       new HookTest<P, V>(
-        (reducer: Reducer<G, R, A>): V =>
-          useDispatch<G, R, A>(globalStateManager, reducer),
+        (reducer: AppendReducer): V =>
+          useDispatch<G, {}, A>(globalStateManager, reducer),
       );
   });
 

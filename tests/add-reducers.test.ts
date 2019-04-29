@@ -14,7 +14,7 @@ const REDUCERS = Object.entries(INITIAL_REDUCERS);
 describe('addReducers', (): void => {
 
   let globalStateManager: GlobalStateManager<G>;
-  const spy = spyOn('addDispatcher', 'removeDispatcher');
+  const spy = spyOn('addReducer', 'removeDispatcher');
 
   beforeEach((): void => {
     globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
@@ -28,12 +28,12 @@ describe('addReducers', (): void => {
   });
 
   it(
-    'should call GlobalStateManager.addDispatcher for each reducer',
+    'should call GlobalStateManager.addReducer for each reducer',
     (): void => {
       addReducers(globalStateManager, INITIAL_REDUCERS);
-      expect(spy.addDispatcher).toHaveBeenCalledTimes(REDUCERS.length);
+      expect(spy.addReducer).toHaveBeenCalledTimes(REDUCERS.length);
       for (const [ name, reducer ] of REDUCERS) {
-        expect(spy.addDispatcher).toHaveBeenCalledWith(name, reducer);
+        expect(spy.addReducer).toHaveBeenCalledWith(name, reducer);
       }
     }
   );

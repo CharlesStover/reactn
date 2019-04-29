@@ -10,7 +10,9 @@ import spyOn from '../utils/spy-on-global-state-manager';
 
 type A = string[];
 
-type P = [ Reducer<G, R, A> ];
+type AppendReducer = Reducer<G, R, A, Partial<G>>;
+
+type P = [ AppendReducer ];
 
 type V = Dispatcher<G, A>;
 
@@ -20,12 +22,13 @@ const ARGS: string[] = [ 'te', 'st' ];
 
 const EMPTY_STATE: {} = Object.create(null);
 
-const Provider: ReactNProvider<G> = createProvider<G>(INITIAL_STATE);
+const Provider: ReactNProvider<G, R> =
+  createProvider<G, R>(INITIAL_STATE, INITIAL_REDUCERS);
 
-const REDUCER: Reducer<G, R, A> = INITIAL_REDUCERS.append;
+const REDUCER: AppendReducer = INITIAL_REDUCERS.append;
 
 const STATE_CHANGE: Partial<G> =
-  REDUCER(INITIAL_STATE, INITIAL_REDUCERS, ...ARGS);
+  REDUCER(INITIAL_STATE, Provider.dispatch, ...ARGS);
 
 const NEW_STATE: G = {
   ...INITIAL_STATE,
@@ -43,7 +46,7 @@ describe('Context useDispatch(Function)', (): void => {
   beforeEach((): void => {
     testUseDispatch =
       new HookTest<P, V>(
-        (reducer: Reducer<G, R, A>): V => ReactN.useDispatch<G, R, A>(reducer),
+        (reducer: AppendReducer): V => ReactN.useDispatch<G, R, A>(reducer),
       )
         .addParent(Provider);
     testUseDispatch.render(REDUCER);
