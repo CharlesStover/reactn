@@ -8,7 +8,7 @@ import REACT_HOOKS_ERROR from './utils/react-hooks-error';
 
 
 
-export type UseGlobalReducer<
+export type UseDispatch<
   G extends {} = State,
   R extends {} = Reducers,
   K extends keyof R = keyof R,
@@ -17,17 +17,18 @@ export type UseGlobalReducer<
 
 
 
-// useGlobalReducer(Function)
-export default function useGlobalReducer<
+// useDispatch(Function)
+export default function useDispatch<
   G extends {} = State,
+  R extends {} = Reducers,
   A extends any[] = any[],
 >(
   overrideGlobalStateManager: GlobalStateManager<G, any> | null,
-  reducer: Reducer<G, A>,
+  reducer: Reducer<G, R, A>,
 ): Dispatcher<G, A>;
 
-// useGlobalReducer('name')
-export default function useGlobalReducer<
+// useDispatch('name')
+export default function useDispatch<
   G extends {} = State,
   R extends {} = Reducers,
   K extends keyof R = keyof R,
@@ -37,15 +38,15 @@ export default function useGlobalReducer<
 ): Dispatcher<G, ExtractA<R[K]>>;
 
 // Implementation
-export default function useGlobalReducer<
+export default function useDispatch<
   G extends {} = State,
   R extends {} = Reducers,
   K extends keyof R = keyof R,
   A extends any[] = any[],
 >(
   overrideGlobalStateManager: GlobalStateManager<G, R> | null,
-  reducer: K | Reducer<G, A>,
-): UseGlobalReducer<G, R, K, A> {
+  reducer: K | Reducer<G, R, A>,
+): UseDispatch<G, R, K, A> {
 
   // Require hooks.
   if (!useContext) {

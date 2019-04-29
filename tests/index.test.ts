@@ -109,10 +109,10 @@ describe('package.json main', (): void => {
     expect(ReactN.useGlobal).toHaveLength(1);
   });
 
-  // useGlobalReducer
-  it('should contain useGlobalReducer', (): void => {
-    expect(ReactN.useGlobalReducer).toBeInstanceOf(Function);
-    expect(ReactN.useGlobalReducer).toHaveLength(1);
+  // useDispatch
+  it('should contain useDispatch', (): void => {
+    expect(ReactN.useDispatch).toBeInstanceOf(Function);
+    expect(ReactN.useDispatch).toHaveLength(1);
   });
 
   // withGlobal

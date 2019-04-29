@@ -4,7 +4,7 @@ import Context from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager, { NewGlobalState } from './global-state-manager';
 import Callback from './typings/callback';
-import { AdditionalDispatchers, DispatcherMap } from './typings/reducer';
+import { Dispatchers } from './typings/reducer';
 
 const getGlobalStateManager = <
   G extends {} = State,
@@ -73,7 +73,7 @@ export function ReactNComponentWillUpdate<G extends {} = State>(
 export function ReactNDispatch<
   G extends {} = State,
   R extends {} = Reducers,
->(): DispatcherMap<G, R> & AdditionalDispatchers<G> {
+>(): Dispatchers<G, R> {
   return getGlobalStateManager<G, R>().dispatchers;
 }
 
@@ -115,10 +115,12 @@ export function ReactNSetGlobal<G extends {} = State>(
   }
   let globalState: G;
   return globalStateManager.set(newGlobalState)
-    .then((gs: G): G => {
-      globalState = gs;
-      return gs;
+    .then((global: G): G => {
+      globalState = global;
+      return global;
     })
-    .then(callback)
+    .then((newGlobal: G) => {
+      callback(newGlobal, globalStateManager.dispatchers);
+    })
     .then((): G => globalState);
 }

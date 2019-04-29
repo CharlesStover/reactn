@@ -12,7 +12,7 @@ import {
 } from './methods';
 import { NewGlobalState } from './global-state-manager';
 import Callback from './typings/callback';
-import { AdditionalDispatchers, DispatcherMap } from './typings/reducer';
+import { Dispatchers } from './typings/reducer';
 
 
 
@@ -62,7 +62,7 @@ export default function ReactN<
       }
     }
 
-    public get dispatch(): DispatcherMap<G, R> & AdditionalDispatchers<G> {
+    public get dispatch(): Dispatchers<G, R> {
       return ReactNDispatch<G, R>();
     }
 

@@ -14,8 +14,8 @@ import resetGlobal from './reset-global';
 import setGlobal from './set-global';
 import Callback from './typings/callback';
 import Reducer, { Dispatcher, ExtractA, ReducerMap } from './typings/reducer';
+import useDispatch from './use-dispatch';
 import useGlobal, { GlobalTuple, StateTuple } from './use-global';
-import useGlobalReducer from './use-global-reducer';
 import withGlobal, { Getter, Setter, WithGlobal } from './with-global';
 
 
@@ -65,19 +65,19 @@ interface ReactN extends TypeOfReact {
     callback?: Callback<G>,
   ): Promise<G>;
 
+  useDispatch<G extends {} = State, R extends {} = Reducers, A extends any[] = any[]>(
+    reducer: Reducer<G, R, A>,
+  ): Dispatcher<G, A>;
+
+  useDispatch<G extends {} = State, R extends {} = Reducers, K extends keyof R = keyof R>(
+    reducer: K,
+  ): Dispatcher<G, ExtractA<R[K]>>;
+
   useGlobal<G extends {} = State, Property extends keyof G = keyof G>(
     property: Property,
   ): StateTuple<G, Property>;
 
   useGlobal<G extends {} = State>(): GlobalTuple<G>;
-
-  useGlobalReducer<G extends {} = State, R extends {} = Reducers, K extends keyof R = keyof R>(
-    reducer: K,
-  ): Dispatcher<G, ExtractA<R[K]>>;
-
-  useGlobalReducer<G extends {} = State, A extends any[] = any[]>(
-    reducer: Reducer<G, A>,
-  ): Dispatcher<G, A>;
 
   withGlobal<G extends {} = State, HP extends {} = {}, LP extends {} = {}>(
     getter?: Getter<G, HP, LP>,
@@ -114,7 +114,7 @@ export = Object.assign(reactn, React, {
   removeCallback: removeCallback.bind(null, defaultGlobalStateManager),
   resetGlobal: resetGlobal.bind(null, defaultGlobalStateManager),
   setGlobal: setGlobal.bind(null, defaultGlobalStateManager),
+  useDispatch: useDispatch.bind(null, null),
   useGlobal: useGlobal.bind(null, null),
-  useGlobalReducer: useGlobalReducer.bind(null, null),
   withGlobal: withGlobal.bind(null, null),
 }) as ReactN & typeof ReactNTypes;

@@ -7,14 +7,13 @@ import GlobalStateManager, { NewGlobalState } from './global-state-manager';
 import setGlobal from './set-global';
 import Callback from './typings/callback';
 import Reducer, {
-  AdditionalDispatchers,
   Dispatcher,
-  DispatcherMap,
+  Dispatchers,
   ExtractA,
   ReducerMap,
 } from './typings/reducer';
+import useDispatch, { UseDispatch } from './use-dispatch';
 import useGlobal, { GlobalTuple, StateTuple, UseGlobal } from './use-global';
-import useGlobalReducer, { UseGlobalReducer } from './use-global-reducer';
 import withGlobal, { Getter, Setter, WithGlobal } from './with-global';
 
 
@@ -28,11 +27,11 @@ export interface ReactNProvider<
   addCallback(callback: Callback<G>): BooleanFunction;
   addReducer<A extends any[] = any[]>(
     name: string,
-    reducer: Reducer<G, A>,
+    reducer: Reducer<G, R, A>,
   ): BooleanFunction;
-  addReducers(reducers: ReducerMap<G>): BooleanFunction;
-  dispatch: DispatcherMap<G, R> & AdditionalDispatchers<G>;
-  getDispatch(): DispatcherMap<G, R> & AdditionalDispatchers<G>;
+  addReducers(reducers: ReducerMap<G, R>): BooleanFunction;
+  dispatch: Dispatchers<G, R>;
+  getDispatch(): Dispatchers<G, R>;
   getGlobal(): G;
   global: G;
   removeCallback(callback: Callback<G>): boolean;
@@ -41,16 +40,16 @@ export interface ReactNProvider<
     newGlobalState: NewGlobalState<G>,
     callback?: Callback<G>,
   ): Promise<G>;
+  useDispatch<A extends any[] = any[]>(
+    reducer: Reducer<G, R, A>,
+  ): Dispatcher<G, A>;
+  useDispatch<K extends keyof R = keyof R>(
+    reducer: K,
+  ): Dispatcher<G, ExtractA<R[K]>>;
   useGlobal(): GlobalTuple<G>;
   useGlobal<Property extends keyof G>(
     property: Property,
   ): StateTuple<G, Property>;
-  useGlobalReducer<A extends any[] = any[]>(
-    reducer: Reducer<G, A>,
-  ): Dispatcher<G, A>;
-  useGlobalReducer<K extends keyof R = keyof R>(
-    reducer: K,
-  ): Dispatcher<G, ExtractA<R[K]>>;
   withGlobal<HP, LP>(
     getter: Getter<G, HP, LP>,
     setter: Setter<G, HP, LP>,
@@ -81,7 +80,7 @@ export default function createProvider<
 
     public static addReducer<A extends any[] = any[]>(
       name: string,
-      reducer: Reducer<G, A>,
+      reducer: Reducer<G, R, A>,
     ): BooleanFunction {
       return addReducer<G>(globalStateManager, name, reducer);
     }
@@ -90,13 +89,11 @@ export default function createProvider<
       return addReducers<G>(globalStateManager, reducers);
     }
 
-    public static get dispatch(
-    ): DispatcherMap<G, R> & AdditionalDispatchers<G> {
+    public static get dispatch(): Dispatchers<G, R> {
       return globalStateManager.dispatchers;
     }
 
-    public static getDispatch(
-    ): DispatcherMap<G, R> & AdditionalDispatchers<G> {
+    public static getDispatch(): Dispatchers<G, R> {
       return globalStateManager.dispatchers;
     }
 
@@ -123,6 +120,25 @@ export default function createProvider<
       return setGlobal<G>(globalStateManager, newGlobalState, callback);
     }
 
+    public static useDispatch<A extends any[] = any[]>(
+      reducer: Reducer<G, R, A>,
+    ): Dispatcher<G, A>;
+    public static useDispatch<K extends keyof R = keyof R>(
+      reducer: K,
+    ): Dispatcher<G, ExtractA<R[K]>>;
+    public static useDispatch<K extends keyof R = keyof R, A extends any[] = any[]>(
+      reducer: K | Reducer<G, R, A>,
+    ): UseDispatch<G, R, K, A> {
+
+      // TypeScript required this be an if-else block with the exact same
+      //   function call.
+      // The generics were added to make the best of an inefficient situation.
+      if (typeof reducer === 'function') {
+        return useDispatch<G, R, A>(globalStateManager, reducer);
+      }
+      return useDispatch<G, R>(globalStateManager, reducer);
+    }
+
     public static useGlobal(): GlobalTuple<G>;
     public static useGlobal<Property extends keyof G>(
       property: Property,
@@ -131,25 +147,6 @@ export default function createProvider<
       property?: Property,
     ): UseGlobal<G, Property> {
       return useGlobal(globalStateManager, property);
-    }
-
-    public static useGlobalReducer<A extends any[] = any[]>(
-      reducer: Reducer<G, A>,
-    ): Dispatcher<G, A>;
-    public static useGlobalReducer<K extends keyof R = keyof R>(
-      reducer: K,
-    ): Dispatcher<G, ExtractA<R[K]>>;
-    public static useGlobalReducer<K extends keyof R = keyof R, A extends any[] = any[]>(
-      reducer: K | Reducer<G, A>,
-    ): UseGlobalReducer<G, R, K, A> {
-
-      // TypeScript required this be an if-else block with the exact same
-      //   function call.
-      // The generics were added to make the best of an inefficient situation.
-      if (typeof reducer === 'function') {
-        return useGlobalReducer<G, A>(globalStateManager, reducer);
-      }
-      return useGlobalReducer<G, R>(globalStateManager, reducer);
     }
 
     public static withGlobal<HP, LP>(

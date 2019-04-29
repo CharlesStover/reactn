@@ -13,5 +13,5 @@ export default function addReducer<G extends {} = State>(
   name: string,
   reducer: Reducer<G>,
 ): BooleanFunction {
-  return globalStateManager.addDispatcher(name, reducer);
+  return globalStateManager.addReducer(name, reducer);
 };

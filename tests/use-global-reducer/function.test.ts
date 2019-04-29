@@ -1,17 +1,17 @@
 import GlobalStateManager from '../../src/global-state-manager';
 import Reducer, { Dispatcher } from '../../src/typings/reducer';
-import useGlobalReducer from '../../src/use-global-reducer';
+import useDispatch from '../../src/use-dispatch';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
 import deleteHooks from '../utils/delete-hooks';
 import HookTest from '../utils/hook-test';
-import { G, INITIAL_REDUCERS, INITIAL_STATE } from '../utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
 
 type A = string[];
 
-type P = [ Reducer<G, A> ];
+type P = [ Reducer<G, R, A> ];
 
 type V = Dispatcher<G, A>;
 
@@ -19,10 +19,10 @@ type V = Dispatcher<G, A>;
 
 const ARGS: string[] = [ 'te', 'st' ];
 
-const REDUCER: Reducer<G, A> = INITIAL_REDUCERS.append;
+const REDUCER: Reducer<G, R, A> = INITIAL_REDUCERS.append;
 
 const STATE_CHANGE: Partial<G> =
-  REDUCER(INITIAL_STATE, ...ARGS) as Partial<G>;
+  REDUCER(INITIAL_STATE, INITIAL_REDUCERS, ...ARGS) as Partial<G>;
 
 const NEW_STATE: G = {
   ...INITIAL_STATE,
@@ -31,27 +31,27 @@ const NEW_STATE: G = {
 
 
 
-describe('useGlobalReducer(Function)', (): void => {
+describe('useDispatch(Function)', (): void => {
 
   let globalStateManager: GlobalStateManager<G>;
-  let testUseGlobalReducer: HookTest<P, V>;
+  let testUseDispatch: HookTest<P, V>;
   const spy = spyOn('set');
 
   beforeEach((): void => {
     globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
-    testUseGlobalReducer =
+    testUseDispatch =
       new HookTest<P, V>(
-        (reducer: Reducer<G, A>): V =>
-          useGlobalReducer(globalStateManager, reducer)
+        (reducer: Reducer<G, R, A>): V =>
+          useDispatch<G, R, A>(globalStateManager, reducer),
       );
   });
 
 
 
   it('should return a function', (): void => {
-    testUseGlobalReducer.render(REDUCER);
-    expect(testUseGlobalReducer.value).toBeInstanceOf(Function);
-    expect(testUseGlobalReducer.value).toHaveLength(0);
+    testUseDispatch.render(REDUCER);
+    expect(testUseDispatch.value).toBeInstanceOf(Function);
+    expect(testUseDispatch.value).toHaveLength(0);
   });
 
 
@@ -60,8 +60,8 @@ describe('useGlobalReducer(Function)', (): void => {
 
     let reducer: Dispatcher<G, A>;
     beforeEach((): void => {
-      testUseGlobalReducer.render(REDUCER);
-      reducer = testUseGlobalReducer.value;
+      testUseDispatch.render(REDUCER);
+      reducer = testUseDispatch.value;
     });
 
     it(
@@ -87,8 +87,8 @@ describe('useGlobalReducer(Function)', (): void => {
     deleteHooks();
 
     it('should be required', (): void => {
-      testUseGlobalReducer.render(REDUCER);
-      expect(testUseGlobalReducer.error).toBe(REACT_HOOKS_ERROR);
+      testUseDispatch.render(REDUCER);
+      expect(testUseDispatch.error).toBe(REACT_HOOKS_ERROR);
     });
   });
 

@@ -1,16 +1,16 @@
 import ReactN = require('../../src/index');
 import createProvider, { ReactNProvider } from '../../src/create-provider';
 import defaultGlobalStateManager from '../../src/default-global-state-manager';
-import Reducer, { Dispatcher } from '../../src/typings/reducer';
+import { Dispatcher } from '../../src/typings/reducer';
 import HookTest from '../utils/hook-test';
-import { G, INITIAL_REDUCERS, INITIAL_STATE } from '../utils/initial';
+import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
 
 type A = string[];
 
-type P = [ Reducer<G, A> ];
+type P = [ keyof R ];
 
 type V = Dispatcher<G, A>;
 
@@ -20,12 +20,18 @@ const ARGS: string[] = [ 'te', 'st' ];
 
 const EMPTY_STATE: {} = Object.create(null);
 
-const Provider: ReactNProvider<G> = createProvider<G>(INITIAL_STATE);
+const Provider: ReactNProvider<G> = createProvider<G, R>(
+  INITIAL_STATE,
+  INITIAL_REDUCERS,
+);
 
-const REDUCER: Reducer<G, A> = INITIAL_REDUCERS.append;
+const REDUCER: keyof R = 'append';
 
-const STATE_CHANGE: Partial<G> =
-  REDUCER(INITIAL_STATE, ...ARGS) as Partial<G>;
+const STATE_CHANGE: Partial<G> = INITIAL_REDUCERS[REDUCER](
+  INITIAL_STATE,
+  INITIAL_REDUCERS,
+  ...ARGS,
+) as Partial<G>;
 
 const NEW_STATE: G = {
   ...INITIAL_STATE,
@@ -34,20 +40,20 @@ const NEW_STATE: G = {
 
 
 
-describe('Context useGlobalReducer(Function)', (): void => {
+describe('Context useDispatch(Function)', (): void => {
 
   let reducer: Dispatcher<G, A>;
-  let testUseGlobalReducer: HookTest<P, V>;
+  let testUseDispatch: HookTest<P, V>;
   const spy = spyOn('set');
 
   beforeEach((): void => {
-    testUseGlobalReducer =
+    testUseDispatch =
       new HookTest<P, V>(
-        (reducer: Reducer<G, A>): V => ReactN.useGlobalReducer<G, A>(reducer)
+        (reducer: keyof R): V => ReactN.useDispatch<G, R>(reducer)
       )
         .addParent(Provider);
-    testUseGlobalReducer.render(REDUCER);
-    reducer = testUseGlobalReducer.value;
+        testUseDispatch.render(REDUCER);
+    reducer = testUseDispatch.value;
   });
 
   afterEach((): void => {

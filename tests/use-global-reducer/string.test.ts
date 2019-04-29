@@ -1,6 +1,6 @@
 import GlobalStateManager from '../../src/global-state-manager';
 import { Dispatcher } from '../../src/typings/reducer';
-import useGlobalReducer from '../../src/use-global-reducer';
+import useDispatch from '../../src/use-dispatch';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
 import deleteHooks from '../utils/delete-hooks';
 import HookTest from '../utils/hook-test';
@@ -21,10 +21,10 @@ const REDUCER: keyof R = 'append';
 
 
 
-describe('useGlobalReducer(string)', (): void => {
+describe('useDispatch(string)', (): void => {
 
   let globalStateManager: GlobalStateManager<G, R>;
-  let testUseGlobalReducer: HookTest<P, V>;
+  let testUseDispatch: HookTest<P, V>;
   const spy = spyOn('getDispatcher', 'set');
 
   beforeEach((): void => {
@@ -32,31 +32,31 @@ describe('useGlobalReducer(string)', (): void => {
       INITIAL_STATE,
       INITIAL_REDUCERS,
     );
-    testUseGlobalReducer =
+    testUseDispatch =
       new HookTest<P, V>(
-        (name: keyof R): V => useGlobalReducer(globalStateManager, name)
+        (name: keyof R): V => useDispatch(globalStateManager, name)
       );
   });
 
 
 
   it('should call GlobalStateManager.getDispatcher', (): void => {
-    testUseGlobalReducer.render(REDUCER);
+    testUseDispatch.render(REDUCER);
     expect(spy.getDispatcher).toHaveBeenCalledTimes(1);
     expect(spy.getDispatcher).toHaveBeenCalledWith(REDUCER);
   });
 
   it('should return a function if the reducer exists', (): void => {
-    testUseGlobalReducer.render(REDUCER);
-    expect(testUseGlobalReducer.value).toBeInstanceOf(Function);
-    expect(testUseGlobalReducer.value).toHaveLength(0);
+    testUseDispatch.render(REDUCER);
+    expect(testUseDispatch.value).toBeInstanceOf(Function);
+    expect(testUseDispatch.value).toHaveLength(0);
   });
 
   it('should throw an error if the reducer does not exist', (): void => {
 
     // @ts-ignore: Deliberately throwing an error.
-    testUseGlobalReducer.render('abc');
-    expect(testUseGlobalReducer.error).toBeInstanceOf(Error);
+    testUseDispatch.render('abc');
+    expect(testUseDispatch.error).toBeInstanceOf(Error);
   });
 
 
@@ -65,8 +65,8 @@ describe('useGlobalReducer(string)', (): void => {
 
     let reducer: Dispatcher<G, A>;
     beforeEach((): void => {
-      testUseGlobalReducer.render(REDUCER);
-      reducer = testUseGlobalReducer.value;
+      testUseDispatch.render(REDUCER);
+      reducer = testUseDispatch.value;
     });
 
     it('should be the dispatcher', (): void => {
@@ -80,8 +80,8 @@ describe('useGlobalReducer(string)', (): void => {
     deleteHooks();
 
     it('should be required', (): void => {
-      testUseGlobalReducer.render(REDUCER);
-      expect(testUseGlobalReducer.error).toBe(REACT_HOOKS_ERROR);
+      testUseDispatch.render(REDUCER);
+      expect(testUseDispatch.error).toBe(REACT_HOOKS_ERROR);
     });
   });
 

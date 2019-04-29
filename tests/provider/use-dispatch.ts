@@ -3,7 +3,7 @@ import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 
 
 
-describe('Provider.useGlobal', (): void => {
+describe('Provider.useDispatch', (): void => {
 
   let Provider: ReactNProvider<G, R>;
   beforeEach((): void => {
@@ -13,10 +13,10 @@ describe('Provider.useGlobal', (): void => {
 
 
   it('should be a function with 1 arguments', (): void => {
-    expect(Provider.useGlobalReducer).toBeInstanceOf(Function);
-    expect(Provider.useGlobalReducer).toHaveLength(1);
+    expect(Provider.useDispatch).toBeInstanceOf(Function);
+    expect(Provider.useDispatch).toHaveLength(1);
   });
 
-  it.skip('should call the useGlobalReducer helper function', (): void => {
+  it.skip('should call the useDispatch helper function', (): void => {
   });
 });

@@ -1,9 +1,8 @@
 import { Reducers, State } from '../default';
 import Callback from './typings/callback';
 import Reducer, {
-  AdditionalDispatchers,
   Dispatcher,
-  DispatcherMap,
+  Dispatchers,
   ExtractA,
 } from './typings/reducer';
 import objectGetListener from './utils/object-get-listener';
@@ -15,8 +14,8 @@ import {
 
 
 
-interface AdditionalReducers<GS> {
-  [name: string]: Reducer<GS, any>;
+interface AdditionalReducers<G extends {} = State> {
+  [name: string]: Reducer<G, any>;
 }
 
 // AsynchronousNewGlobalState is an interface so that NewGlobalState does not
@@ -66,7 +65,7 @@ export default class GlobalStateManager<
 > {
 
   private _callbacks: Set<Callback<G>> = new Set<Callback<G>>();
-  private _dispatchers: DispatcherMap<G, R> & AdditionalDispatchers<G> =
+  private _dispatchers: Dispatchers<G, R> =
     Object.create(null);
   private _initialReducers: R;
   private _initialState: G;
@@ -85,7 +84,7 @@ export default class GlobalStateManager<
     this._initialState = copyObject(initialState);
     this._state = copyObject(initialState);
     this._reduxEnhancedStore = createReduxEnhancedStore(this);
-    this.addDispatchers(initialReducers);
+    this.addReducers(initialReducers);
   }
 
   public addCallback(callback: Callback<G>): BooleanFunction {
@@ -113,18 +112,18 @@ export default class GlobalStateManager<
     }
   }
 
-  public addDispatcher<A extends any[] = any[]>(
+  public addReducer<A extends any[] = any[]>(
     name: string,
-    reducer: Reducer<G, A>,
+    reducer: Reducer<G, R, A>,
   ): BooleanFunction {
     this._dispatchers[name] = this.createDispatcher(reducer);
     return (): boolean =>
       this.removeDispatcher(name);
   }
 
-  public addDispatchers(reducers: AdditionalReducers<G>): void {
+  public addReducers(reducers: AdditionalReducers<G>): void {
     for (const [ name, reducer ] of Object.entries(reducers)) {
-      this.addDispatcher(name, reducer);
+      this.addReducer(name, reducer);
     }
   }
 
@@ -133,15 +132,15 @@ export default class GlobalStateManager<
   }
 
   public createDispatcher<A extends any[] = []>(
-    reducer: Reducer<G, A>,
+    reducer: Reducer<G, R, A>,
   ): Dispatcher<G, A> {
     return (...args: A): Promise<G> =>
       this.set(
-        reducer(this.state, ...args),
+        reducer(this.state, this.dispatchers, ...args),
       );
   }
 
-  public get dispatchers(): DispatcherMap<G, R> & AdditionalDispatchers<G> {
+  public get dispatchers(): Dispatchers<G, R> {
     return copyObject(this._dispatchers);
   }
 
@@ -177,7 +176,7 @@ export default class GlobalStateManager<
 
     // Call each global callback.
     for (const callback of this._callbacks) {
-      this.set(callback(this.state));
+      this.set(callback(this.state, this.dispatchers));
     }
   }
 
@@ -194,10 +193,6 @@ export default class GlobalStateManager<
     return this._callbacks.has(callback);
   }
 
-  public hasDispatcher(name: keyof R | string): boolean {
-    return Object.prototype.hasOwnProperty.call(this._dispatchers, name);
-  }
-
   public hasPropertyListener(pl: PropertyListener): boolean {
     for (const propertyListeners of this.propertyListeners.values()) {
       for (const propertyListener of propertyListeners) {
@@ -207,6 +202,10 @@ export default class GlobalStateManager<
       }
     }
     return false;
+  }
+
+  public hasDispatcher(name: keyof R | string): boolean {
+    return Object.prototype.hasOwnProperty.call(this._dispatchers, name);
   }
 
   public get queue(): Map<keyof G, G[keyof G]> {
@@ -225,9 +224,9 @@ export default class GlobalStateManager<
     return this._callbacks.delete(callback);
   }
 
-  public removeDispatcher(dispatcherName: string): boolean {
-    if (this.hasDispatcher(dispatcherName)) {
-      delete this._dispatchers[dispatcherName];
+  public removeDispatcher(name: string): boolean {
+    if (this.hasDispatcher(name)) {
+      delete this._dispatchers[name];
       return true;
     }
     return false;
@@ -255,7 +254,7 @@ export default class GlobalStateManager<
     this._queue.clear();
 
     // Prepopulate.
-    this.addDispatchers(this._initialReducers);
+    this.addReducers(this._initialReducers);
     this._state = copyObject(this._initialState);
     this._reduxEnhancedStore = createReduxEnhancedStore(this);
   }
