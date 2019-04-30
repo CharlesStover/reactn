@@ -22,7 +22,7 @@ export interface Dispatcher<
 }
 
 export type DispatcherMap<G extends {} = State, R extends {} = Reducers> = {
-  [name in keyof R]: Dispatcher<G, ExtractA<R[name]>>;
+  [name in keyof R]: Dispatcher<G, ExtractArguments<R[name]>>;
 };
 
 export type Dispatchers<
@@ -30,7 +30,7 @@ export type Dispatchers<
   R extends {} = Reducers,
 > = DispatcherMap<G, R> & AdditionalDispatchers<G>;
 
-export type ExtractA<R> =
+export type ExtractArguments<R> =
   R extends Reducer<infer _G, infer _R, infer A>
     ? A
     : never;

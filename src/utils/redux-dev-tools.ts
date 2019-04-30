@@ -22,7 +22,7 @@ interface DevToolReducerAction extends Action<string> {
 }
 
 interface DevToolStateChangeAction<G extends {} = State>
-extends Action<'STATE_CHANGE'> {
+extends Action<''> {
   stateChange: Partial<G>;
 }
 
@@ -37,16 +37,26 @@ export interface Window {
 
 
 
+const hasStateChange = <G extends {} = State>(
+  action: DevToolAction<G>,
+): action is DevToolStateChangeAction<G> =>
+  Object.prototype.hasOwnProperty.call(action, 'stateChange');
+
 const reducer = <G extends {} = State>(
   state: G,
   action: DevToolAction<G>,
-) => ({
-  ...state,
-  ...action.stateChange,
-});
+) => {
+  if (hasStateChange(action)) {
+    return {
+      ...state,
+      ...action.stateChange,
+    };
+  }
+  return state;
+};
 
 const REDUX_DEVTOOLS_OPTIONS: EnhancerOptions = {
-  name: 'ReactN state',
+  name: 'ReactN',
 };
 
 declare const window: Window | void;
@@ -60,10 +70,7 @@ export function createReduxEnhancedStore<G extends {} = State>(
     if (
       process.env.NODE_ENV === 'production' ||
       typeof window !== 'object' ||
-      !Object.prototype.hasOwnProperty.call(
-        window,
-        '__REDUX_DEVTOOLS_EXTENSION__',
-      )
+      !window.__REDUX_DEVTOOLS_EXTENSION__
     ) {
       return null;
     }

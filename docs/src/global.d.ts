@@ -1,7 +1,17 @@
 import reactn from 'reactn';
 
 declare module 'reactn/default' {
-  interface State {
-    rainbow: string;
+
+  interface Reducers {
+    setColor: (
+      global: State,
+      dispatch: Dispatch,
+      color: string,
+    ) => Pick<State, 'color'>;
   }
+
+  interface State {
+    color: string;
+  }
+
 }

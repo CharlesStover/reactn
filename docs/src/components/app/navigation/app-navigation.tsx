@@ -35,7 +35,7 @@ const PAGES: { [key: string]: Page[] } = {
 
 
 export default function AppNavigation() {
-  const [ backgroundColor ] = useGlobal('rainbow');
+  const [ backgroundColor ] = useGlobal('color');
   return (
     <nav
       className="app-navigation"

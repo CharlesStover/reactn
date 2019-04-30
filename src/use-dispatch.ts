@@ -3,7 +3,7 @@ import { Reducers, State } from '../default';
 import Context from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager from './global-state-manager';
-import Reducer, { Dispatcher, ExtractA } from './typings/reducer';
+import Reducer, { Dispatcher, ExtractArguments } from './typings/reducer';
 import REACT_HOOKS_ERROR from './utils/react-hooks-error';
 
 
@@ -13,7 +13,7 @@ export type UseDispatch<
   R extends {} = Reducers,
   K extends keyof R = keyof R,
   A extends any[] = any[]
-> = Dispatcher<G, A> | Dispatcher<G, ExtractA<R[K]>>;
+> = Dispatcher<G, A> | Dispatcher<G, ExtractArguments<R[K]>>;
 
 
 
@@ -35,7 +35,7 @@ export default function useDispatch<
 >(
   overrideGlobalStateManager: GlobalStateManager<G, R> | null,
   reducer: K,
-): Dispatcher<G, ExtractA<R[K]>>;
+): Dispatcher<G, ExtractArguments<R[K]>>;
 
 // Implementation
 export default function useDispatch<

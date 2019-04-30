@@ -3,7 +3,7 @@ import Callback from './typings/callback';
 import Reducer, {
   Dispatcher,
   Dispatchers,
-  ExtractA,
+  ExtractArguments,
 } from './typings/reducer';
 import objectGetListener from './utils/object-get-listener';
 import {
@@ -190,7 +190,7 @@ export default class GlobalStateManager<
 
   public getDispatcher<K extends keyof R>(
     name: K,
-  ): Dispatcher<G, ExtractA<R[K]>> {
+  ): Dispatcher<G, ExtractArguments<R[K]>> {
     if (this.hasDispatcher(name)) {
       return this._dispatchers[name];
     }

@@ -7,7 +7,7 @@ import ReactLogo from './react-logo';
 
 
 export default function AppHeader() {
-  const [ color ] = useGlobal('rainbow');
+  const [ color ] = useGlobal('color');
   return (
     <header
       className="app-header"

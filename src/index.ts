@@ -13,7 +13,11 @@ import removeCallback from './remove-callback';
 import resetGlobal from './reset-global';
 import setGlobal from './set-global';
 import Callback from './typings/callback';
-import Reducer, { AdditionalReducers, Dispatcher, ExtractA } from './typings/reducer';
+import Reducer, {
+  AdditionalReducers,
+  Dispatcher,
+  ExtractArguments,
+} from './typings/reducer';
 import useDispatch from './use-dispatch';
 import useGlobal, { GlobalTuple, StateTuple } from './use-global';
 import withGlobal, { Getter, Setter, WithGlobal } from './with-global';
@@ -71,7 +75,7 @@ interface ReactN extends TypeOfReact {
 
   useDispatch<G extends {} = State, R extends {} = Reducers, K extends keyof R = keyof R>(
     reducer: K,
-  ): Dispatcher<G, ExtractA<R[K]>>;
+  ): Dispatcher<G, ExtractArguments<R[K]>>;
 
   useGlobal<G extends {} = State, Property extends keyof G = keyof G>(
     property: Property,

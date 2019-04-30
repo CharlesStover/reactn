@@ -19,7 +19,7 @@ const SIZE: number = 69; // nice
 
 
 export default function AppHeaderGitHubBanner() {
-  const [ fill ] = useGlobal('rainbow');
+  const [ fill ] = useGlobal('color');
   return (
     <a
       className="app-header-github-banner"

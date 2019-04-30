@@ -1,11 +1,8 @@
-import React, { useGlobal } from 'reactn';
+import React, { useDispatch } from 'reactn';
 
 export default function About() {
-  const [ rainbow, setRainbow ] = useGlobal('rainbow');
-  if (rainbow !== '#61DAFB') {
-    setRainbow('#61DAFB');
-    return null;
-  }
+  const setColor = useDispatch('setColor');
+  setColor('#61DAFB');
   return <>
     <strong>ReactN</strong>{' '}
     is a global state management solution for{' '}

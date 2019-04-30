@@ -68,7 +68,7 @@ export default function AppNavigationListItem(
                   <li
                     className={SELECTED_CLASS_NAME}
                     key={url}
-                    style={{ color: global.rainbow }}
+                    style={{ color: global.color }}
                   >
                     ⮞ {title}
                   </li>
@@ -100,7 +100,7 @@ export default function AppNavigationListItem(
   if (location.pathname.substring(1) === props.to) {
     return (
       <li className={SELECTED_CLASS_NAME}>
-        <strong style={{ color: global.rainbow }}>⮞ {props.children}</strong>
+        <strong style={{ color: global.color }}>⮞ {props.children}</strong>
       </li>
     );
   }

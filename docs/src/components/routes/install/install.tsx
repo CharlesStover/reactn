@@ -1,11 +1,8 @@
-import React, { useGlobal } from 'reactn';
+import React, { useDispatch } from 'reactn';
 
 export default function Install() {
-  const [ rainbow, setRainbow ] = useGlobal('rainbow');
-  if (rainbow !== '#FF0000') {
-    setRainbow('#FF0000');
-    return null;
-  }
+  const setColor = useDispatch('setColor');
+  setColor('#FF0000');
   return <>
     <code>yarn add reactn</code>
   </>;

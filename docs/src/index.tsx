@@ -1,12 +1,9 @@
-import React, { setGlobal } from 'reactn';
+import React from 'reactn';
 import ReactDOM from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 import App from './components/app';
 import './index.scss';
-
-setGlobal({
-  rainbow: '#61DAFB',
-});
+import './reactn';
 
 ReactDOM.render(
   <BrowserRouter>

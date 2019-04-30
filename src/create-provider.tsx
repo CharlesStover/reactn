@@ -10,7 +10,7 @@ import Reducer, {
   AdditionalReducers,
   Dispatcher,
   Dispatchers,
-  ExtractA,
+  ExtractArguments,
 } from './typings/reducer';
 import useDispatch, { UseDispatch } from './use-dispatch';
 import useGlobal, { GlobalTuple, StateTuple, UseGlobal } from './use-global';
@@ -45,7 +45,7 @@ export interface ReactNProvider<
   ): Dispatcher<G, A>;
   useDispatch<K extends keyof R = keyof R>(
     reducer: K,
-  ): Dispatcher<G, ExtractA<R[K]>>;
+  ): Dispatcher<G, ExtractArguments<R[K]>>;
   useGlobal(): GlobalTuple<G>;
   useGlobal<Property extends keyof G>(
     property: Property,
@@ -127,7 +127,7 @@ export default function createProvider<
     ): Dispatcher<G, A>;
     public static useDispatch<K extends keyof R = keyof R>(
       reducer: K,
-    ): Dispatcher<G, ExtractA<R[K]>>;
+    ): Dispatcher<G, ExtractArguments<R[K]>>;
     public static useDispatch<K extends keyof R = keyof R, A extends any[] = any[]>(
       reducer: K | Reducer<G, R, A>,
     ): UseDispatch<G, R, K, A> {
