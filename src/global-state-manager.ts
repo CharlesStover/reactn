@@ -8,6 +8,7 @@ import Reducer, {
 import objectGetListener from './utils/object-get-listener';
 import {
   createReduxEnhancedStore,
+  DevToolAction,
   ReduxEnhancedStore,
   Window,
 } from './utils/redux-dev-tools';
@@ -117,7 +118,7 @@ export default class GlobalStateManager<
     name: string,
     reducer: Reducer<G, R, A>,
   ): BooleanFunction {
-    this._dispatchers[name] = this.createDispatcher(reducer);
+    this._dispatchers[name] = this.createDispatcher(reducer, name);
     return (): boolean =>
       this.removeDispatcher(name);
   }
@@ -134,11 +135,17 @@ export default class GlobalStateManager<
 
   public createDispatcher<A extends any[] = []>(
     reducer: Reducer<G, R, A>,
+    type: string = 'UNKNOWN_ACTION',
   ): Dispatcher<G, A> {
-    return (...args: A): Promise<G> =>
-      this.set(
+    return (...args: A): Promise<G> => {
+
+      // Redux Dev Tools
+      this.reduxDispatch({ args, type });
+
+      return this.set(
         reducer(this.state, this.dispatchers, ...args),
       );
+    };
   }
 
   public get dispatchers(): Dispatchers<G, R> {
@@ -217,6 +224,15 @@ export default class GlobalStateManager<
     return this._propertyListeners;
   }
 
+  public reduxDispatch(action: DevToolAction<G>): boolean {
+    const reduxEnhancedStore = this.reduxEnhancedStore;
+    if (reduxEnhancedStore) {
+      reduxEnhancedStore.dispatch(action);
+      return true;
+    }
+    return false;
+  }
+
   public get reduxEnhancedStore(): null | ReduxEnhancedStore<G> {
     return this._reduxEnhancedStore;
   }
@@ -280,13 +296,10 @@ export default class GlobalStateManager<
     }
 
     // Redux Dev Tools
-    const reduxEnhancedStore = this.reduxEnhancedStore;
-    if (reduxEnhancedStore) {
-      reduxEnhancedStore.dispatch({
-        stateChange: newGlobalState,
-        type: 'STATE_CHANGE',
-      });
-    }
+    this.reduxDispatch({
+      stateChange: newGlobalState
+      type: 'STATE_CHANGE',
+    });
 
     if (typeof newGlobalState === 'object') {
       return this.setObject(newGlobalState);

@@ -13,11 +13,20 @@ import GlobalStateManager from '../global-state-manager';
 
 
 
-interface DevToolAction<G> extends Action<'STATE_CHANGE'> {
+export type DevToolAction<G extends {} = State> =
+  DevToolReducerAction |
+  DevToolStateChangeAction<G>;
+
+interface DevToolReducerAction extends Action<string> {
+  args: any[];
+}
+
+interface DevToolStateChangeAction<G extends {} = State>
+extends Action<'STATE_CHANGE'> {
   stateChange: Partial<G>;
 }
 
-export type ReduxEnhancedStore<G> =
+export type ReduxEnhancedStore<G extends {} = State> =
   Store<G & any, DevToolAction<G>>;
 
 export interface Window {
