@@ -1,1 +1,1 @@
-export { default } from './use-global-reducer';
+export { default } from './use-dispatch';

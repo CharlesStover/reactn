@@ -8,8 +8,8 @@ import GetGlobal from '../routes/get-global';
 import RemoveCallback from '../routes/remove-callback';
 import ResetGlobal from '../routes/reset-global';
 import SetGlobal from '../routes/set-global';
+import UseDispatch from '../routes/use-dispatch';
 import UseGlobal from '../routes/use-global';
-import UseGlobalReducer from '../routes/use-global-reducer';
 import WithGlobal from '../routes/with-global';
 import Support from '../routes/support';
 import Install from '../routes/install';
@@ -62,12 +62,12 @@ export default function App() {
               path="/setGlobal"
             />
             <Route
-              component={UseGlobal}
-              path="/useGlobal"
+              component={UseDispatch}
+              path="/useDispatch"
             />
             <Route
-              component={UseGlobalReducer}
-              path="/useGlobalReducer"
+              component={UseGlobal}
+              path="/useGlobal"
             />
             <Route
               component={WithGlobal}
