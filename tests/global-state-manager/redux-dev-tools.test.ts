@@ -12,7 +12,7 @@ import { Window } from '../../src/utils/redux-dev-tools';
 declare const global: { window: Window };
 
 const REDUX_DEVTOOLS_OPTIONS: EnhancerOptions = {
-  name: 'ReactN state',
+  name: 'ReactN',
 };
 
 
