@@ -14,9 +14,9 @@ describe('GlobalStateManager.createDispatcher', (): void => {
 
 
 
-  it('should be a function with 1 argument', (): void => {
+  it('should be a function with 2 argument', (): void => {
     expect(globalStateManager.createDispatcher).toBeInstanceOf(Function);
-    expect(globalStateManager.createDispatcher).toHaveLength(1);
+    expect(globalStateManager.createDispatcher).toHaveLength(2);
   });
 
 
