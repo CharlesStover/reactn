@@ -297,7 +297,7 @@ export default class GlobalStateManager<
 
     // Redux Dev Tools
     this.reduxDispatch({
-      stateChange: newGlobalState
+      stateChange: newGlobalState,
       type: 'STATE_CHANGE',
     });
 
