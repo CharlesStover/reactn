@@ -1,12 +1,17 @@
-# ReactN [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=ReactN%20offers%20global%20state%20management%20baked%20into%20React!&url=https://github.com/CharlesStover/reactn&via=CharlesStover&hashtags=react,reactjs,javascript,typescript,webdev,webdevelopment) [![version](https://img.shields.io/npm/v/reactn.svg)](https://www.npmjs.com/package/reactn) [![minified size](https://img.shields.io/bundlephobia/min/reactn.svg)](https://www.npmjs.com/package/reactn) [![minzipped size](https://img.shields.io/bundlephobia/minzip/reactn.svg)](https://www.npmjs.com/package/reactn) [![downloads](https://img.shields.io/npm/dt/reactn.svg)](https://www.npmjs.com/package/reactn) [![build](https://api.travis-ci.com/CharlesStover/reactn.svg)](https://travis-ci.com/CharlesStover/reactn/)
+# ReactN [![Tweet](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/intent/tweet?text=ReactN%20offers%20global%20state%20management%20baked%20into%20React!&url=https://github.com/CharlesStover/reactn&via=CharlesStover&hashtags=react,reactjs,javascript,typescript,webdev,webdevelopment) [![version](https://img.shields.io/npm/v/reactn.svg)](https://www.npmjs.com/package/reactn) [![minzipped size](https://img.shields.io/bundlephobia/minzip/reactn.svg)](https://www.npmjs.com/package/reactn) [![downloads](https://img.shields.io/npm/dt/reactn.svg)](https://www.npmjs.com/package/reactn) [![build](https://api.travis-ci.com/CharlesStover/reactn.svg)](https://travis-ci.com/CharlesStover/reactn/) [![chat](https://img.shields.io/discord/102860784329052160.svg)](https://discord.gg/Tae4vuX)
 
-ReactN is a extension of React that includes global state management.
+ReactN is a extension of React that includes global state management. It treats
+global state as if it were built into React itself -- without the boilerplate
+of third party libraries.
 
 [![banner](https://user-images.githubusercontent.com/343837/53267742-fe3f4900-3698-11e9-82fd-3c3a1decb7fd.png)](https://www.npmjs.com/package/reactn)
 
+For support, reach out to us on the 
+[Reactiflux Discord channel #reactn](https://discord.gg/Tae4vuX).
+
 ## Install
 
-* `npm install reactn --save` or
+* `npm install reactn` or
 * `yarn add reactn`
 
 ## Features
@@ -29,31 +34,40 @@ If you prefer class decorators, you can continue to
 #### Function Components
 
 Global state in function components behaves almost identically to local state.
-Instead of `[ value, setValue ] = useState(defaultValue)`, you can use
-`[ value, setValue ] = useGlobal(property)` where `property` is the property of
-the global state you want to get and set.
 
-You may also use `[ global, setGlobal ] = useGlobal()` to access the entire
-global object.
+You use `[ global, setGlobal ] = useGlobal()` to access the entire global state
+object.
 
-You may also use `[ state, dispatch ] = useGlobal(reducerFunction)` to mimic
-the behavior of `useReducer`, where instead of providing an initial state, the
-state of the reducer is the ReactN global state object.
+You use `[ value, setValue ] = useGlobal(property)` where `property` is the
+property of the global state you want to get and set.
+
+Global reducers  in function components behaves almost identically to local
+reducers.
+
+You use `dispatch = useDispatch(reducerFunction)` to mimic the behavior of
+`useReducer`, where instead of providing an initial state, the state of the
+reducer is the ReactN global state object.
+
+You use `dispatch = useDispatch(reducerName)` to use a reducer that was added
+by the `addReducer` helper function.
 
 #### Class Components
 
-Global state in class components behaves exactly like local state! Instead of
-`this.state` and `this.setState` to get and set the local state, you can use
-`this.global` and `this.setGlobal` to get and set the global state.
+Global state in class components behaves exactly like local state!
 
-Alternatively, the `@reactn` decorator allows you to convert classes that
-extend `React.Component` to ReactN global state components.
+You use `this.global` and `this.setGlobal` to get and set the global state.
+
+You use `this.dispatch.reducerName()` to dispatch to a reducer that was added
+by the `addReducer` helper function.
+
+The `@reactn` decorator allows you to convert classes that extend
+`React.Component` to ReactN global state components.
 
 #### Map State to Props
 
 If you prefer Redux's `connect` functionality, pure functions, or are dealing
 with deeply nested objects, a
-[`withGlobal` higher-order component](#withglobal) is also an available option.
+[`withGlobal` higher-order component](#withglobal) is also available.
 
 ## Table of Contents
 
@@ -76,6 +90,7 @@ with deeply nested objects, a
       * [resetGlobal](#resetglobal)
       * [setGlobal](#setglobal)
 * [Frequently Asked Questions](https://github.com/CharlesStover/reactn/blob/master/FAQ.md)
+* [Support](#support)
 
 ## Getting Started
 
@@ -98,7 +113,7 @@ lifecycle method, as the global state should exist before your components
 attempt to render.
 
 It is recommended that you initialize the global state just prior to mounting
-with `ReactDOM`, the same way a Redux store would be initialized this way.
+with `ReactDOM`.
 
 ```JavaScript
 import React, { setGlobal } from 'reactn';
@@ -110,7 +125,7 @@ setGlobal({
   cards: [],
   disabled: false,
   initial: 'values',
-  x: 1
+  x: 1,
 });
 
 ReactDOM.render(
@@ -125,7 +140,8 @@ ReactDOM.render(
 
 By importing React from `reactn` instead of `react`, you bake global state
 directly into the React namespace. As a result, `Component` and `PureComponent`
-will have access to the `global` member variable and `setGlobal` method.
+will have access to the `global` and `dispatch` member variables and
+`setGlobal` method.
 
 ```JavaScript
 import React from 'reactn'; // <-- reactn
@@ -225,8 +241,8 @@ export default class Cards extends React.PureComponent {
 
 #### Function Components
 
-Using [React Hooks](https://reactjs.org/docs/hooks-intro.html) in version 16.8
-(or above), you can harness `useGlobal` to access the global state.
+Using [React Hooks](https://reactjs.org/docs/hooks-intro.html), you can harness
+`useGlobal` to access the global state.
 
 ```JavaScript
 import React, { useGlobal } from 'reactn'; // <-- reactn
@@ -255,35 +271,29 @@ const Cards = () => {
 export default Cards;
 ```
 
-You may also use the `useGlobal` hook analogously to the `useReducer` hook by
-providing a function to `useGlobal`.
+You may also use the `useDispatch` hook analogously to the `useReducer` hook by
+providing a function to `useDispatch`.
 
 ```JavaScript
-import React, { useGlobal } from 'reactn'; // <-- reactn
+import React, { useDispatch } from 'reactn'; // <-- reactn
 
 const incrementReducer = (global, action) => ({
-  count: global.count + action.amount
+  count: global.count + action.amount,
 });
 
 const decrementReducer = (global, action) => ({
-  count: global.count - action.amount
+  count: global.count - action.amount,
 });
 
 const MyComponent = () => {
-
-  // In most cases, you only want the dispatch function and not a copy of the
-  //   global state.
-  const dispatch1 = useGlobal(incrementReducer);
-
-  // You may use [ state, dispatch ] to match useReducer, where state is the
-  //   global state.
-  const [ state, dispatch2 ] = useGlobal(decrementReducer);
+  const increment = useDispatch(incrementReducer);
+  const decrement = useDispatch(decrementReducer);
 
   return (
     <div>
-      <button onClick={() => dispatch1({ amount: 1 })}>Add 1</button>
-      <button onClick={() => dispatch1({ amount: 3 })}>Add 3</button>
-      <button onClick={() => dispatch2({ amount: 5 })}>Subtract 5</button>
+      <button onClick={() => increment({ amount: 1 })}>Add 1</button>
+      <button onClick={() => increment({ amount: 3 })}>Add 3</button>
+      <button onClick={() => decrement({ amount: 5 })}>Subtract 5</button>
     </div>
   );
 };
@@ -351,26 +361,28 @@ setGlobal({ value: 4 });
 Use `addReducer` to add a reducer to your global state.
 
 The first parameter is the name of your reducer. You will access your reducer
-by this name: `this.global.reducerName` or `useGlobal('reducerName')`.
+by this name. `this.dispatch.reducerName` or `useDispatch('reducerName')`.
 
 The second parameter is the reducer function. The reducer function that you
-_write_ has two parameters: first, the global state; second, the value passed
-to the reducer. The reducer function that you _use_ has one parameter: the
-value to pass to the reducer.
+_write_ has at least two parameters: first, the global state; second, a map of
+your reducers. The third and onward parameters are the arguments that you pass
+when dispatching. The reducer function that you _use_ when dispatching does not
+contain the global state or map of reducers. Those are prefixed for you
+automatically.
 
 ```JavaScript
-import { addReducer, setGlobal, useGlobal } from 'reactn';
+import { addReducer, setGlobal, useDispatch, useGlobal } from 'reactn';
 
 // Initialize the global state with the value 0.
 setGlobal({ value: 0 });
 
 // When the increment reducer is called, increment the global value by X.
-addReducer('increment', (global, x = 1) => ({
+addReducer('increment', (global, dispatch, x = 1) => ({
   value: global.value + x
 }));
 
 function MyComponent() {
-  const increment = useGlobal('increment');
+  const increment = useDispatch('increment');
   const [ value ] = useGlobal('value');
   return (
     <>
@@ -396,7 +408,35 @@ function MyComponent() {
 }
 ```
 
-For a class component, the analogous method is `this.global.increment(value)`.
+For a class component, the analogous method is
+`this.dispatch.increment(value)`.
+
+The `dispatch` parameter on a reducer allows you to write "sagas," or a single
+reducer that dispatches other reducers.
+
+```JavaScript
+// add(1)
+addReducer('add', (global, dispatch, i) => ({
+  x: global.x + i,
+}));
+
+// subtract(2)
+addReducer('subtract', (global, dispatch, i) => ({
+  x: global.x - i,
+}));
+
+// addSubtract(1, 2)
+addReducer('addSubtract', async (global, dispatch, i, j) => {
+  await dispatch.add(i);
+  await dispatch.subtract(j);
+});
+```
+
+##### addReducers
+
+`addReducers` accepts an object where the keys are reducer names and the values
+are reducers. `addReducers` is just a convenient shorthand for calling
+`addReducer` multiple times.
 
 ##### getGlobal
 
@@ -561,3 +601,10 @@ export default withGlobal(
 )(MyComponent);
 
 ```
+
+## Support
+
+For support, reach out to us on the 
+[Reactiflux Discord channel #reactn](https://discord.gg/Tae4vuX).
+
+[![chat](https://img.shields.io/discord/102860784329052160.svg)](https://discord.gg/Tae4vuX)
