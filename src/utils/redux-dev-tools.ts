@@ -22,7 +22,7 @@ interface DevToolReducerAction extends Action<string> {
 }
 
 interface DevToolStateChangeAction<G extends {} = State>
-extends Action<''> {
+extends Action<'STATE_CHANGE'> {
   stateChange: Partial<G>;
 }
 
