@@ -14,6 +14,7 @@ import Reducer, {
 } from './typings/reducer';
 import useDispatch, { UseDispatch } from './use-dispatch';
 import useGlobal, { GlobalTuple, StateTuple, UseGlobal } from './use-global';
+import REACT_CONTEXT_ERROR from './utils/react-context-error';
 import withGlobal, { Getter, Setter, WithGlobal } from './with-global';
 
 
@@ -66,6 +67,11 @@ export default function createProvider<
   initialState: G = Object.create(null),
   initialReducers: R = Object.create(null),
 ): ReactNProvider<G, R> {
+
+  // If the Context API is not supported, you cannot create a Provider.
+  if (Context === null) {
+    throw REACT_CONTEXT_ERROR;
+  }
 
   const globalStateManager = new GlobalStateManager<G, R>(
     initialState,

@@ -25,7 +25,7 @@
     "build": "yarn prepublishOnly",
     "lint": "eslint src/**/*.{ts,tsx}",
     "prepublishOnly": "rm -rf build && tsc",
-    "test": "jest"
+    "test": "node tests/index.js"
   },
   "dependencies": {
     "use-force-update": "^1.0.5"

@@ -10,6 +10,7 @@
     "module": "commonjs",
     "outDir": "./build",
     "removeComments": true,
+    "resolveJsonModule": true,
     "strictBindCallApply": true,
     "target": "es5"
   },

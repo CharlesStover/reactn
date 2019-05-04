@@ -2,9 +2,9 @@ import GlobalStateManager from '../../src/global-state-manager';
 import setGlobal from '../../src/set-global';
 import useGlobal, { StateTuple } from '../../src/use-global';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
-import deleteHooks from '../utils/delete-hooks';
 import HookTest from '../utils/hook-test';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
+import { hasHooks } from '../utils/react-version';
 
 
 
@@ -39,6 +39,17 @@ describe('useGlobal(string)', (): void => {
         (property: P[0]): T => useGlobal(globalStateManager, property),
       );
   });
+
+
+
+  // If Hooks are not supported,
+  if (!hasHooks) {
+    it('should require Hooks', (): void => {
+      testUseGlobal.render(PROPERTY);
+      expect(testUseGlobal.error).toBe(REACT_HOOKS_ERROR);
+    });
+    return;
+  }
 
 
 
@@ -158,17 +169,6 @@ describe('useGlobal(string)', (): void => {
         await setValue(NEW_VALUE);
         expect(globalStateManager.state).toEqual(NEW_STATE);
       });
-    });
-  });
-
-
-
-  describe('React Hooks', (): void => {
-    deleteHooks();
-
-    it('should be required', (): void => {
-      testUseGlobal.render(PROPERTY);
-      expect(testUseGlobal.error).toBe(REACT_HOOKS_ERROR);
     });
   });
 

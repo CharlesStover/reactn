@@ -2,9 +2,9 @@ import GlobalStateManager from '../../src/global-state-manager';
 import { Dispatcher } from '../../src/typings/reducer';
 import useDispatch from '../../src/use-dispatch';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
-import deleteHooks from '../utils/delete-hooks';
 import HookTest from '../utils/hook-test';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
+import { hasHooks } from '../utils/react-version';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
@@ -40,6 +40,17 @@ describe('useDispatch(string)', (): void => {
 
 
 
+  // If Hooks are not supported,
+  if (!hasHooks) {
+    it('should require Hooks', (): void => {
+      testUseDispatch.render(REDUCER);
+      expect(testUseDispatch.error).toBe(REACT_HOOKS_ERROR);
+    });
+    return;
+  }
+
+
+
   it('should call GlobalStateManager.getDispatcher', (): void => {
     testUseDispatch.render(REDUCER);
     expect(spy.getDispatcher).toHaveBeenCalledTimes(1);
@@ -71,17 +82,6 @@ describe('useDispatch(string)', (): void => {
 
     it('should be the dispatcher', (): void => {
       expect(reducer).toBe(globalStateManager.getDispatcher(REDUCER));
-    });
-  });
-
-
-
-  describe('React Hooks', (): void => {
-    deleteHooks();
-
-    it('should be required', (): void => {
-      testUseDispatch.render(REDUCER);
-      expect(testUseDispatch.error).toBe(REACT_HOOKS_ERROR);
     });
   });
 

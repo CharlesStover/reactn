@@ -11,6 +11,7 @@ const getGlobalStateManager = <
   G extends {} = State,
   R extends {} = Reducers,
 >(): GlobalStateManager<G, R> =>
+  Context &&
   (Context._currentValue2 as GlobalStateManager<G, R>) ||
   (defaultGlobalStateManager as GlobalStateManager<G, R>);
 

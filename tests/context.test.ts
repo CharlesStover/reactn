@@ -1,10 +1,16 @@
 import { Context, createContext } from 'react';
 import ReactNContext from '../src/context';
 import defaultGlobalStateManager from '../src/default-global-state-manager';
+import { hasContext } from './utils/react-version';
 
 
 
 describe('ReactN Context', (): void => {
+
+  // If Context is not supported,
+  if (!hasContext) {
+    return;
+  }
 
   it('should be a React Context', (): void => {
     const reactContext: Context<null> = createContext(null);

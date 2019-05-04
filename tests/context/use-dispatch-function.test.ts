@@ -4,6 +4,7 @@ import defaultGlobalStateManager from '../../src/default-global-state-manager';
 import Reducer, { Dispatcher } from '../../src/typings/reducer';
 import HookTest from '../utils/hook-test';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
+import { hasContext } from '../utils/react-version';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
@@ -38,6 +39,11 @@ const NEW_STATE: G = {
 
 
 describe('Context useDispatch(Function)', (): void => {
+
+  // If Context is not supported,
+  if (!hasContext) {
+    return;
+  }
 
   let reducer: Dispatcher<G, A>;
   let testUseDispatch: HookTest<P, V>;
