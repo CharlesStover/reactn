@@ -9,11 +9,12 @@ install:
 - cd docs
 - yarn
 - yarn build
-- cd ../
+- cd ..
 script:
 - yarn test
 - cd docs
 - yarn test
+- cd ..
 deploy:
 - api_key:
     secure: OGUpA8E72fS8hYlpFPpOoAwRVUMxB3BgrcQWCeI8H9IpyJg3YxWOkAT0NO7EbHPhTyD81Wv03W6Wb4B02x2Wxxj3RzMKm3Vch+M1+LZBg8vHP//K5/v4NM742SnOzuBe/hZADSHQdSdn2Anawj998poXkDtPt80IlKEZ2+tEuVCZfh+DP4qHzL9hwmE2o1yon+9NXl8Bd1E4Pw2n152aNiqvk2eMJdRDMBlrH5nN/oN/UC6icLvDXTZYwTEDRXdNlR9HNqaD+J45KG6qmBVW9I69TZSz+4Y/7uiijaDKRJi+1gK4CfqhsvdWH74xJZpgxN11PZM84y3eGZQgF1JpNi4f0/JcsG2O3R1g/coyDAQFS3hk7klcNONN0h68wAocb4wCb4pg3nrPWrn7aD4YOaaDvJpwbFL1vl+WHTrJIGNSjgKbsu5/Bl2YZQzFzzv87vx6OqJmyS0uNI0kLEXCR3bwmOY4U38qih9yVlERojWKilLWK28j815L3t9lD0VGVHnYjmELQovRxr1OSLPXWMDjvRgYF2QQ7EMRegQeWmBonJkrnO3hp10uOckCLv91IYUObNLgP0g2UEwuD3zactEsjXYazNH/UD6SCI7SiaHoPTa7VIsFQpyHwjm11ROBG85gJJm8GP0Tjb1YOGLT3eZykP+fmHKaUXiwpuQlUPM=
