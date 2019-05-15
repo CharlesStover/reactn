@@ -1,7 +1,7 @@
 import ReactN = require('../../src/index');
 import createProvider, { ReactNProvider } from '../../src/create-provider';
 import defaultGlobalStateManager from '../../src/default-global-state-manager';
-import { Dispatcher } from '../../src/typings/reducer';
+import { Dispatcher, ExtractArguments } from '../../src/typings/reducer';
 import HookTest from '../utils/hook-test';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 import { hasContext } from '../utils/react-version';
@@ -9,7 +9,7 @@ import spyOn from '../utils/spy-on-global-state-manager';
 
 
 
-type A = string[];
+type A = ExtractArguments<R[typeof REDUCER]>;
 
 type P = [ keyof R ];
 
@@ -17,7 +17,7 @@ type V = Dispatcher<G, A>;
 
 
 
-const ARGS: string[] = [ 'te', 'st' ];
+const ARGS: A = [ 'te', 'st' ];
 
 const EMPTY_STATE: {} = Object.create(null);
 

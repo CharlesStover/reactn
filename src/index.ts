@@ -7,6 +7,7 @@ import addReducers from './add-reducers';
 import createProvider, { ReactNProvider } from './create-provider';
 import reactn from './decorator';
 import defaultGlobalStateManager from './default-global-state-manager';
+import getDispatch from './get-dispatch';
 import getGlobal from './get-global';
 import { NewGlobalState } from './global-state-manager';
 import removeCallback from './remove-callback';
@@ -16,6 +17,7 @@ import Callback from './typings/callback';
 import Reducer, {
   AdditionalReducers,
   Dispatcher,
+  Dispatchers,
   ExtractArguments,
 } from './typings/reducer';
 import useDispatch from './use-dispatch';
@@ -54,6 +56,9 @@ interface ReactN extends TypeOfReact {
 
   default: ReactN;
 
+  getDispatch<G extends {} = State, R extends {} = Reducers>(
+  ): Dispatchers<G, R>;
+
   getGlobal<G extends {} = State>(): G;
 
   PureComponent: typeof ReactNPureComponent;
@@ -68,6 +73,9 @@ interface ReactN extends TypeOfReact {
     newGlobalState: NewGlobalState<G>,
     callback?: Callback<G>,
   ): Promise<G>;
+
+  useDispatch<G extends {} = State, R extends {} = Reducers>(
+  ): Dispatchers<G, R>;
 
   useDispatch<G extends {} = State, R extends {} = Reducers, A extends any[] = any[]>(
     reducer: Reducer<G, R, A>,
@@ -113,6 +121,7 @@ export = Object.assign(reactn, React, {
   Component: ReactNComponent,
   createProvider,
   default: reactn,
+  getDispatch: getDispatch.bind(null, defaultGlobalStateManager),
   getGlobal: getGlobal.bind(null, defaultGlobalStateManager),
   PureComponent: ReactNPureComponent,
   removeCallback: removeCallback.bind(null, defaultGlobalStateManager),

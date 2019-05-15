@@ -128,6 +128,7 @@ export default function createProvider<
       return setGlobal<G>(globalStateManager, newGlobalState, callback);
     }
 
+    public static useDispatch(): Dispatchers<G, R>;
     public static useDispatch<A extends any[] = any[]>(
       reducer: Reducer<G, R, A>,
     ): Dispatcher<G, A>;
@@ -135,7 +136,7 @@ export default function createProvider<
       reducer: K,
     ): Dispatcher<G, ExtractArguments<R[K]>>;
     public static useDispatch<K extends keyof R = keyof R, A extends any[] = any[]>(
-      reducer: K | Reducer<G, R, A>,
+      reducer?: K | Reducer<G, R, A>,
     ): UseDispatch<G, R, K, A> {
 
       // TypeScript required this be an if-else block with the exact same

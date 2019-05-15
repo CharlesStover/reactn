@@ -74,6 +74,8 @@ Provider.addCallback(callbackFunction);
 
 Provider.addReducer('name', reducerFunction);
 
+Provider.getDispatch();
+
 Provider.getGlobal();
 
 Provider.removeCallback(callbackFunction);
@@ -81,21 +83,31 @@ Provider.removeCallback(callbackFunction);
 Provider.resetGlobal();
 
 Provider.setGlobal({ x: 1 });
+
+Provider.useDispatch();
+
+Provider.useDispatch('name');
+
+Provider.useDispatch(reducerFunction);
+
+Provider.useGlobal();
+
+Provider.useGlobal('property');
 ```
 
 ## useGlobal and withGlobal
 
-The `useGlobal` React Hook and `withGlobal` Higher-Order Component, unlike
-other helper methods, have access to the ReactN Context. Because of this, you
-do not need to use your `Provider`'s static method.
+The `useDispatch` and `useGlobal` React Hooks and `withGlobal` Higher-Order
+Component, unlike other helper methods, have access to the ReactN Context.
+Because of this, you do not need to use your `Provider`'s static method.
 
 However, you may want to mix-and-match multiple global states in a single
 component. Because of this, you can forcefully override the Context with your
 `Provider`'s static method.
 
-`Provider.useGlobal` and `Provider.withGlobal` behave exactly like their
-respective helper functions, except they ignore the existing ReactN Context and
-use your `Provider` instead.
+`Provider.useDispatch`, `Provider.useGlobal`, and `Provider.withGlobal` behave
+exactly like their respective helper functions, except they ignore the existing
+ReactN Context and use your `Provider` instead.
 
 Below is an example component that uses four different global states at once.
 
@@ -131,12 +143,12 @@ function MyComponent({ x4 }) {
 
 // Ignore Provider1 and map Provider4's global state to props.
 const MyComponentWithGlobal = Provider4.withGlobal(
-  ({ x }) => ({ x4: x })
+  ({ x }) => ({ x4: x }),
 );
 
 ReactDOM.render(
   <Provider1>
     <MyComponentWithGlobal />
-  </Provider1>
+  </Provider1>,
 );
 ```

@@ -74,6 +74,12 @@ describe('package.json main', (): void => {
     expect(ReactN).toBe(ReactN.default);
   });
 
+  // getDispatch
+  it('should contain getDispatch', (): void => {
+    expect(ReactN.getDispatch).toBeInstanceOf(Function);
+    expect(ReactN.getDispatch).toHaveLength(0);
+  });
+
   // getGlobal
   it('should contain getGlobal', (): void => {
     expect(ReactN.getGlobal).toBeInstanceOf(Function);

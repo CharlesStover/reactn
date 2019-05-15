@@ -1,5 +1,5 @@
 import GlobalStateManager from '../../src/global-state-manager';
-import { Dispatcher } from '../../src/typings/reducer';
+import { Dispatcher, ExtractArguments } from '../../src/typings/reducer';
 import useDispatch from '../../src/use-dispatch';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
 import HookTest from '../utils/hook-test';
@@ -9,7 +9,7 @@ import spyOn from '../utils/spy-on-global-state-manager';
 
 
 
-type A = string[];
+type A = ExtractArguments<R[typeof REDUCER]>;
 
 type P = [ keyof R ];
 
@@ -34,7 +34,7 @@ describe('useDispatch(string)', (): void => {
     );
     testUseDispatch =
       new HookTest<P, V>(
-        (name: keyof R): V => useDispatch(globalStateManager, name)
+        (name: keyof R): V => useDispatch(globalStateManager, name),
       );
   });
 

@@ -3,7 +3,11 @@ import { Reducers, State } from '../default';
 import Context from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager from './global-state-manager';
-import Reducer, { Dispatcher, ExtractArguments } from './typings/reducer';
+import Reducer, {
+  Dispatcher,
+  Dispatchers,
+  ExtractArguments,
+} from './typings/reducer';
 import REACT_HOOKS_ERROR from './utils/react-hooks-error';
 
 
@@ -13,9 +17,17 @@ export type UseDispatch<
   R extends {} = Reducers,
   K extends keyof R = keyof R,
   A extends any[] = any[]
-> = Dispatcher<G, A> | Dispatcher<G, ExtractArguments<R[K]>>;
+> = Dispatcher<G, A> | Dispatcher<G, ExtractArguments<R[K]>> | Dispatchers<G, R>;
 
 
+
+// useGlobal()
+export default function useDispatch<
+  G extends {} = State,
+  R extends {} = Reducers,
+>(
+  overrideGlobalStateManager: GlobalStateManager<G, R> | null,
+): Dispatchers<G, R>;
 
 // useDispatch(Function)
 export default function useDispatch<
@@ -23,7 +35,7 @@ export default function useDispatch<
   R extends {} = Reducers,
   A extends any[] = any[],
 >(
-  overrideGlobalStateManager: GlobalStateManager<G, any> | null,
+  overrideGlobalStateManager: GlobalStateManager<G, R> | null,
   reducer: Reducer<G, R, A>,
 ): Dispatcher<G, A>;
 
@@ -45,7 +57,7 @@ export default function useDispatch<
   A extends any[] = any[],
 >(
   overrideGlobalStateManager: GlobalStateManager<G, R> | null,
-  reducer: K | Reducer<G, R, A>,
+  reducer?: K | Reducer<G, R, A>,
 ): UseDispatch<G, R, K, A> {
 
   // Require hooks.
@@ -58,6 +70,11 @@ export default function useDispatch<
     overrideGlobalStateManager ||
     (useContext(Context) as GlobalStateManager<G, R>) ||
     (defaultGlobalStateManager as GlobalStateManager<G, R>);
+
+  // Return all dispatchers.
+  if (typeof reducer === 'undefined') {
+    return globalStateManager.dispatchers;
+  }
 
   // Use a custom reducer.
   if (typeof reducer === 'function') {

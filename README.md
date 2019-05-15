@@ -85,6 +85,7 @@ with deeply nested objects, a
     * [Helper Functions](#helper-functions)
       * [addCallback](#addcallback)
       * [addReducer](#addreducer)
+      * [getDispatch](#getdispatch)
       * [getGlobal](#getglobal)
       * [removeCallback](#removecallback)
       * [resetGlobal](#resetglobal)
@@ -438,11 +439,30 @@ addReducer('addSubtract', async (global, dispatch, i, j) => {
 are reducers. `addReducers` is just a convenient shorthand for calling
 `addReducer` multiple times.
 
+##### getDispatch
+
+Use `getDispatch` to return an object of the global dispatch functions. You
+only want to use this in helper libraries, and _not_ in Components. Components
+should use `useDispatch` or `this.dispatch`.
+
+`getDispatch` has no parameters.
+
+```JavaScript
+import { getDispatch } from 'reactn';
+
+// Access this.dispatch.reducerName outside of a Component.
+class HelperLibrary {
+  getDispatcherFunction() {
+    return getDispatch().reducerName;
+  }
+}
+```
+
 ##### getGlobal
 
 Use `getGlobal` to return a current snapshot of the global state. You only want
 to use this in helper libraries, and _not_ in Components. Components should use
-`useGlobal` or `this.global` to insure that they re-render when the global
+`useGlobal` or `this.global` to ensure that they re-render when the global
 state changes. `getGlobal` will not cause a Component reliant on the global
 state to re-render, nor will it cause a library function to re-execute. It does
 nothing more than return a current snapshot of the global state.
