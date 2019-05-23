@@ -1,7 +1,8 @@
 import GlobalStateManager from '../../src/global-state-manager';
-import Reducer, { Dispatcher } from '../../src/typings/reducer';
 import useDispatch from '../../src/use-dispatch';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
+import Dispatcher from '../../typings/dispatcher';
+import Reducer from '../../typings/reducer';
 import HookTest from '../utils/hook-test';
 import { G, INITIAL_REDUCERS, INITIAL_STATE } from '../utils/initial';
 import { hasHooks } from '../utils/react-version';
@@ -89,7 +90,7 @@ describe('useDispatch(Function)', (): void => {
     it('should call GlobalStateManager.set', async (): Promise<void> => {
       await reducer(...ARGS);
       expect(spy.set).toHaveBeenCalledTimes(1);
-      expect(spy.set).toHaveBeenCalledWith(STATE_CHANGE);
+      expect(spy.set).toHaveBeenCalledWith(STATE_CHANGE, REDUCER.name, ARGS);
     });
   });
 

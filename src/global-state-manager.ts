@@ -1,49 +1,19 @@
 import { Reducers, State } from '../default';
-import Callback from './typings/callback';
-import Reducer, {
-  Dispatcher,
-  Dispatchers,
-  ExtractArguments,
-} from './typings/reducer';
+import Callback from '../typings/callback';
+import Dispatcher, { ExtractArguments } from '../typings/dispatcher';
+import Dispatchers from '../typings/dispatchers';
+import Middleware, { MiddlewareCreator } from '../typings/middleware';
+import NewGlobalState, {
+  FunctionalNewGlobalState,
+} from '../typings/new-global-state';
+import Reducer, { AdditionalReducers } from '../typings/reducer';
 import objectGetListener from './utils/object-get-listener';
-import {
-  createReduxEnhancedStore,
-  DevToolAction,
-  ReduxEnhancedStore,
-  Window,
-} from './utils/redux-dev-tools';
 
 
-
-interface AdditionalReducers<G extends {} = State> {
-  [name: string]: Reducer<G, any>;
-}
-
-// AsynchronousNewGlobalState is an interface so that NewGlobalState does not
-//   circularly reference itself.
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface AsynchronousNewGlobalState<G extends {} = State>
-  extends Promise<NewGlobalState<G>> { }
 
 type BooleanFunction = () => boolean;
 
-interface FunctionalNewGlobalState<G extends {} = State> {
-  (global: G): NewGlobalState<G>;
-}
-
-export type NewGlobalState<G extends {} = State> =
-  AsynchronousNewGlobalState<G> |
-  FunctionalNewGlobalState<G> |
-  SynchronousNewGlobalState<G>;
-
-// type PartialState<Shape> = Shape extends {} ? Partial<Shape> : Shape;
-
 export type PropertyListener = () => void;
-
-type SynchronousNewGlobalState<G extends {} = State> =
-  null | Partial<G> | void;
-
-
 
 
 
@@ -57,8 +27,6 @@ export const INVALID_NEW_GLOBAL_STATE: Error = new Error(
   'ReactN global state must be a function, null, object, or Promise.',
 );
 
-declare const window: Window | void;
-
 
 
 export default class GlobalStateManager<
@@ -71,11 +39,11 @@ export default class GlobalStateManager<
     Object.create(null);
   private _initialReducers: R;
   private _initialState: G;
+  private _middlewares: Set<Middleware<G, R>> = new Set<Middleware<G, R>>();
   private _propertyListeners: Map<keyof G, Set<PropertyListener>> =
     new Map<keyof G, Set<PropertyListener>>();
   private _queue: Map<keyof G, G[keyof G]> =
     new Map<keyof G, G[keyof G]>();
-  private _reduxEnhancedStore: ReduxEnhancedStore<G> = null;
   private _state: G;
 
   public constructor(
@@ -85,7 +53,6 @@ export default class GlobalStateManager<
     this._initialReducers = copyObject(initialReducers);
     this._initialState = copyObject(initialState);
     this._state = copyObject(initialState);
-    this._reduxEnhancedStore = createReduxEnhancedStore(this);
     this.addReducers(initialReducers);
   }
 
@@ -93,6 +60,19 @@ export default class GlobalStateManager<
     this._callbacks.add(callback);
     return (): boolean =>
       this.removeCallback(callback);
+  }
+
+  public addMiddleware(
+    createMiddleware: MiddlewareCreator<G, R>,
+  ): BooleanFunction {
+    const middleware: Middleware<G, R> =
+      createMiddleware(
+        this.state,
+        this.dispatchers,
+      );
+    this._middlewares.add(middleware);
+    return (): boolean =>
+      this.removeMiddleware(middleware);
   }
 
   // Map component instance to a state property.
@@ -123,11 +103,25 @@ export default class GlobalStateManager<
       this.removeDispatcher(name);
   }
 
-  public addReducers(reducers: AdditionalReducers<G>): void {
+  public addReducers(reducers: AdditionalReducers<G, R & any>): void {
     for (const [ name, reducer ] of Object.entries(reducers)) {
       this.addReducer(name, reducer);
     }
   }
+
+  /*
+  public applyMiddleware(
+    global: NewGlobalState<G>,
+    reducer?: string,
+    reducerArgs?: any[],
+  ): NewGlobalState<G> {
+    let newGlobalState: NewGlobalState<G> = global;
+    for (const middleware of this._middlewares) {
+      newGlobalState = middleware(newGlobalState, this.dispatchers);
+    }
+    return newGlobalState;
+  }
+  */
 
   public clearQueue(): void {
     return this.queue.clear();
@@ -135,16 +129,15 @@ export default class GlobalStateManager<
 
   public createDispatcher<A extends any[] = []>(
     reducer: Reducer<G, R, A>,
-    type: string = 'UNKNOWN_ACTION',
+    name: string = reducer.name,
   ): Dispatcher<G, A> {
     return (...args: A): Promise<G> => {
-
-      // Redux Dev Tools
-      this.reduxDispatch({ args, type });
-
       return this.set(
         reducer(this.state, this.dispatchers, ...args),
-      );
+        name,
+        args,
+      )
+        .then((): G => this.state);
     };
   }
 
@@ -160,8 +153,16 @@ export default class GlobalStateManager<
   }
 
   // Flush the queue.
-  public flush(): void {
-    const propertyListeners = new Set();
+  public flush(reducerName?: string, reducerArgs?: any[]): Partial<G> {
+    const propertyListeners = new Set<PropertyListener>();
+
+    // Covnert the state change map to an object.
+    const stateChange: Partial<G> = Object.create(null);
+    this.queue.forEach(
+      <K extends keyof G>(value: G[K], key: K) => {
+        stateChange[key] = value;
+      }
+    );
 
     // Commit all state changes.
     for (const [ property, value ] of this.queue.entries()) {
@@ -184,8 +185,16 @@ export default class GlobalStateManager<
 
     // Call each global callback.
     for (const callback of this._callbacks) {
-      this.set(callback(this.state, this.dispatchers));
+      this.set(callback(
+        this.state,
+        this.dispatchers,
+        stateChange,
+        reducerName,
+        reducerArgs,
+      ));
     }
+
+    return stateChange;
   }
 
   public getDispatcher<K extends keyof R>(
@@ -199,6 +208,10 @@ export default class GlobalStateManager<
 
   public hasCallback(callback: Callback<G>): boolean {
     return this._callbacks.has(callback);
+  }
+
+  public hasMiddleware(middleware: Middleware<G, R>): boolean {
+    return this._middlewares.has(middleware);
   }
 
   public hasPropertyListener(pl: PropertyListener): boolean {
@@ -224,19 +237,6 @@ export default class GlobalStateManager<
     return this._propertyListeners;
   }
 
-  public reduxDispatch(action: DevToolAction<G>): boolean {
-    const reduxEnhancedStore = this.reduxEnhancedStore;
-    if (reduxEnhancedStore) {
-      reduxEnhancedStore.dispatch(action);
-      return true;
-    }
-    return false;
-  }
-
-  public get reduxEnhancedStore(): null | ReduxEnhancedStore<G> {
-    return this._reduxEnhancedStore;
-  }
-
   public removeCallback(callback: Callback<G>): boolean {
     return this._callbacks.delete(callback);
   }
@@ -247,6 +247,12 @@ export default class GlobalStateManager<
       return true;
     }
     return false;
+  }
+
+  public removeMiddleware(
+    middleware: Middleware<G, R>,
+  ): boolean {
+    return this._middlewares.delete(middleware);
   }
 
   // Unmap a component instance from all state properties.
@@ -267,69 +273,87 @@ export default class GlobalStateManager<
     // Clear.
     this._callbacks.clear();
     this._dispatchers = Object.create(null);
+    this._middlewares.clear();
     this._propertyListeners.clear();
     this._queue.clear();
 
     // Prepopulate.
     this.addReducers(this._initialReducers);
     this._state = copyObject(this._initialState);
-    this._reduxEnhancedStore = createReduxEnhancedStore(this);
   }
 
   // Set any type of state change.
-  public set(newGlobalState: NewGlobalState<G>): Promise<G> {
+  public set(
+    newGlobalState: NewGlobalState<G>,
+    reducerName?: string,
+    reducerArgs?: any[],
+  ): Promise<Partial<G>> {
+
+    // Apply middleware.
+    /*
+    const newGlobalState: NewGlobalState<G> =
+      this.applyMiddleware(global, reducer, reducerArgs);
+    */
 
     // No changes, e.g. getDerivedGlobalFromProps.
     if (
       newGlobalState === null ||
       typeof newGlobalState === 'undefined'
     ) {
-      return Promise.resolve(this.state);
+      return Promise.resolve(Object.create(null));
     }
 
     if (newGlobalState instanceof Promise) {
-      return this.setPromise(newGlobalState);
+      return this.setPromise(newGlobalState, reducerName, reducerArgs);
     }
 
     if (typeof newGlobalState === 'function') {
-      return this.setFunction(newGlobalState);
+      return this.setFunction(newGlobalState, reducerName, reducerArgs);
     }
 
-    // Redux Dev Tools
-    this.reduxDispatch({
-      stateChange: newGlobalState,
-      type: 'STATE_CHANGE',
-    });
-
     if (typeof newGlobalState === 'object') {
-      return this.setObject(newGlobalState);
+      return this.setObject(newGlobalState, reducerName, reducerArgs);
     }
 
     throw INVALID_NEW_GLOBAL_STATE;
   }
 
-  public setFunction(f: FunctionalNewGlobalState<G>): Promise<G> {
-    return this.set(f(this.state));
+  public setFunction(
+    f: FunctionalNewGlobalState<G>,
+    reducerName?: string,
+    reducerArgs?: any[],
+  ): Promise<Partial<G>> {
+    return this.set(
+      f(this.state, reducerName, reducerArgs),
+      reducerName,
+      reducerArgs,
+    );
   }
 
   // Set the state's property-value pairs via an object.
-  public setObject<O extends Partial<G> = Partial<G>>(obj: O): Promise<G> {
+  public setObject<O extends Partial<G> = Partial<G>>(
+    obj: O,
+    reducerName?: string,
+    reducerArgs?: any[],
+  ): Promise<Partial<G>> {
     const properties: (keyof G)[] = Object.keys(obj) as (keyof G)[];
     for (const property of properties) {
       const value: G[keyof G] = obj[property] as G[keyof G];
       this.enqueue(property, value);
     }
-    this.flush();
-    return Promise.resolve(this.state);
+    const stateChange: Partial<G> = this.flush(reducerName, reducerArgs);
+    return Promise.resolve(stateChange);
   }
 
   // Set the state's property-value pairs via a promise.
   public setPromise(
-    promise: Promise<NewGlobalState<G>>
-  ): Promise<G> {
+    promise: Promise<NewGlobalState<G>>,
+    reducerName?: string,
+    reducerArgs?: any[],
+  ): Promise<Partial<G>> {
     return promise
-      .then((result: NewGlobalState<G>): Promise<G> =>
-        this.set(result)
+      .then((result: NewGlobalState<G>): Promise<Partial<G>> =>
+        this.set(result, reducerName, reducerArgs),
       );
   }
 

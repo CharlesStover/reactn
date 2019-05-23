@@ -19,9 +19,13 @@ const PROPERTY: keyof G = 'z';
 
 const NEW_VALUE: G[typeof PROPERTY] = 'any';
 
+const STATE_CHANGE: Partial<G> = {
+  [PROPERTY]: NEW_VALUE,
+};
+
 const NEW_STATE: G = {
   ...INITIAL_STATE,
-  [PROPERTY]: NEW_VALUE,
+  ...STATE_CHANGE,
 };
 
 
@@ -142,8 +146,11 @@ describe('useGlobal(string)', (): void => {
         const [ , setValue ]: T = testUseGlobal.value;
         await setValue(NEW_VALUE, CALLBACK);
         expect(CALLBACK).toHaveBeenCalledTimes(1);
-        expect(CALLBACK)
-          .toHaveBeenCalledWith(NEW_STATE, globalStateManager.dispatchers);
+        expect(CALLBACK).toHaveBeenCalledWith(
+          NEW_STATE,
+          globalStateManager.dispatchers,
+          STATE_CHANGE,
+        );
       });
     });
 

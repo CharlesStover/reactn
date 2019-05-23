@@ -1,13 +1,11 @@
 import { useContext } from 'react';
 import { Reducers, State } from '../default';
+import Dispatcher, { ExtractArguments } from '../typings/dispatcher';
+import Dispatchers from '../typings/dispatchers';
+import Reducer from '../typings/reducer';
 import Context from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager from './global-state-manager';
-import Reducer, {
-  Dispatcher,
-  Dispatchers,
-  ExtractArguments,
-} from './typings/reducer';
 import REACT_HOOKS_ERROR from './utils/react-hooks-error';
 
 

@@ -1,7 +1,7 @@
 import { Reducers, State } from '../default';
+import { AdditionalReducers } from '../typings/reducer';
 import addReducer from './add-reducer';
 import GlobalStateManager from './global-state-manager';
-import { AdditionalReducers } from './typings/reducer';
 
 
 
@@ -14,7 +14,7 @@ export default function addReducers<
   R extends {} = Reducers,
 >(
   globalStateManager: GlobalStateManager<G, R>,
-  reducers: AdditionalReducers<G, R>,
+  reducers: AdditionalReducers<G, R & any>,
 ): BooleanFunction {
 
   // Amalgamate all the functions to remove these reducers.

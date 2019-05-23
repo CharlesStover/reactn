@@ -1,5 +1,5 @@
 import GlobalStateManager from '../../src/global-state-manager';
-import Callback from '../../src/typings/callback';
+import Callback from '../../typings/callback';
 
 
 

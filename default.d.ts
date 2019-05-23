@@ -1,5 +1,4 @@
-import { NewGlobalState } from './src/global-state-manager';
-import { Dispatchers } from './src/typings/reducer';
+import Dispatchers from './typings/dispatchers';
 
 export type Dispatch = Dispatchers<State, Reducers>;
 

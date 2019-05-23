@@ -1,7 +1,7 @@
 import GlobalStateManager from '../../src/global-state-manager';
-import { Dispatcher, ExtractArguments } from '../../src/typings/reducer';
 import useDispatch from '../../src/use-dispatch';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
+import Dispatcher, { ExtractArguments } from '../../typings/dispatcher';
 import HookTest from '../utils/hook-test';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 import { hasHooks } from '../utils/react-version';
@@ -9,7 +9,7 @@ import spyOn from '../utils/spy-on-global-state-manager';
 
 
 
-type A = ExtractArguments<R[typeof REDUCER]>;
+type A = ExtractArguments<R[typeof NAME]>;
 
 type P = [ keyof R ];
 
@@ -17,7 +17,7 @@ type V = Dispatcher<G, A>;
 
 
 
-const REDUCER: keyof R = 'append';
+const NAME: keyof R = 'append';
 
 
 
@@ -43,7 +43,7 @@ describe('useDispatch(string)', (): void => {
   // If Hooks are not supported,
   if (!hasHooks) {
     it('should require Hooks', (): void => {
-      testUseDispatch.render(REDUCER);
+      testUseDispatch.render(NAME);
       expect(testUseDispatch.error).toBe(REACT_HOOKS_ERROR);
     });
     return;
@@ -52,13 +52,13 @@ describe('useDispatch(string)', (): void => {
 
 
   it('should call GlobalStateManager.getDispatcher', (): void => {
-    testUseDispatch.render(REDUCER);
+    testUseDispatch.render(NAME);
     expect(spy.getDispatcher).toHaveBeenCalledTimes(1);
-    expect(spy.getDispatcher).toHaveBeenCalledWith(REDUCER);
+    expect(spy.getDispatcher).toHaveBeenCalledWith(NAME);
   });
 
   it('should return a function if the reducer exists', (): void => {
-    testUseDispatch.render(REDUCER);
+    testUseDispatch.render(NAME);
     expect(testUseDispatch.value).toBeInstanceOf(Function);
     expect(testUseDispatch.value).toHaveLength(0);
   });
@@ -76,12 +76,12 @@ describe('useDispatch(string)', (): void => {
 
     let reducer: Dispatcher<G, A>;
     beforeEach((): void => {
-      testUseDispatch.render(REDUCER);
+      testUseDispatch.render(NAME);
       reducer = testUseDispatch.value;
     });
 
     it('should be the dispatcher', (): void => {
-      expect(reducer).toBe(globalStateManager.getDispatcher(REDUCER));
+      expect(reducer).toBe(globalStateManager.getDispatcher(NAME));
     });
   });
 

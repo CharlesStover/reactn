@@ -1,5 +1,5 @@
 import createProvider, { ReactNProvider } from '../../src/create-provider';
-import Reducer from '../../src/typings/reducer';
+import Reducer from '../../typings/reducer';
 import { G, INITIAL_REDUCERS, INITIAL_STATE } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 

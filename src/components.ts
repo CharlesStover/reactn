@@ -1,6 +1,8 @@
 import { Reducers, State } from '../default';
+import Callback from '../typings/callback';
+import { DispatcherMap } from '../typings/dispatchers';
+import NewGlobalState from '../typings/new-global-state';
 import { Component, ComponentClass, PureComponent } from 'react';
-import { NewGlobalState } from './global-state-manager';
 import {
   ReactNComponentWillUnmount,
   ReactNComponentWillUpdate,
@@ -9,8 +11,6 @@ import {
   ReactNGlobalCallback,
   ReactNSetGlobal,
 } from './methods';
-import Callback from './typings/callback';
-import { DispatcherMap } from './typings/reducer';
 
 
 

@@ -15,7 +15,6 @@ export default function spyOn(
       if (
         method === 'dispatchers' ||
         method === 'propertyListeners' ||
-        method === 'reduxEnhancedStore' ||
         method === 'queue' ||
         method === 'state'
       ) {

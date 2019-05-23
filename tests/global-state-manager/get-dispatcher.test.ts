@@ -1,5 +1,5 @@
 import GlobalStateManager from '../../src/global-state-manager';
-import { Dispatcher } from '../../src/typings/reducer';
+import Dispatcher from '../../typings/dispatcher';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 
 

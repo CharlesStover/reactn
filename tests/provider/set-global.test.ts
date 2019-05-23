@@ -35,7 +35,8 @@ describe('Provider.setGlobal', (): void => {
       const CALLBACK: jest.Mock<void, []> = jest.fn();
       await Provider.setGlobal(STATE_CHANGE, CALLBACK);
       expect(CALLBACK).toHaveBeenCalledTimes(1);
-      expect(CALLBACK).toHaveBeenCalledWith(NEW_STATE, Provider.dispatch);
+      expect(CALLBACK)
+        .toHaveBeenCalledWith(NEW_STATE, Provider.dispatch, STATE_CHANGE);
     }
   );
 

@@ -1,7 +1,8 @@
 import ReactN = require('../../src/index');
 import createProvider, { ReactNProvider } from '../../src/create-provider';
 import defaultGlobalStateManager from '../../src/default-global-state-manager';
-import Reducer, { Dispatcher } from '../../src/typings/reducer';
+import Dispatcher from '../../typings/dispatcher';
+import Reducer from '../../typings/reducer';
 import HookTest from '../utils/hook-test';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 import { hasContext } from '../utils/react-version';
@@ -68,7 +69,7 @@ describe('Context useDispatch(Function)', (): void => {
   it('should call GlobalStateManager.set', async (): Promise<void> => {
     await reducer(...ARGS);
     expect(spy.set).toHaveBeenCalledTimes(1);
-    expect(spy.set).toHaveBeenCalledWith(STATE_CHANGE);
+    expect(spy.set).toHaveBeenCalledWith(STATE_CHANGE, REDUCER.name, ARGS);
   });
 
   it('should update the Context global state', async (): Promise<void> => {

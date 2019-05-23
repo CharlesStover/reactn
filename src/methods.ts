@@ -1,11 +1,12 @@
 import { Reducers, State } from '../default';
+import Callback from '../typings/callback';
+import Dispatchers from '../typings/dispatchers';
+import NewGlobalState from '../typings/new-global-state';
 import { ReactNComponent, ReactNPureComponent } from './components';
 import Context from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
-import GlobalStateManager, { NewGlobalState } from './global-state-manager';
+import GlobalStateManager from './global-state-manager';
 import setGlobal from './set-global';
-import Callback from './typings/callback';
-import { Dispatchers } from './typings/reducer';
 
 const getGlobalStateManager = <
   G extends {} = State,

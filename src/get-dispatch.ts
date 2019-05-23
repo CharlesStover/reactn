@@ -1,5 +1,5 @@
 import { Reducers, State } from '../default';
-import { Dispatchers } from './typings/reducer';
+import Dispatchers from '../typings/dispatchers';
 import GlobalStateManager from './global-state-manager';
 
 

@@ -1,5 +1,10 @@
 import React = require('react');
 import { Reducers, State } from '../default';
+import Callback from '../typings/callback';
+import Dispatcher, { ExtractArguments } from '../typings/dispatcher';
+import Dispatchers from '../typings/dispatchers';
+import NewGlobalState from '../typings/new-global-state';
+import Reducer, { AdditionalReducers } from '../typings/reducer';
 import { ReactNComponent, ReactNPureComponent } from './components';
 import addCallback from './add-callback';
 import addReducer from './add-reducer';
@@ -9,17 +14,9 @@ import reactn from './decorator';
 import defaultGlobalStateManager from './default-global-state-manager';
 import getDispatch from './get-dispatch';
 import getGlobal from './get-global';
-import { NewGlobalState } from './global-state-manager';
 import removeCallback from './remove-callback';
 import resetGlobal from './reset-global';
 import setGlobal from './set-global';
-import Callback from './typings/callback';
-import Reducer, {
-  AdditionalReducers,
-  Dispatcher,
-  Dispatchers,
-  ExtractArguments,
-} from './typings/reducer';
 import useDispatch from './use-dispatch';
 import useGlobal, { GlobalTuple, StateTuple } from './use-global';
 import withGlobal, { Getter, Setter, WithGlobal } from './with-global';
@@ -107,6 +104,7 @@ declare namespace ReactNTypes {
   > extends React.ComponentClass<P, S> {
     new (props: P, context?: any): ReactNComponent<P, S, G, R, SS>;
   }
+
   class ComponentClass { }
 }
 

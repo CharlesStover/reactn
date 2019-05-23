@@ -1,11 +1,12 @@
 import { useContext, useEffect } from 'react';
 import useForceUpdate from 'use-force-update';
 import { State } from '../default';
+import Callback from '../typings/callback';
+import NewGlobalState from '../typings/new-global-state';
 import Context from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
-import GlobalStateManager, { NewGlobalState } from './global-state-manager';
+import GlobalStateManager from './global-state-manager';
 import setGlobal from './set-global';
-import Callback from './typings/callback';
 import REACT_HOOKS_ERROR from './utils/react-hooks-error';
 
 

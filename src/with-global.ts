@@ -5,12 +5,13 @@ import {
   FunctionComponent,
 } from 'react';
 import { State } from '../default';
+import Callback from '../typings/callback';
+import NewGlobalState from '../typings/new-global-state';
 import { ReactNComponent, ReactNComponentClass } from './components';
 import ReactNContext from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
-import GlobalStateManager, { NewGlobalState } from './global-state-manager';
+import GlobalStateManager from './global-state-manager';
 import { ReactNGlobal, ReactNSetGlobal } from './methods';
-import Callback from './typings/callback';
 
 
 

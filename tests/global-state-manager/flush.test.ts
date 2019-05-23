@@ -12,13 +12,21 @@ describe('GlobalStateManager.flush', (): void => {
 
 
 
-  it('should be a function with no arguments', (): void => {
+  it('should be a function with 2 arguments', (): void => {
     expect(globalStateManager.flush).toBeInstanceOf(Function);
-    expect(globalStateManager.flush).toHaveLength(0);
+    expect(globalStateManager.flush).toHaveLength(2);
   });
 
-  it('should not return anything', (): void => {
-    expect(globalStateManager.flush()).toBeUndefined();
+  it('should return an object', (): void => {
+    expect(typeof globalStateManager.flush()).toBe('object');
+  });
+
+  it('should return the state change', (): void => {
+    globalStateManager.enqueue('x', true);
+    const stateChange: Partial<G> = globalStateManager.flush();
+    expect(stateChange.x).toBe(true);
+    expect(stateChange.y).toBeUndefined();
+    expect(stateChange.z).toBeUndefined();
   });
 
   it('should clear the queue', (): void => {

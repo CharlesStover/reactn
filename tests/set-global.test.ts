@@ -34,20 +34,22 @@ describe('setGlobal', (): void => {
   });
 
   it(
-    'should return a Promise if there is no callback',
+    'should return a Promise of the new state if there is no callback',
     async (): Promise<void> => {
       const p = setGlobal<G>(globalStateManager, STATE_CHANGE);
       expect(p).toBeInstanceOf(Promise);
-      await p;
+      const newGlobalState: G = await p;
+      expect(newGlobalState).toStrictEqual(globalStateManager.state);
     }
   );
 
   it(
-    'should return a Promise if there is a callback',
+    'should return a Promise of the new state if there is a callback',
     async (): Promise<void> => {
       const p = setGlobal<G>(globalStateManager, STATE_CHANGE, CALLBACK);
       expect(p).toBeInstanceOf(Promise);
-      await p;
+      const newGlobalState: G = await p;
+      expect(newGlobalState).toStrictEqual(globalStateManager.state);
     }
   );
 
@@ -56,8 +58,11 @@ describe('setGlobal', (): void => {
     async (): Promise<void> => {
       await setGlobal<G>(globalStateManager, STATE_CHANGE, CALLBACK);
       expect(CALLBACK).toHaveBeenCalledTimes(1);
-      expect(CALLBACK)
-        .toHaveBeenCalledWith(NEW_STATE, globalStateManager.dispatchers);
+      expect(CALLBACK).toHaveBeenCalledWith(
+        NEW_STATE,
+        globalStateManager.dispatchers,
+        STATE_CHANGE,
+      );
     }
   );
 
@@ -68,16 +73,16 @@ describe('setGlobal', (): void => {
     const spies = spyOn('set');
 
     it('should be called if there is no callback', async (): Promise<void> => {
-        await setGlobal<G>(globalStateManager, STATE_CHANGE);
-        expect(spies.set).toHaveBeenCalledTimes(1);
-        expect(spies.set).toHaveBeenCalledWith(STATE_CHANGE);
+      await setGlobal<G>(globalStateManager, STATE_CHANGE);
+      expect(spies.set).toHaveBeenCalledTimes(1);
+      expect(spies.set).toHaveBeenCalledWith(STATE_CHANGE);
     });
 
     it('should be called if there is a callback', async (): Promise<void> => {
-        await setGlobal<G>(globalStateManager, STATE_CHANGE, CALLBACK);
-        expect(spies.set).toHaveBeenCalledTimes(2);
-        expect(spies.set).toHaveBeenNthCalledWith(1, STATE_CHANGE);
-        expect(spies.set).toHaveBeenNthCalledWith(2, undefined);
+      await setGlobal<G>(globalStateManager, STATE_CHANGE, CALLBACK);
+      expect(spies.set).toHaveBeenCalledTimes(2);
+      expect(spies.set).toHaveBeenNthCalledWith(1, STATE_CHANGE);
+      expect(spies.set).toHaveBeenNthCalledWith(2, undefined);
     });
   });
 

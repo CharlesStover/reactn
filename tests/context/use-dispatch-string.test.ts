@@ -1,7 +1,7 @@
 import ReactN = require('../../src/index');
 import createProvider, { ReactNProvider } from '../../src/create-provider';
 import defaultGlobalStateManager from '../../src/default-global-state-manager';
-import { Dispatcher, ExtractArguments } from '../../src/typings/reducer';
+import Dispatcher, { ExtractArguments } from '../../typings/dispatcher';
 import HookTest from '../utils/hook-test';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 import { hasContext } from '../utils/react-version';
@@ -9,7 +9,7 @@ import spyOn from '../utils/spy-on-global-state-manager';
 
 
 
-type A = ExtractArguments<R[typeof REDUCER]>;
+type A = ExtractArguments<R[typeof NAME]>;
 
 type P = [ keyof R ];
 
@@ -21,14 +21,14 @@ const ARGS: A = [ 'te', 'st' ];
 
 const EMPTY_STATE: {} = Object.create(null);
 
+const NAME: keyof R = 'append';
+
 const Provider: ReactNProvider<G, R> = createProvider<G, R>(
   INITIAL_STATE,
   INITIAL_REDUCERS,
 );
 
-const REDUCER: keyof R = 'append';
-
-const STATE_CHANGE: Partial<G> = INITIAL_REDUCERS[REDUCER](
+const STATE_CHANGE: Partial<G> = INITIAL_REDUCERS[NAME](
   INITIAL_STATE,
   Provider.dispatch,
   ...ARGS,
@@ -41,7 +41,7 @@ const NEW_STATE: G = {
 
 
 
-describe('Context useDispatch(Function)', (): void => {
+describe('Context useDispatch(string)', (): void => {
 
   // If Context is not supported,
   if (!hasContext) {
@@ -58,7 +58,7 @@ describe('Context useDispatch(Function)', (): void => {
         (reducer: keyof R): V => ReactN.useDispatch<G, R>(reducer)
       )
         .addParent(Provider);
-        testUseDispatch.render(REDUCER);
+    testUseDispatch.render(NAME);
     reducer = testUseDispatch.value;
   });
 
@@ -71,7 +71,7 @@ describe('Context useDispatch(Function)', (): void => {
   it('should call GlobalStateManager.set', async (): Promise<void> => {
     await reducer(...ARGS);
     expect(spy.set).toHaveBeenCalledTimes(1);
-    expect(spy.set).toHaveBeenCalledWith(STATE_CHANGE);
+    expect(spy.set).toHaveBeenCalledWith(STATE_CHANGE, NAME, ARGS);
   });
 
   it('should update the Context global state', async (): Promise<void> => {

@@ -142,8 +142,11 @@ describe('useGlobal()', (): void => {
         const [ , setGlobal ]: T = testUseGlobal.value;
         await setGlobal(STATE_CHANGE, CALLBACK);
         expect(CALLBACK).toHaveBeenCalledTimes(1);
-        expect(CALLBACK)
-          .toHaveBeenCalledWith(NEW_STATE, globalStateManager.dispatchers);
+        expect(CALLBACK).toHaveBeenCalledWith(
+          NEW_STATE,
+          globalStateManager.dispatchers,
+          STATE_CHANGE,
+        );
       });
     });
 

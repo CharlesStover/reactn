@@ -1,16 +1,17 @@
 import GlobalStateManager from '../../src/global-state-manager';
+import Callback from '../../typings/callback';
 
 
 
-const CALLBACK = (): void => { };
+const CALLBACK: Callback = (): void => { };
 
 
 
 describe('GlobalStateManager.removeCallback', (): void => {
 
-  let globalStateManager: GlobalStateManager<{}, {}>;
+  let globalStateManager: GlobalStateManager;
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<{}, {}>();
+    globalStateManager = new GlobalStateManager();
   });
 
 

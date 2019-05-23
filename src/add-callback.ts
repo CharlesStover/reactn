@@ -1,6 +1,6 @@
 import { State } from '../default';
+import Callback from '../typings/callback';
 import GlobalStateManager from './global-state-manager';
-import Callback from './typings/callback';
 
 
 
