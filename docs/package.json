@@ -2,6 +2,7 @@
   "name": "reactn-docs",
   "version": "2.0.0",
   "homepage": ".",
+  "license": "MIT",
   "private": true,
   "browserslist": [
     ">0.2%",
@@ -24,6 +25,8 @@
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "reactn": "link:../",
+    "reactn-devtools": "^1.0.0",
+    "redux": "^4.0.1",
     "use-react-router": "^1.0.5"
   },
   "devDependencies": {
