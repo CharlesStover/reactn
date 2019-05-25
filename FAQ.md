@@ -84,5 +84,5 @@ export default withGlobal(
     age: global.people[props.person].age,
     name: global.people[props.person].name
   })
-)(MyName);
+)(Me);
 ```
