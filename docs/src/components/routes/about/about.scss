@@ -1,0 +1,15 @@
+.about-blockquote {
+  filter: brightness(200%);
+  font-size: 1rem;
+
+  &:after {
+    content: "”";
+  }
+
+  &:before {
+    content: "“";
+    font-size: 2rem;
+    line-height: 1rem;
+    vertical-align: text-bottom;
+  }
+}

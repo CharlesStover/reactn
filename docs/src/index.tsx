@@ -6,6 +6,14 @@ import App from './components/app';
 import './index.scss';
 import './reactn';
 
+type TypeOfModule = typeof module;
+
+interface HotNodeModule extends TypeOfModule {
+  hot?: {
+    accept(): void;
+  }
+}
+
 addReactNDevTools();
 
 ReactDOM.render(
@@ -14,3 +22,8 @@ ReactDOM.render(
   </BrowserRouter>,
   document.getElementById('root'),
 );
+
+const m: HotNodeModule = module;
+if (m.hot) {
+  m.hot.accept();
+}
