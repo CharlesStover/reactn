@@ -4,57 +4,23 @@ import Callback from '../types/callback';
 import Dispatcher, { ExtractArguments } from '../types/dispatcher';
 import Dispatchers from '../types/dispatchers';
 import NewGlobalState from '../types/new-global-state';
+import ReactNProvider from '../types/provider';
 import Reducer, { AdditionalReducers } from '../types/reducer';
+import UseGlobal, { GlobalTuple, StateTuple } from '../types/use-global';
+import WithGlobal, { Getter, Setter } from '../types/with-global';
 import Context from './context';
 import addReducer from './add-reducer';
 import addReducers from './add-reducers';
 import GlobalStateManager from './global-state-manager';
 import setGlobal from './set-global';
 import useDispatch, { UseDispatch } from './use-dispatch';
-import useGlobal, { GlobalTuple, StateTuple, UseGlobal } from './use-global';
+import useGlobal from './use-global';
 import REACT_CONTEXT_ERROR from './utils/react-context-error';
-import withGlobal, { Getter, Setter, WithGlobal } from './with-global';
+import withGlobal from './with-global';
 
 
 
 type BooleanFunction = () => boolean;
-
-export interface ReactNProvider<
-  G extends {} = State,
-  R extends {} = Reducers,
-> {
-  addCallback(callback: Callback<G>): BooleanFunction;
-  addReducer<A extends any[] = any[]>(
-    name: string,
-    reducer: Reducer<G, R, A>,
-  ): BooleanFunction;
-  addReducers(reducers: AdditionalReducers<G, R>): BooleanFunction;
-  dispatch: Dispatchers<G, R>;
-  getDispatch(): Dispatchers<G, R>;
-  getGlobal(): G;
-  global: G;
-  removeCallback(callback: Callback<G>): boolean;
-  reset(): void;
-  setGlobal(
-    newGlobalState: NewGlobalState<G>,
-    callback?: Callback<G>,
-  ): Promise<G>;
-  useDispatch<A extends any[] = any[]>(
-    reducer: Reducer<G, R, A>,
-  ): Dispatcher<G, A>;
-  useDispatch<K extends keyof R = keyof R>(
-    reducer: K,
-  ): Dispatcher<G, ExtractArguments<R[K]>>;
-  useGlobal(): GlobalTuple<G>;
-  useGlobal<Property extends keyof G>(
-    property: Property,
-  ): StateTuple<G, Property>;
-  withGlobal<HP, LP>(
-    getter: Getter<G, HP, LP>,
-    setter: Setter<G, HP, LP>,
-  ): WithGlobal<HP, LP>;
-  new (props: {}, context?: any): React.Component<{}, {}>;
-}
 
 
 
@@ -156,11 +122,11 @@ export default function _createProvider<
       return useGlobal(globalStateManager, property);
     }
 
-    public static withGlobal<HP, LP>(
-      getter: Getter<G, HP, LP> = (globalState: G): G => globalState,
-      setter: Setter<G, HP, LP> = (): null => null,
+    public static withGlobal<HP extends {} = {}, LP extends {} = {}>(
+      getter: Getter<G, R, HP, LP> = (global: G): G => global,
+      setter: Setter<G, R, HP, LP> = (): null => null,
     ): WithGlobal<HP, LP> {
-      return withGlobal<G, HP, LP>(globalStateManager, getter, setter);
+      return withGlobal<G, R, HP, LP>(globalStateManager, getter, setter);
     }
 
     public render(): JSX.Element {
@@ -170,5 +136,5 @@ export default function _createProvider<
         </Context.Provider>
       );
     }
-  }
+  };
 }

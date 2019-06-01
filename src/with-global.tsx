@@ -1,37 +1,19 @@
-import {
-  ComponentClass,
-  Context,
-  createElement,
-  FunctionComponent,
-} from 'react';
-import { State } from '../default';
+import * as React from 'react';
+import { Reducers, State } from '../default';
 import Callback from '../types/callback';
 import { ReactNComponentClass } from '../types/component-class';
+import Dispatchers from '../types/dispatchers';
+import WithGlobal, {
+  Getter,
+  LowerOrderComponent,
+  Setter,
+} from '../types/with-global';
 import NewGlobalState from '../types/new-global-state';
 import { ReactNComponent } from './components';
 import ReactNContext from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager from './global-state-manager';
 import { ReactNGlobal, ReactNSetGlobal } from './methods';
-
-
-
-export type Getter<G extends {}, HP, LP> = (globalState: G, props: HP) =>
-  null | Partial<LP> | void;
-
-type LowerOrderComponent<P = {}> =
-  ComponentClass<P> | FunctionComponent<P> | string;
-
-type SetGlobal<G extends {} = State> = (
-  newGlobalState: NewGlobalState<G>,
-  callback?: Callback<G>,
-) => Promise<G>;
-
-export type Setter<G, HP, LP> = (setGlobal: SetGlobal<G>, props: HP) =>
-  null | Partial<LP> | void;
-
-export type WithGlobal<HP, LP> =
-  (Component: LowerOrderComponent<LP>) => ComponentClass<HP>;
 
 
 
@@ -66,12 +48,13 @@ hoc(MyComponent);
 */
 export default function _withGlobal<
   G extends {} = State,
+  R extends {} = Reducers,
   HP extends {} = {},
   LP extends {} = {},
 >(
-  globalStateManager: GlobalStateManager<G> | null = null,
-  getter: Getter<G, HP, LP> = (globalState: G): G => globalState,
-  setter: Setter<G, HP, LP> = (): null => null,
+  globalStateManager: GlobalStateManager<G, R> | null = null,
+  getter: Getter<G, R, HP, LP> = (global: G): G => global,
+  setter: Setter<G, R, HP, LP> = (): null => null,
 ): WithGlobal<HP, LP> {
   return function ReactNWithGlobal(
     Component: LowerOrderComponent<LP>,
@@ -83,18 +66,31 @@ export default function _withGlobal<
 
     return class ReactNHOC extends ReactNComponent<HP, {}, G> {
 
-      // Context knows it provides a GlobalStateManager,
-      //   but not the shape <GS> of the GlobalState that it holds.
-      public static contextType: Context<GlobalStateManager<G>> =
-        ReactNContext as Context<GlobalStateManager<G>>;
+      // Context knows it provides a GlobalStateManager, but not the shape.
+      public static contextType: React.Context<GlobalStateManager<G, R>> =
+        ReactNContext;
 
       public static displayName = `${componentName(Component)}-ReactN`;
 
+      // Context knows it provides a GlobalStateManager, but not the shape.
+      public context: GlobalStateManager<G, R>;
+
+      public get dispatch(): Dispatchers<G, R> {
+        return this.globalStateManager.dispatchers;
+      }
+
       public get global(): G {
-        return ReactNGlobal<G>(
-          this,
-          globalStateManager || this.context || defaultGlobalStateManager
-        );
+        return ReactNGlobal<G>(this, this.globalStateManager);
+      }
+
+      public get globalStateManager(): GlobalStateManager<G, R> {
+        if (globalStateManager) {
+          return globalStateManager;
+        }
+        if (this.context instanceof GlobalStateManager) {
+          return this.context;
+        }
+        return defaultGlobalStateManager as GlobalStateManager<G, R>;
       }
 
       public setGlobal = (
@@ -106,9 +102,7 @@ export default function _withGlobal<
           !isComponentDidMount &&
           !isComponentDidUpdate &&
           !isSetGlobalCallback,
-          globalStateManager ||
-          this.context ||
-          defaultGlobalStateManager,
+          this.globalStateManager,
         );
 
       public render(): JSX.Element {
@@ -116,10 +110,10 @@ export default function _withGlobal<
         // @ts-ignore: LP doesn't match HP
         const lowerOrderProps: LP = {
           ...this.props,
-          ...getter(this.global, this.props),
-          ...setter(this.setGlobal, this.props),
+          ...getter(this.global, this.dispatch, this.props),
+          ...setter(this.setGlobal, this.dispatch, this.props),
         };
-        return createElement(Component, lowerOrderProps);
+        return <Component {...lowerOrderProps} />;
       }
     };
   };

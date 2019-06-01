@@ -8,12 +8,15 @@ import {
 import Dispatcher, { ExtractArguments } from '../types/dispatcher';
 import Dispatchers from '../types/dispatchers';
 import NewGlobalState from '../types/new-global-state';
+import ReactNProvider from '../types/provider';
 import Reducer, { AdditionalReducers } from '../types/reducer';
+import { GlobalTuple, StateTuple } from '../types/use-global';
+import WithGlobal, { Getter, Setter } from '../types/with-global';
 import { ReactNComponent, ReactNPureComponent } from './components';
 import addCallback from './add-callback';
 import addReducer from './add-reducer';
 import addReducers from './add-reducers';
-import createProvider, { ReactNProvider } from './create-provider';
+import createProvider from './create-provider';
 import reactn from './decorator';
 import defaultGlobalStateManager from './default-global-state-manager';
 import getDispatch from './get-dispatch';
@@ -22,8 +25,8 @@ import removeCallback from './remove-callback';
 import resetGlobal from './reset-global';
 import setGlobal from './set-global';
 import useDispatch from './use-dispatch';
-import useGlobal, { GlobalTuple, StateTuple } from './use-global';
-import withGlobal, { Getter, Setter, WithGlobal } from './with-global';
+import useGlobal from './use-global';
+import withGlobal from './with-global';
 
 
 
@@ -92,9 +95,9 @@ interface ReactN extends TypeOfReact {
 
   useGlobal<G extends {} = State>(): GlobalTuple<G>;
 
-  withGlobal<G extends {} = State, HP extends {} = {}, LP extends {} = {}>(
-    getter?: Getter<G, HP, LP>,
-    setter?: Setter<G, HP, LP>,
+  withGlobal<G extends {} = State, R extends {} = Reducers, HP extends {} = {}, LP extends {} = {}>(
+    getter?: Getter<G, R, HP, LP>,
+    setter?: Setter<G, R, HP, LP>,
   ): WithGlobal<HP, LP>;
 }
 

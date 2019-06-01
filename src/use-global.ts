@@ -3,6 +3,7 @@ import useForceUpdate from 'use-force-update';
 import { State } from '../default';
 import Callback from '../types/callback';
 import NewGlobalState from '../types/new-global-state';
+import UseGlobal, { GlobalTuple, StateTuple } from '../types/use-global';
 import Context from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager from './global-state-manager';
@@ -11,27 +12,7 @@ import REACT_HOOKS_ERROR from './utils/react-hooks-error';
 
 
 
-export type GlobalTuple<GS> = [
-  GS,
-  (newGlobalState: NewGlobalState<GS>, callback?: Callback<GS>) => Promise<GS>,
-];
-
-type Setter<G extends {}, P extends keyof G> =
-  (newValue: G[P], callback?: Callback<G>) => Promise<G>;
-
-export type StateTuple<G extends {}, P extends keyof G> = [
-  G[P],
-  Setter<G, P>,
-];
-
-export type UseGlobal<G extends {}, Property extends keyof G> =
-  GlobalTuple<G> | StateTuple<G, Property>;
-
 type VoidFunction = () => void;
-
-
-
-
 
 
 
