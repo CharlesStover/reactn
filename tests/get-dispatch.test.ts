@@ -1,7 +1,7 @@
 import addReducer from '../src/add-reducer';
 import getDispatch from '../src/get-dispatch';
 import GlobalStateManager from '../src/global-state-manager';
-import Dispatchers from '../typings/dispatchers';
+import Dispatchers from '../types/dispatchers';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from './utils/initial';
 import spyOn from './utils/spy-on-global-state-manager';
 

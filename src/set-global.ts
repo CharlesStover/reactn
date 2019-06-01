@@ -1,11 +1,11 @@
 import { Reducers, State } from '../default';
-import Callback from '../typings/callback';
-import NewGlobalState from '../typings/new-global-state';
+import Callback from '../types/callback';
+import NewGlobalState from '../types/new-global-state';
 import GlobalStateManager from './global-state-manager';
 
 
 
-export default function setGlobal<
+export default function _setGlobal<
   G extends {} = State,
   R extends {} = Reducers,
 >(
@@ -26,7 +26,7 @@ export default function setGlobal<
   //   callback, then return the state.
   return globalStateManager.set(newGlobalState)
     .then((stateChange: Partial<G>): Promise<G> =>
-      setGlobal(
+      _setGlobal(
         globalStateManager,
         callback(
           globalStateManager.state,

@@ -1,8 +1,8 @@
 import { useContext, useEffect } from 'react';
 import useForceUpdate from 'use-force-update';
 import { State } from '../default';
-import Callback from '../typings/callback';
-import NewGlobalState from '../typings/new-global-state';
+import Callback from '../types/callback';
+import NewGlobalState from '../types/new-global-state';
 import Context from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager from './global-state-manager';
@@ -36,12 +36,12 @@ type VoidFunction = () => void;
 
 
 // useGlobal()
-export default function useGlobal<G extends {} = State>(
+export default function _useGlobal<G extends {} = State>(
   overrideGlobalStateManager: GlobalStateManager<G> | null,
 ): GlobalTuple<G>;
 
 // useGlobal('property')
-export default function useGlobal<
+export default function _useGlobal<
   G extends {} = State,
   Property extends keyof G = keyof G,
 >(
@@ -50,7 +50,7 @@ export default function useGlobal<
 ): StateTuple<G, Property>;
 
 // Implementation
-export default function useGlobal<
+export default function _useGlobal<
   G extends {} = State,
   Property extends keyof G = keyof G,
 >(

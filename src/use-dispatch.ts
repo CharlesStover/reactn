@@ -1,8 +1,8 @@
 import { useContext } from 'react';
 import { Reducers, State } from '../default';
-import Dispatcher, { ExtractArguments } from '../typings/dispatcher';
-import Dispatchers from '../typings/dispatchers';
-import Reducer from '../typings/reducer';
+import Dispatcher, { ExtractArguments } from '../types/dispatcher';
+import Dispatchers from '../types/dispatchers';
+import Reducer from '../types/reducer';
 import Context from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager from './global-state-manager';
@@ -20,7 +20,7 @@ export type UseDispatch<
 
 
 // useGlobal()
-export default function useDispatch<
+export default function _useDispatch<
   G extends {} = State,
   R extends {} = Reducers,
 >(
@@ -28,7 +28,7 @@ export default function useDispatch<
 ): Dispatchers<G, R>;
 
 // useDispatch(Function)
-export default function useDispatch<
+export default function _useDispatch<
   G extends {} = State,
   R extends {} = Reducers,
   A extends any[] = any[],
@@ -38,7 +38,7 @@ export default function useDispatch<
 ): Dispatcher<G, A>;
 
 // useDispatch('name')
-export default function useDispatch<
+export default function _useDispatch<
   G extends {} = State,
   R extends {} = Reducers,
   K extends keyof R = keyof R,
@@ -48,7 +48,7 @@ export default function useDispatch<
 ): Dispatcher<G, ExtractArguments<R[K]>>;
 
 // Implementation
-export default function useDispatch<
+export default function _useDispatch<
   G extends {} = State,
   R extends {} = Reducers,
   K extends keyof R = keyof R,

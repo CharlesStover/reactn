@@ -4,3 +4,4 @@
 /docs/node_modules
 /jest
 /node_modules
+/package-lock.json

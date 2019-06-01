@@ -1,7 +1,7 @@
 import { Reducers, State } from '../default';
-import Callback from '../typings/callback';
-import Dispatchers from '../typings/dispatchers';
-import NewGlobalState from '../typings/new-global-state';
+import Callback from '../types/callback';
+import Dispatchers from '../types/dispatchers';
+import NewGlobalState from '../types/new-global-state';
 import { ReactNComponent, ReactNPureComponent } from './components';
 import Context from './context';
 import defaultGlobalStateManager from './default-global-state-manager';

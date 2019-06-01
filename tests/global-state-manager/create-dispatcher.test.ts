@@ -1,5 +1,5 @@
 import GlobalStateManager from '../../src/global-state-manager';
-import Dispatcher from '../../typings/dispatcher';
+import Dispatcher from '../../types/dispatcher';
 import { D, G, INITIAL_STATE } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 

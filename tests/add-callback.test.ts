@@ -1,6 +1,6 @@
 import addCallback from '../src/add-callback';
 import GlobalStateManager from '../src/global-state-manager';
-import Callback from '../typings/callback';
+import Callback from '../types/callback';
 import { G, INITIAL_STATE } from './utils/initial';
 import spyOn from './utils/spy-on-global-state-manager';
 

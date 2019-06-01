@@ -1,10 +1,10 @@
-import { Reducers, State } from '../default';
-import Callback from '../typings/callback';
-import Dispatcher, { ExtractArguments } from '../typings/dispatcher';
-import Dispatchers from '../typings/dispatchers';
-import NewGlobalState from '../typings/new-global-state';
-import Reducer, { AdditionalReducers } from '../typings/reducer';
 import * as React from 'react';
+import { Reducers, State } from '../default';
+import Callback from '../types/callback';
+import Dispatcher, { ExtractArguments } from '../types/dispatcher';
+import Dispatchers from '../types/dispatchers';
+import NewGlobalState from '../types/new-global-state';
+import Reducer, { AdditionalReducers } from '../types/reducer';
 import Context from './context';
 import addReducer from './add-reducer';
 import addReducers from './add-reducers';
@@ -58,7 +58,7 @@ export interface ReactNProvider<
 
 
 
-export default function createProvider<
+export default function _createProvider<
   G extends {} = State,
   R extends {} = Reducers,
 >(

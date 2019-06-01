@@ -12,6 +12,7 @@
 /.travis.yml
 /FAQ.md
 /jest.config.js
+/package-lock.json
 /Provider.md
 /tsconfig.json
 /yarn.lock

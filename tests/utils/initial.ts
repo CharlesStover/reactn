@@ -1,5 +1,5 @@
 import GlobalStateManager from '../../src/global-state-manager';
-import Reducer from '../../typings/reducer';
+import Reducer from '../../types/reducer';
 
 
 

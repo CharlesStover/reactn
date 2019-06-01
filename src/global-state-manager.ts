@@ -1,12 +1,12 @@
 import { Reducers, State } from '../default';
-import Callback from '../typings/callback';
-import Dispatcher, { ExtractArguments } from '../typings/dispatcher';
-import Dispatchers from '../typings/dispatchers';
-import Middleware, { MiddlewareCreator } from '../typings/middleware';
+import Callback from '../types/callback';
+import Dispatcher, { ExtractArguments } from '../types/dispatcher';
+import Dispatchers from '../types/dispatchers';
+import Middleware, { MiddlewareCreator } from '../types/middleware';
 import NewGlobalState, {
   FunctionalNewGlobalState,
-} from '../typings/new-global-state';
-import Reducer, { AdditionalReducers } from '../typings/reducer';
+} from '../types/new-global-state';
+import Reducer, { AdditionalReducers } from '../types/reducer';
 import objectGetListener from './utils/object-get-listener';
 
 
@@ -98,6 +98,8 @@ export default class GlobalStateManager<
     name: string,
     reducer: Reducer<G, R, A>,
   ): BooleanFunction {
+    // @ts-ignore: Type 'string' cannot be used to index type
+    //   'Dispatchers<G, R>'.
     this._dispatchers[name] = this.createDispatcher(reducer, name);
     return (): boolean =>
       this.removeDispatcher(name);
@@ -336,10 +338,12 @@ export default class GlobalStateManager<
     reducerName?: string,
     reducerArgs?: any[],
   ): Promise<Partial<G>> {
-    const properties: (keyof G)[] = Object.keys(obj) as (keyof G)[];
+    const properties: (keyof O)[] = Object.keys(obj) as (keyof O)[];
     for (const property of properties) {
-      const value: G[keyof G] = obj[property] as G[keyof G];
-      this.enqueue(property, value);
+      const value: O[keyof O] = obj[property] as O[keyof O];
+      // keyof Partial<G> should be keyof G, but TypeScript cannot correctly
+      //   infer that, so we use "as keyof G" and "as any as ..." here.
+      this.enqueue(property as keyof G, value as any as G[keyof G]);
     }
     const stateChange: Partial<G> = this.flush(reducerName, reducerArgs);
     return Promise.resolve(stateChange);

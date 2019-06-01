@@ -1,5 +1,5 @@
 import GlobalStateManager from '../../src/global-state-manager';
-import Middleware from '../../typings/middleware';
+import Middleware from '../../types/middleware';
 import { G } from '../utils/initial';
 
 

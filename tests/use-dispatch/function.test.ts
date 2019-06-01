@@ -1,8 +1,8 @@
 import GlobalStateManager from '../../src/global-state-manager';
 import useDispatch from '../../src/use-dispatch';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
-import Dispatcher from '../../typings/dispatcher';
-import Reducer from '../../typings/reducer';
+import Dispatcher from '../../types/dispatcher';
+import Reducer from '../../types/reducer';
 import HookTest from '../utils/hook-test';
 import { G, INITIAL_REDUCERS, INITIAL_STATE } from '../utils/initial';
 import { hasHooks } from '../utils/react-version';

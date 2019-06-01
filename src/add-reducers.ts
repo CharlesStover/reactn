@@ -1,5 +1,5 @@
 import { Reducers, State } from '../default';
-import { AdditionalReducers } from '../typings/reducer';
+import { AdditionalReducers } from '../types/reducer';
 import addReducer from './add-reducer';
 import GlobalStateManager from './global-state-manager';
 
@@ -9,7 +9,7 @@ type BooleanFunction = () => boolean;
 
 
 
-export default function addReducers<
+export default function _addReducers<
   G extends {} = State,
   R extends {} = Reducers,
 >(

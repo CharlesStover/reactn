@@ -1,9 +1,9 @@
-import { Reducers, State } from '../default';
-import Callback from '../typings/callback';
-import Dispatchers from '../typings/dispatchers';
-import NewGlobalState from '../typings/new-global-state';
 import { ComponentClass } from 'react';
-import { ReactNComponentClass } from './components';
+import { Reducers, State } from '../default';
+import Callback from '../types/callback';
+import { ReactNComponentClass } from '../types/component-class';
+import Dispatchers from '../types/dispatchers';
+import NewGlobalState from '../types/new-global-state';
 import {
   // createReactNGetDerivedStateFromProps,
   ReactNComponentWillUnmount,
@@ -22,7 +22,10 @@ const isComponentDidUpdate = false;
 const isSetGlobalCallback = false;
 
 // Get the name of a Component.
-const componentName = (DecoratedComponent: ComponentClass): string =>
+const componentName = <
+  P extends {} = {},
+  S extends {} = {},
+>(DecoratedComponent: ComponentClass<P, S>): string =>
   typeof DecoratedComponent === 'string' ?
     DecoratedComponent :
     DecoratedComponent.displayName ||

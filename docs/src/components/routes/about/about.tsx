@@ -1,16 +1,24 @@
-import React, { useGlobal } from 'reactn';
+import React, { useDispatch, withGlobal } from 'reactn';
 import './about.scss';
 
-export default function About() {
-  const [ color, setColor ] = useGlobal('color');
-  setColor('#61DAFB');
-  return <>
-    <p>
-      <strong>ReactN</strong> is a global state management solution for{' '}
-      <strong>ReactJS</strong>.
-    </p>
-    <p>
-      <strong>ReactN</strong> follows the design philosophy,
+interface Props {
+  color: string;
+}
+
+export default withGlobal(
+  ({ color }) => ({ color }),
+)(
+  function About({ color }) {
+    const setColor = useDispatch('setColor');
+    setColor('#61DAFB');
+    return <>
+      <p>
+        <strong>ReactN</strong> is a global state management solution for{' '}
+        <strong>ReactJS</strong>.
+      </p>
+      <p>
+        <strong>ReactN</strong> adheres to the following design philosophy,
+      </p>
       <blockquote
         className="about-blockquote"
         style={{ color }}
@@ -27,6 +35,6 @@ export default function About() {
           as the React local state API?
         </li>
       </ul>
-    </p>
-  </>;
-}
+    </>;
+  },
+);

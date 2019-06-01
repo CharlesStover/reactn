@@ -5,9 +5,10 @@ import {
   FunctionComponent,
 } from 'react';
 import { State } from '../default';
-import Callback from '../typings/callback';
-import NewGlobalState from '../typings/new-global-state';
-import { ReactNComponent, ReactNComponentClass } from './components';
+import Callback from '../types/callback';
+import { ReactNComponentClass } from '../types/component-class';
+import NewGlobalState from '../types/new-global-state';
+import { ReactNComponent } from './components';
 import ReactNContext from './context';
 import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager from './global-state-manager';
@@ -35,7 +36,9 @@ export type WithGlobal<HP, LP> =
 
 
 // Get the name of a Component.
-const componentName = (Component: LowerOrderComponent): string =>
+const componentName = <
+  P extends {} = {},
+>(Component: LowerOrderComponent<P>): string =>
   typeof Component === 'string' ?
     Component :
     Component.displayName ||
@@ -61,7 +64,7 @@ const hoc = withGlobal(
 );
 hoc(MyComponent);
 */
-export default function withGlobal<
+export default function _withGlobal<
   G extends {} = State,
   HP extends {} = {},
   LP extends {} = {},

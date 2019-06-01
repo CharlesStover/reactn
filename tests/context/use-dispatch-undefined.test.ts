@@ -1,8 +1,8 @@
 import ReactN = require('../../src/index');
 import createProvider, { ReactNProvider } from '../../src/create-provider';
 import defaultGlobalStateManager from '../../src/default-global-state-manager';
-import Dispatcher, { ExtractArguments } from '../../typings/dispatcher';
-import Dispatchers from '../../typings/dispatchers';
+import Dispatcher, { ExtractArguments } from '../../types/dispatcher';
+import Dispatchers from '../../types/dispatchers';
 import HookTest from '../utils/hook-test';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 import { hasContext } from '../utils/react-version';

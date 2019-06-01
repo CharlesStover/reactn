@@ -1,4 +1,4 @@
-import Dispatchers from './typings/dispatchers';
+import Dispatchers from './types/dispatchers';
 
 export type Dispatch = Dispatchers<State, Reducers>;
 

@@ -1,10 +1,14 @@
 import React = require('react');
 import { Reducers, State } from '../default';
-import Callback from '../typings/callback';
-import Dispatcher, { ExtractArguments } from '../typings/dispatcher';
-import Dispatchers from '../typings/dispatchers';
-import NewGlobalState from '../typings/new-global-state';
-import Reducer, { AdditionalReducers } from '../typings/reducer';
+import Callback from '../types/callback';
+import {
+  ReactNComponentClass,
+  ReactNPureComponentClass,
+} from '../types/component-class';
+import Dispatcher, { ExtractArguments } from '../types/dispatcher';
+import Dispatchers from '../types/dispatchers';
+import NewGlobalState from '../types/new-global-state';
+import Reducer, { AdditionalReducers } from '../types/reducer';
 import { ReactNComponent, ReactNPureComponent } from './components';
 import addCallback from './add-callback';
 import addReducer from './add-reducer';
@@ -44,7 +48,7 @@ interface ReactN extends TypeOfReact {
     reducers: AdditionalReducers<G, R>,
   ): BooleanFunction;
 
-  Component: typeof ReactNComponent;
+  Component: ReactNComponentClass;
 
   createProvider<G extends {} = State, R extends {} = Reducers>(
     initialState?: G,
@@ -58,7 +62,7 @@ interface ReactN extends TypeOfReact {
 
   getGlobal<G extends {} = State>(): G;
 
-  PureComponent: typeof ReactNPureComponent;
+  PureComponent: ReactNPureComponentClass;
 
   removeCallback<G extends {} = State>(
     callback: Callback<G>,

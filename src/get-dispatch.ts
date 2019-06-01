@@ -1,10 +1,10 @@
 import { Reducers, State } from '../default';
-import Dispatchers from '../typings/dispatchers';
+import Dispatchers from '../types/dispatchers';
 import GlobalStateManager from './global-state-manager';
 
 
 
-export default function getDispatch<
+export default function _getDispatch<
   G extends {} = State,
   R extends {} = Reducers,
 >(
