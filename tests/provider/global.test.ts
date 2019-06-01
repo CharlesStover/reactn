@@ -1,4 +1,5 @@
-import createProvider, { ReactNProvider } from '../../src/create-provider';
+import createProvider from '../../src/create-provider';
+import ReactNProvider from '../../types/provider';
 import { G, INITIAL_STATE } from '../utils/initial';
 import spyOn from '../utils/spy-on-global-state-manager';
 

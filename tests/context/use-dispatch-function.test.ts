@@ -1,7 +1,8 @@
 import ReactN = require('../../src/index');
-import createProvider, { ReactNProvider } from '../../src/create-provider';
+import createProvider from '../../src/create-provider';
 import defaultGlobalStateManager from '../../src/default-global-state-manager';
 import Dispatcher from '../../types/dispatcher';
+import ReactNProvider from '../../types/provider';
 import Reducer from '../../types/reducer';
 import HookTest from '../utils/hook-test';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';

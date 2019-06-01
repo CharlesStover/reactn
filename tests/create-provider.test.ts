@@ -1,5 +1,6 @@
 import { Component } from 'react';
-import createProvider, { ReactNProvider } from '../src/create-provider';
+import createProvider from '../src/create-provider';
+import ReactNProvider from '../types/provider';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from './utils/initial';
 
 

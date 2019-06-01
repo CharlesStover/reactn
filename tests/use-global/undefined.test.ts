@@ -1,6 +1,7 @@
 import GlobalStateManager from '../../src/global-state-manager';
-import useGlobal, { GlobalTuple } from '../../src/use-global';
+import useGlobal from '../../src/use-global';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
+import { GlobalTuple } from '../../types/use-global';
 import HookTest from '../utils/hook-test';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 import { hasHooks } from '../utils/react-version';
