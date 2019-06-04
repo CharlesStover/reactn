@@ -11,11 +11,10 @@ export interface AdditionalReducers<
 
 export interface PropertyReducer<
   G extends {} = State,
-  R extends {} = Reducers,
   A extends any[] = any[],
   P extends keyof G = keyof G,
 > extends CallableFunction {
-  (global: G, dispatch: Dispatchers<G, R>, ...args: A): G[P];
+  (value: G[P], ...args: A): G[P];
 }
 
 

@@ -325,11 +325,11 @@ state. This allows you to write your reducers similar to React's `useReducer`.
 ```JavaScript
 import React, { useDispatch } from 'reactn'; // <-- reactn
 
-const incrementReducer = (global, dispatch, action) =>
-  global.count + action.amount;
+const incrementReducer = (count, action) =>
+  count + action.amount;
 
-const decrementReducer = (global, dispatch, action) =>
-  global.count - action.amount;
+const decrementReducer = (count, action) =>
+  count - action.amount;
 
 const MyComponent = () => {
   const increment = useDispatch(incrementReducer, 'count');

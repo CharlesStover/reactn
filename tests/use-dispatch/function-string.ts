@@ -2,7 +2,6 @@ import GlobalStateManager from '../../src/global-state-manager';
 import useDispatch from '../../src/use-dispatch';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
 import Dispatcher from '../../types/dispatcher';
-import Dispatchers from '../../types/dispatchers';
 import { PropertyReducer } from '../../types/reducer';
 import HookTest from '../utils/hook-test';
 import { G, INITIAL_STATE } from '../utils/initial';
@@ -17,18 +16,18 @@ type P = [ ZReducer, keyof G ];
 
 type V = Dispatcher<G, A>;
 
-type ZReducer = PropertyReducer<G, {}, string[], 'z'>;
+type ZReducer = PropertyReducer<G, string[], 'z'>;
 
 
 
 const ARGS: string[] = [ 'te', 'st' ];
 
 const REDUCER: ZReducer =
-  (global: G, _dispatch: Dispatchers<G, {}>, ...args: string[]): G['z'] =>
-    global.z + args.join('');
+  (z: G['z'], ...args: string[]): G['z'] =>
+    z + args.join('');
 
 const STATE_CHANGE: Partial<G> = {
-  z: REDUCER(INITIAL_STATE, {}, ...ARGS),
+  z: REDUCER(INITIAL_STATE.z, ...ARGS),
 };
 
 const NEW_STATE: G = {

@@ -46,7 +46,7 @@ export default function _useDispatch<
   P extends keyof G = keyof G,
 >(
   overrideGlobalStateManager: GlobalStateManager<G, R> | null,
-  reducer: PropertyReducer<G, R, A, P>,
+  reducer: PropertyReducer<G, A, P>,
   property: P,
 ): Dispatcher<G, A>;
 
@@ -83,7 +83,7 @@ export default function _useDispatch<
   P extends keyof G = keyof G,
 >(
   overrideGlobalStateManager: GlobalStateManager<G, R> | null,
-  reducer?: K | Reducer<G, R, A> | PropertyReducer<G, R, A, P>,
+  reducer?: K | Reducer<G, R, A> | PropertyReducer<G, A, P>,
   property?: P,
 ): UseDispatch<G, R, K, A> {
 
@@ -111,11 +111,11 @@ export default function _useDispatch<
     if (isPropertyReducer(reducer, property)) {
       const newReducer: Reducer<G, R, A, Partial<G>> = (
         global: G,
-        dispatch: Dispatchers<G, R>,
+        _dispatch: Dispatchers<G, R>,
         ...args: A
       ): Partial<G> => {
         const newGlobalState: Partial<G> = Object.create(null);
-        newGlobalState[property] = reducer(global, dispatch, ...args);
+        newGlobalState[property] = reducer(global[property], ...args);
         return newGlobalState;
       };
       return globalStateManager.createDispatcher(newReducer);

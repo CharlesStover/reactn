@@ -1,6 +1,6 @@
 {
   "name": "reactn",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "author": "Charles Stover <reactn@charlesstover.com>",
   "description": "React, but with built-in global state management.",
   "homepage": "https://github.com/CharlesStover/reactn#readme",

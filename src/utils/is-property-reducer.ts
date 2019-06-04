@@ -9,8 +9,8 @@ export default function isPropertyReducer<
   A extends any[] = any[],
   P extends keyof G = keyof G,
 >(
-  _reducer: Reducer<G, R, A> | PropertyReducer<G, R, A, P>,
+  _reducer: Reducer<G, R, A> | PropertyReducer<G, A, P>,
   property?: keyof G,
-): _reducer is PropertyReducer<G, R, A, P> {
+): _reducer is PropertyReducer<G, A, P> {
   return typeof property !== 'undefined';
 };

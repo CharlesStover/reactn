@@ -98,14 +98,14 @@ export default function _createProvider<
       reducer: Reducer<G, R, A>,
     ): Dispatcher<G, A>;
     public static useDispatch<A extends any[] = any[], P extends keyof G = keyof G>(
-      reducer: PropertyReducer<G, R, A, P>,
+      reducer: PropertyReducer<G, A, P>,
       property: P,
     ): Dispatcher<G, A>;
     public static useDispatch<K extends keyof R = keyof R>(
       reducer: K,
     ): Dispatcher<G, ExtractArguments<R[K]>>;
     public static useDispatch<K extends keyof R = keyof R, A extends any[] = any[], P extends keyof G = keyof G>(
-      reducer?: K | Reducer<G, R, A> | PropertyReducer<G, R, A, P>,
+      reducer?: K | Reducer<G, R, A> | PropertyReducer<G, A, P>,
       property?: P,
     ): UseDispatch<G, R, K, A> {
 
