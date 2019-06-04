@@ -4,7 +4,7 @@ import Dispatcher, { ExtractArguments } from './dispatcher';
 import Dispatchers from './dispatchers';
 import NewGlobalState from './new-global-state';
 import Reducer, { AdditionalReducers } from './reducer';
-import UseGlobal, { GlobalTuple, StateTuple } from './use-global';
+import { GlobalTuple, StateTuple } from './use-global';
 import WithGlobal, { Getter, Setter } from './with-global';
 
 
@@ -33,8 +33,13 @@ export default interface ReactNProvider<
     newGlobalState: NewGlobalState<G>,
     callback?: Callback<G>,
   ): Promise<G>;
+  useDispatch(): Dispatchers<G, R>;
   useDispatch<A extends any[] = any[]>(
     reducer: Reducer<G, R, A>,
+  ): Dispatcher<G, A>;
+  useDispatch<A extends any[] = any[], P extends keyof G = keyof G>(
+    reducer: Reducer<G, R, A, G[P]>,
+    property: P,
   ): Dispatcher<G, A>;
   useDispatch<K extends keyof R = keyof R>(
     reducer: K,

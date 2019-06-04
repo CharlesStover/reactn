@@ -109,16 +109,16 @@ describe('package.json main', (): void => {
     expect(ReactN.setGlobal).toHaveLength(2);
   });
 
+  // useDispatch
+  it('should contain useDispatch', (): void => {
+    expect(ReactN.useDispatch).toBeInstanceOf(Function);
+    expect(ReactN.useDispatch).toHaveLength(2);
+  });
+
   // useGlobal
   it('should contain useGlobal', (): void => {
     expect(ReactN.useGlobal).toBeInstanceOf(Function);
     expect(ReactN.useGlobal).toHaveLength(1);
-  });
-
-  // useDispatch
-  it('should contain useDispatch', (): void => {
-    expect(ReactN.useDispatch).toBeInstanceOf(Function);
-    expect(ReactN.useDispatch).toHaveLength(1);
   });
 
   // withGlobal

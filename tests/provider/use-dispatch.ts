@@ -13,9 +13,9 @@ describe('Provider.useDispatch', (): void => {
 
 
 
-  it('should be a function with 1 arguments', (): void => {
+  it('should be a function with 2 arguments', (): void => {
     expect(Provider.useDispatch).toBeInstanceOf(Function);
-    expect(Provider.useDispatch).toHaveLength(1);
+    expect(Provider.useDispatch).toHaveLength(2);
   });
 
   it.skip('should call the useDispatch helper function', (): void => {

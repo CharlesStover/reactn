@@ -5,7 +5,7 @@ import Dispatcher, { ExtractArguments } from '../types/dispatcher';
 import Dispatchers from '../types/dispatchers';
 import NewGlobalState from '../types/new-global-state';
 import ReactNProvider from '../types/provider';
-import Reducer, { AdditionalReducers } from '../types/reducer';
+import Reducer, { AdditionalReducers, PropertyReducer } from '../types/reducer';
 import UseGlobal, { GlobalTuple, StateTuple } from '../types/use-global';
 import WithGlobal, { Getter, Setter } from '../types/with-global';
 import Context from './context';
@@ -15,6 +15,7 @@ import GlobalStateManager from './global-state-manager';
 import setGlobal from './set-global';
 import useDispatch, { UseDispatch } from './use-dispatch';
 import useGlobal from './use-global';
+import isPropertyReducer from './utils/is-property-reducer';
 import REACT_CONTEXT_ERROR from './utils/react-context-error';
 import withGlobal from './with-global';
 
@@ -96,17 +97,28 @@ export default function _createProvider<
     public static useDispatch<A extends any[] = any[]>(
       reducer: Reducer<G, R, A>,
     ): Dispatcher<G, A>;
+    public static useDispatch<A extends any[] = any[], P extends keyof G = keyof G>(
+      reducer: PropertyReducer<G, R, A, P>,
+      property: P,
+    ): Dispatcher<G, A>;
     public static useDispatch<K extends keyof R = keyof R>(
       reducer: K,
     ): Dispatcher<G, ExtractArguments<R[K]>>;
-    public static useDispatch<K extends keyof R = keyof R, A extends any[] = any[]>(
-      reducer?: K | Reducer<G, R, A>,
+    public static useDispatch<K extends keyof R = keyof R, A extends any[] = any[], P extends keyof G = keyof G>(
+      reducer?: K | Reducer<G, R, A> | PropertyReducer<G, R, A, P>,
+      property?: P,
     ): UseDispatch<G, R, K, A> {
 
-      // TypeScript required this be an if-else block with the exact same
-      //   function call.
-      // The generics were added to make the best of an inefficient situation.
+      // TypeScript required these synonymous function calls be separate.
+      // Each call has its own generics, pleasing the TypeScript overlord.
       if (typeof reducer === 'function') {
+        if (isPropertyReducer(reducer, property)) {
+          return useDispatch<G, R, A, P>(
+            globalStateManager,
+            reducer,
+            property,
+          );
+        }
         return useDispatch<G, R, A>(globalStateManager, reducer);
       }
       return useDispatch<G, R>(globalStateManager, reducer);

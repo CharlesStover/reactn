@@ -302,6 +302,35 @@ const MyComponent = () => {
 export default MyComponent;
 ```
 
+By providing a second parameter to `useDispatch` that is the key of the global
+state, the return value of that reducer will set that property of the global
+state. This allows you to write your reducers similar to React's `useReducer`.
+
+```JavaScript
+import React, { useDispatch } from 'reactn'; // <-- reactn
+
+const incrementReducer = (global, dispatch, action) =>
+  global.count + action.amount;
+
+const decrementReducer = (global, dispatch, action) =>
+  global.count - action.amount;
+
+const MyComponent = () => {
+  const increment = useDispatch(incrementReducer, 'count');
+  const decrement = useDispatch(decrementReducer, 'count');
+
+  return (
+    <div>
+      <button onClick={() => increment({ amount: 1 })}>Add 1</button>
+      <button onClick={() => increment({ amount: 3 })}>Add 3</button>
+      <button onClick={() => decrement({ amount: 5 })}>Subtract 5</button>
+    </div>
+  );
+};
+
+export default MyComponent;
+```
+
 #### Helper Functions
 
 ##### addCallback
