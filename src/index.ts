@@ -1,4 +1,3 @@
-import React = require('react');
 import { Reducers, State } from '../default';
 import Callback from '../types/callback';
 import {
@@ -8,6 +7,7 @@ import {
 import Dispatcher, { ExtractArguments } from '../types/dispatcher';
 import Dispatchers from '../types/dispatchers';
 import NewGlobalState from '../types/new-global-state';
+import Omit from '../types/omit';
 import ReactNProvider from '../types/provider';
 import Reducer, { AdditionalReducers } from '../types/reducer';
 import { GlobalTuple, StateTuple } from '../types/use-global';
@@ -27,12 +27,13 @@ import setGlobal from './set-global';
 import useDispatch from './use-dispatch';
 import useGlobal from './use-global';
 import withGlobal from './with-global';
+import React = require('react');
 
 
 
 type BooleanFunction = () => boolean;
 
-interface ReactN extends TypeOfReact {
+interface ReactN extends Omit<typeof React, 'Component' | 'default' | 'PureComponent'> {
 
   <P extends {} = {}, S extends {} = {}, G extends {} = State, R extends {} = Reducers, SS = any>(
     DecoratedComponent: React.ComponentClass<P, S>,
@@ -51,8 +52,6 @@ interface ReactN extends TypeOfReact {
     reducers: AdditionalReducers<G, R>,
   ): BooleanFunction;
 
-  Component: ReactNComponentClass;
-
   createProvider<G extends {} = State, R extends {} = Reducers>(
     initialState?: G,
     initialReducers?: R,
@@ -64,8 +63,6 @@ interface ReactN extends TypeOfReact {
   ): Dispatchers<G, R>;
 
   getGlobal<G extends {} = State>(): G;
-
-  PureComponent: ReactNPureComponentClass;
 
   removeCallback<G extends {} = State>(
     callback: Callback<G>,
@@ -102,20 +99,44 @@ interface ReactN extends TypeOfReact {
 }
 
 declare namespace ReactNTypes {
+
+  interface Component<
+    P extends {} = {},
+    S extends {} = {},
+    G extends {} = State,
+    R extends {} = Reducers,
+    SS = any,
+  > extends ReactNComponent<P, S, G, R, SS> { }
+
   interface ComponentClass<
     P extends {} = {},
     S extends {} = {},
     G extends {} = State,
     R extends {} = Reducers,
-    SS = any
-  > extends React.ComponentClass<P, S> {
-    new (props: P, context?: any): ReactNComponent<P, S, G, R, SS>;
-  }
+    SS = any,
+  > extends ReactNComponentClass<P, S, G, R, SS> { }
 
+  interface PureComponent<
+    P extends {} = {},
+    S extends {} = {},
+    G extends {} = State,
+    R extends {} = Reducers,
+    SS = any,
+  > extends ReactNPureComponent<P, S, G, R, SS> { }
+
+  interface PureComponentClass<
+    P extends {} = {},
+    S extends {} = {},
+    G extends {} = State,
+    R extends {} = Reducers,
+    SS = any,
+  > extends ReactNPureComponentClass<P, S, G, R, SS> { }
+
+  class Component { }
   class ComponentClass { }
+  class PureComponent { }
+  class PureComponentClass { }
 }
-
-type TypeOfReact = typeof React;
 
 
 

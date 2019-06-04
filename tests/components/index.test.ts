@@ -24,7 +24,7 @@ const testComponent = (
 
   testMount(
     class TestMount extends _Super<Props, {}, G, R> {
-      render() { return null; }
+      public render(): null { return null; }
     }
   );
   
@@ -33,8 +33,8 @@ const testComponent = (
   testComponentWillUnmount(
     'prototype',
     class TestUnmountPrototype extends _Super {
-      componentWillUnmount() { spyUnmountPrototype(); }
-      render() { return null; }
+      public componentWillUnmount(): void { spyUnmountPrototype(); }
+      public render(): null { return null; }
     },
     spyUnmountPrototype,
   );
@@ -65,8 +65,8 @@ const testComponent = (
   testComponentWillUpdate(
     'prototype',
     class TestUpdatePrototype extends _Super<Props, {}, G, R> {
-      componentWillUpdate() { spyUpdatePrototype(); }
-      render() { return null; }
+      public componentWillUpdate(): void { spyUpdatePrototype(); }
+      public render(): null { return null; }
     },
     spyUpdatePrototype,
   );
@@ -117,7 +117,7 @@ describe('Components', (): void => {
     testMount(
       reactn(
         class DecoratedMount extends Component<Props, {}> {
-          render() { return null; }
+          public render(): null { return null; }
         }
       )
     );
@@ -128,8 +128,8 @@ describe('Components', (): void => {
       'prototype',
       reactn(
         class DecoratedCwuPrototype extends Component {
-          componentWillUnmount() { spyUnmountPrototype(); }
-          render() { return null; }
+          public componentWillUnmount(): void { spyUnmountPrototype(); }
+          public render(): null { return null; }
         }
       ),
       spyUnmountPrototype,
@@ -165,8 +165,8 @@ describe('Components', (): void => {
       'prototype',
       reactn(
         class DecoratedCwuPrototype extends Component<Props, {}> {
-          componentWillUpdate() { spyUpdatePrototype(); }
-          render() { return null; }
+          public componentWillUpdate(): void { spyUpdatePrototype(); }
+          public render(): null { return null; }
         }
       ),
       spyUpdatePrototype,
