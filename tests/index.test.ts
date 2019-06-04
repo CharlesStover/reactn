@@ -1,6 +1,6 @@
 import React = require('react');
 import ReactN from '../build/index';
-const reactn = require('../build/index');
+import reactn = require('../build/index');
 
 
 
@@ -24,7 +24,7 @@ describe('package.json main', (): void => {
     // Overrides should not match React.
     const entries: [ string, any ][] =
       Object.entries(React)
-        .filter(([ property ]) => !overrides.has(property));
+        .filter(([ property ]): boolean => !overrides.has(property));
 
     // All remaining properties should match React.
     for (const [ key, value ] of entries) {

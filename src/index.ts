@@ -52,6 +52,11 @@ interface ReactN extends Omit<typeof React, 'Component' | 'default' | 'PureCompo
     reducers: AdditionalReducers<G, R>,
   ): BooleanFunction;
 
+  // This line should not need to exist, since `Component` exists on both the
+  //   exported object and ReactNTypes namespace, but TravisCI fails with:
+  //   Property 'Component' does not exist on type 'ReactN'.
+  Component: ReactNComponentClass;
+
   createProvider<G extends {} = State, R extends {} = Reducers>(
     initialState?: G,
     initialReducers?: R,
@@ -63,6 +68,11 @@ interface ReactN extends Omit<typeof React, 'Component' | 'default' | 'PureCompo
   ): Dispatchers<G, R>;
 
   getGlobal<G extends {} = State>(): G;
+
+  // This line should not need to exist, since `Component` exists on both the
+  //   exported object and ReactNTypes namespace, but TravisCI fails with:
+  //   Property 'PureComponent' does not exist on type 'ReactN'.
+  PureComponent: ReactNPureComponentClass;
 
   removeCallback<G extends {} = State>(
     callback: Callback<G>,
