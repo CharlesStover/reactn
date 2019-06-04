@@ -278,11 +278,11 @@ providing a function to `useDispatch`.
 ```JavaScript
 import React, { useDispatch } from 'reactn'; // <-- reactn
 
-const incrementReducer = (global, action) => ({
+const incrementReducer = (global, dispatch, action) => ({
   count: global.count + action.amount,
 });
 
-const decrementReducer = (global, action) => ({
+const decrementReducer = (global, dispatch, action) => ({
   count: global.count - action.amount,
 });
 
