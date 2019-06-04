@@ -78,6 +78,7 @@ with deeply nested objects, a
 * [Getting Started](#getting-started)
   * [Managing Multiple States](#managing-multiple-states)
   * [Initializing Your State](#initializing-your-state)
+  * [Developer Tools](#developer-tools)
   * [Examples](#examples)
     * [Class Components](#class-components)
     * [Class Components (with Decorator)](#class-components-with-decorator)
@@ -134,6 +135,21 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
+
+### Developer Tools
+
+ReactN is compatible with the
+[Redux DevTools extension](https://github.com/zalmoxisus/redux-devtools-extension#installation).
+
+* Install the Redux DevTools extension to your browser or environment.
+* Install the `redux` package to your project via `npm` or `yarn`. This is used
+  to create a middleware Redux store for the Redux DevTools extension.
+  * You do _not_ have to import or use the `redux` package anywhere in your
+    project.
+  * You do _not_ need to create a Redux store, reducer, or actions.
+  * `redux` is just a peer dependency. It will be managed automatically.
+* Follow the instructions on the
+  [ReactN DevTools README](https://github.com/CharlesStover/reactn-devtools#readme).
 
 ### Examples
 
