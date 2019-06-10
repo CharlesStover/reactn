@@ -4,6 +4,9 @@ import { G, INITIAL_STATE } from '../utils/initial';
 
 
 const PROPERTY: keyof G = 'x';
+
+const PROPERTY2: keyof G = 'y';
+
 const PROPERTY_LISTENER = (): void => { };
 
 
@@ -22,8 +25,18 @@ describe('GlobalStateManager.removePropertyListener', (): void => {
     expect(globalStateManager.removePropertyListener).toHaveLength(1);
   });
 
-  it('remove a property listener', (): void => {
+  it('should remove a property listener', (): void => {
     globalStateManager.addPropertyListener(PROPERTY, PROPERTY_LISTENER);
+    expect(globalStateManager.hasPropertyListener(PROPERTY_LISTENER))
+      .toBe(true);
+    globalStateManager.removePropertyListener(PROPERTY_LISTENER);
+    expect(globalStateManager.hasPropertyListener(PROPERTY_LISTENER))
+      .toBe(false);
+  });
+
+  it('should remove more than 1 property listener', (): void => {
+    globalStateManager.addPropertyListener(PROPERTY, PROPERTY_LISTENER);
+    globalStateManager.addPropertyListener(PROPERTY2, PROPERTY_LISTENER);
     expect(globalStateManager.hasPropertyListener(PROPERTY_LISTENER))
       .toBe(true);
     globalStateManager.removePropertyListener(PROPERTY_LISTENER);

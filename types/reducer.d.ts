@@ -11,8 +11,8 @@ export interface AdditionalReducers<
 
 export interface PropertyReducer<
   G extends {} = State,
-  A extends any[] = any[],
   P extends keyof G = keyof G,
+  A extends any[] = any[],
 > extends CallableFunction {
   (value: G[P], ...args: A): G[P];
 }

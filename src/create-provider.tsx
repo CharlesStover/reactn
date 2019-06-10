@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { Reducers, State } from '../default';
 import Callback from '../types/callback';
-import Dispatcher, { ExtractArguments } from '../types/dispatcher';
+import Dispatcher, {
+  ExtractArguments,
+  PropertyDispatcher,
+} from '../types/dispatcher';
 import Dispatchers from '../types/dispatchers';
 import NewGlobalState from '../types/new-global-state';
 import ReactNProvider from '../types/provider';
@@ -97,23 +100,23 @@ export default function _createProvider<
     public static useDispatch<A extends any[] = any[]>(
       reducer: Reducer<G, R, A>,
     ): Dispatcher<G, A>;
-    public static useDispatch<A extends any[] = any[], P extends keyof G = keyof G>(
-      reducer: PropertyReducer<G, A, P>,
+    public static useDispatch<P extends keyof G = keyof G, A extends any[] = any[]>(
+      reducer: PropertyReducer<G, P, A>,
       property: P,
-    ): Dispatcher<G, A>;
+    ): PropertyDispatcher<G, P, A>;
     public static useDispatch<K extends keyof R = keyof R>(
       reducer: K,
     ): Dispatcher<G, ExtractArguments<R[K]>>;
-    public static useDispatch<K extends keyof R = keyof R, A extends any[] = any[], P extends keyof G = keyof G>(
-      reducer?: K | Reducer<G, R, A> | PropertyReducer<G, A, P>,
+    public static useDispatch<P extends keyof G = keyof G, K extends keyof R = keyof R, A extends any[] = any[]>(
+      reducer?: K | Reducer<G, R, A> | PropertyReducer<G, P, A>,
       property?: P,
-    ): UseDispatch<G, R, K, A> {
+    ): UseDispatch<G, R, P, K, A> {
 
       // TypeScript required these synonymous function calls be separate.
       // Each call has its own generics, pleasing the TypeScript overlord.
       if (typeof reducer === 'function') {
         if (isPropertyReducer(reducer, property)) {
-          return useDispatch<G, R, A, P>(
+          return useDispatch<G, R, P, A>(
             globalStateManager,
             reducer,
             property,

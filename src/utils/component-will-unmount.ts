@@ -4,11 +4,12 @@ import { ReactNComponentWillUnmount } from '../methods';
 
 
 
-type VoidFunction = () => void;
+// type VoidFunction = () => void;
 
 
 
 // this.componentWillUnmount on instance
+/*
 export const componentWillUnmountInstance = <
   P extends {} = {},
   S extends {} = {},
@@ -28,6 +29,7 @@ export const componentWillUnmountInstance = <
   }
   return false;
 };
+*/
 
 // this.componentWillUnmount on prototype
 export const componentWillUnmountPrototype = <
@@ -43,6 +45,7 @@ export const componentWillUnmountPrototype = <
     Object.getPrototypeOf(that);
   if (Object.prototype.hasOwnProperty.call(proto, 'componentWillUnmount')) {
     that.componentWillUnmount = (): void => {
+      console.log('ReactN component unmounting.');
       ReactNComponentWillUnmount(that);
       proto.componentWillUnmount.bind(that)();
     };

@@ -1,6 +1,9 @@
 import { Reducers, State } from '../default';
 import Callback from './callback';
-import Dispatcher, { ExtractArguments } from './dispatcher';
+import Dispatcher, {
+  ExtractArguments,
+  PropertyDispatcher,
+} from './dispatcher';
 import Dispatchers from './dispatchers';
 import NewGlobalState from './new-global-state';
 import Reducer, { AdditionalReducers, PropertyReducer } from './reducer';
@@ -47,9 +50,9 @@ export default interface ReactNProvider<
     reducer: Reducer<G, R, A>,
   ): Dispatcher<G, A>;
   useDispatch<A extends any[] = any[], P extends keyof G = keyof G>(
-    reducer: PropertyReducer<G, A, P>,
+    reducer: PropertyReducer<G, P, A>,
     property: P,
-  ): Dispatcher<G, A>;
+  ): PropertyDispatcher<G, P, A>;
   useDispatch<K extends keyof R = keyof R>(
     reducer: K,
   ): Dispatcher<G, ExtractArguments<R[K]>>;

@@ -51,6 +51,11 @@ reducer is the ReactN global state object.
 You use `dispatch = useDispatch(reducerName)` to use a reducer that was added
 by the `addReducer` helper function.
 
+You use `dispatch = useDispatch(reducerFunction, property)` or
+`[ value, dispatch ] = useDispatch(reducerFunction, property)` to apply a
+reducer specifically to a global state property. This is very similar to
+React's native `useReducer` functionality.
+
 #### Class Components
 
 Global state in class components behaves exactly like local state!

@@ -263,7 +263,9 @@ export default class GlobalStateManager<
 
     // Remove this property listener from the global state.
     for (const propertyListeners of this.propertyListeners.values()) {
-      removed = removed || propertyListeners.delete(propertyListener);
+      if (propertyListeners.delete(propertyListener)) {
+        removed = true;
+      }
     }
 
     return removed;

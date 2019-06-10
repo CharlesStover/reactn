@@ -4,12 +4,15 @@ import { ReactNComponentWillUpdate } from '../methods';
 
 
 
+/*
 type ComponentWillUpdate<P extends {} = {}, S extends {} = {}> =
   (nextProps: P, nextState: S, context: any) => void;
+*/
 
 
 
 // this.componentWillUpdate on instance
+/*
 export const componentWillUpdateInstance = <
   P extends {} = {},
   S extends {} = {},
@@ -29,6 +32,7 @@ export const componentWillUpdateInstance = <
   }
   return false;
 };
+*/
 
 // this.componentWillUpdate on prototype
 export const componentWillUpdatePrototype = <

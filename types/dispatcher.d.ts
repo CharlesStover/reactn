@@ -12,3 +12,9 @@ export type ExtractArguments<R> =
   R extends Reducer<infer _G, infer _R, infer A>
     ? A
     : never;
+
+export type PropertyDispatcher<
+  G extends {} = State,
+  P extends keyof G = keyof G,
+  A extends any[] = any[],
+> = Dispatcher<G, A> & [ G[P], Dispatcher<G, A> ];
