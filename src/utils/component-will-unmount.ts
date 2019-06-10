@@ -45,7 +45,6 @@ export const componentWillUnmountPrototype = <
     Object.getPrototypeOf(that);
   if (Object.prototype.hasOwnProperty.call(proto, 'componentWillUnmount')) {
     that.componentWillUnmount = (): void => {
-      console.log('ReactN component unmounting.');
       ReactNComponentWillUnmount(that);
       proto.componentWillUnmount.bind(that)();
     };
