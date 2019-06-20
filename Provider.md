@@ -144,7 +144,7 @@ function MyComponent({ x4 }) {
 // Ignore Provider1 and map Provider4's global state to props.
 const MyComponentWithGlobal = Provider4.withGlobal(
   ({ x }) => ({ x4: x }),
-);
+)(MyComponent);
 
 ReactDOM.render(
   <Provider1>
