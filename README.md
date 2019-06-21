@@ -83,6 +83,7 @@ with deeply nested objects, a
 * [Getting Started](#getting-started)
   * [Managing Multiple States](#managing-multiple-states)
   * [Initializing Your State](#initializing-your-state)
+  * [TypeScript Support](#typescript-support)
   * [Developer Tools](#developer-tools)
   * [Examples](#examples)
     * [Class Components](#class-components)
@@ -140,6 +141,63 @@ ReactDOM.render(
   document.getElementById('root')
 );
 ```
+
+### TypeScript Support
+
+ReactN supports TypeScript out of the box! It is written entirely in TypeScript.
+This gives it powerful intellisense, auto-complete, and error-catching abilities.
+
+TypeScript can maintain inferred global state and reducer shape of a
+[Providers](https://github.com/CharlesStover/reactn/blob/master/Provider.md).
+Unfortunately, without your help, it cannot track the shape of the "default"
+global state -- the one manipulated by the `setGlobal` and `addReducer` helper
+functions.
+
+In order to tell TypeScript the shape of your global state when you are not using
+a Provider, create a file at `src/global.d.ts` with the following contents:
+
+```JavaScript
+import 'reactn';
+
+declare module 'reactn/default' {
+
+  export interface Reducers {
+ 
+    append: (
+      global: State,
+      dispatch: Dispatch,
+      ...strings: any[]
+    ) => Pick<State, 'value'>;
+
+    increment: (
+      global: State,
+      dispatch: Dispatch,
+      i: number,
+    ) => Pick<State, 'count'>;
+
+    doNothing: (
+      global: State,
+      dispatch: Dispatch,
+    ) => null;
+  }
+
+  export interface State {
+    count: number;
+    value: string;
+  }
+}
+```
+
+In the above file, we extend the `Reducers` and `State` interfaces in the
+`'reactn/default'` file. While you will never use `'reactn/default'` in
+your code, ReactN will use it to determine the shape of the default
+global state.
+
+The above example will add `append`, `increment`, and `doNothing` to your
+`useDispatch` and `this.dispatch` auto-completion and typing. The parameters
+and return values will also be correctly typed. In addition, it will also
+add `count` and `value` to your `useGlobal` and `this.global` auto-competion
+with the appropriate types as well.
 
 ### Developer Tools
 
