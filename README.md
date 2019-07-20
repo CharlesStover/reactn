@@ -97,7 +97,7 @@ with deeply nested objects, a
       * [removeCallback](#removecallback)
       * [resetGlobal](#resetglobal)
       * [setGlobal](#setglobal)
-      * [WithGlobal](#withglobal)
+      * [withGlobal](#withglobal)
       * [withInit](#withinit)
 * [Frequently Asked Questions](https://github.com/CharlesStover/reactn/blob/master/FAQ.md)
 * [Support](#support)
