@@ -3,11 +3,7 @@ import { Reducers, State } from '../default';
 import Callback from '../types/callback';
 import { ReactNComponentClass } from '../types/component-class';
 import Dispatchers from '../types/dispatchers';
-import WithGlobal, {
-  Getter,
-  LowerOrderComponent,
-  Setter,
-} from '../types/with-global';
+import WithGlobal, { Getter, Setter } from '../types/with-global';
 import NewGlobalState from '../types/new-global-state';
 import { ReactNComponent } from './components';
 import ReactNContext from './context';
@@ -20,7 +16,7 @@ import { ReactNGlobal, ReactNSetGlobal } from './methods';
 // Get the name of a Component.
 const componentName = <
   P extends {} = {},
->(Component: LowerOrderComponent<P>): string =>
+>(Component: React.ComponentType<P> | string): string =>
   typeof Component === 'string' ?
     Component :
     Component.displayName ||
@@ -57,14 +53,14 @@ export default function _withGlobal<
   setter: Setter<G, R, HP, LP> = (): null => null,
 ): WithGlobal<HP, LP> {
   return function ReactNWithGlobal(
-    Component: LowerOrderComponent<LP>,
+    Component: React.ComponentType<LP> | string,
   ): ReactNComponentClass<HP, {}, G> {
 
     // If a Global State was provided, use it.
     // Otherwise, if a Provider was mounted, use its global state.
     // Otherwise, use the default global state.
 
-    return class ReactNHOC extends ReactNComponent<HP, {}, G> {
+    return class ReactNWithGlobalHoc extends ReactNComponent<HP, {}, G> {
 
       // Context knows it provides a GlobalStateManager, but not the shape.
       public static contextType: React.Context<GlobalStateManager<G, R>> =

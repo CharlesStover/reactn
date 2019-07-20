@@ -12,9 +12,11 @@ type BooleanFunction = () => boolean;
 export default function _addReducers<
   G extends {} = State,
   R extends {} = Reducers,
+  AR extends AdditionalReducers<G, R> = AdditionalReducers<G, R>,
+  ARR extends AdditionalReducers<G, R & AR> = AdditionalReducers<G, R & AR>,
 >(
   globalStateManager: GlobalStateManager<G, R>,
-  reducers: AdditionalReducers<G, R & any>,
+  reducers: Partial<R> & ARR,
 ): BooleanFunction {
 
   // Amalgamate all the functions to remove these reducers.

@@ -97,6 +97,8 @@ with deeply nested objects, a
       * [removeCallback](#removecallback)
       * [resetGlobal](#resetglobal)
       * [setGlobal](#setglobal)
+      * [WithGlobal](#withglobal)
+      * [withInit](#withinit)
 * [Frequently Asked Questions](https://github.com/CharlesStover/reactn/blob/master/FAQ.md)
 * [Support](#support)
 
@@ -123,7 +125,7 @@ attempt to render.
 It is recommended that you initialize the global state just prior to mounting
 with `ReactDOM`.
 
-```JavaScript
+```javascript
 import React, { setGlobal } from 'reactn';
 import ReactDOM from 'react-dom';
 import App from './App';
@@ -156,7 +158,7 @@ functions.
 In order to tell TypeScript the shape of your global state when you are not using
 a Provider, create a file at `src/global.d.ts` with the following contents:
 
-```JavaScript
+```javascript
 import 'reactn';
 
 declare module 'reactn/default' {
@@ -223,7 +225,7 @@ directly into the React namespace. As a result, `Component` and `PureComponent`
 will have access to the `global` and `dispatch` member variables and
 `setGlobal` method.
 
-```JavaScript
+```javascript
 import React from 'reactn'; // <-- reactn
 import Card from '../card/card';
 
@@ -273,7 +275,7 @@ By importing React and ReactN separately, the React namespace remains
 unchanged. You can inject ReactN's global functionality into your vanilla React
 component by using the `@reactn` decorator imported from the `reactn` package.
 
-```JavaScript
+```javascript
 import React from 'react';
 import reactn from 'reactn'; // <-- reactn
 import Card from '../card/card';
@@ -324,7 +326,7 @@ export default class Cards extends React.PureComponent {
 Using [React Hooks](https://reactjs.org/docs/hooks-intro.html), you can harness
 `useGlobal` to access the global state.
 
-```JavaScript
+```javascript
 import React, { useGlobal } from 'reactn'; // <-- reactn
 import Card from '../card/card';
 
@@ -354,7 +356,7 @@ export default Cards;
 You may also use the `useDispatch` hook analogously to the `useReducer` hook by
 providing a function to `useDispatch`.
 
-```JavaScript
+```javascript
 import React, { useDispatch } from 'reactn'; // <-- reactn
 
 const incrementReducer = (global, dispatch, action) => ({
@@ -385,7 +387,7 @@ By providing a second parameter to `useDispatch` that is the key of the global
 state, the return value of that reducer will set that property of the global
 state. This allows you to write your reducers similar to React's `useReducer`.
 
-```JavaScript
+```javascript
 import React, { useDispatch } from 'reactn'; // <-- reactn
 
 const incrementReducer = (count, action) =>
@@ -422,7 +424,7 @@ new global state will trigger the very same callback.
 
 The only parameter is the callback function.
 
-```JavaScript
+```javascript
 import { addCallback, setGlobal } from 'reactn';
 
 // Every time the global state changes, this function will execute.
@@ -446,7 +448,7 @@ setGlobal({ value: 1 });
 The return value of `addCallback` is a function that, when executed, removes
 the callback.
 
-```JavaScript
+```javascript
 import { addCallback, setGlobal } from 'reactn';
 
 const removeAlert = addCallback(global => {
@@ -479,7 +481,7 @@ when dispatching. The reducer function that you _use_ when dispatching does not
 contain the global state or map of reducers. Those are prefixed for you
 automatically.
 
-```JavaScript
+```javascript
 import { addReducer, setGlobal, useDispatch, useGlobal } from 'reactn';
 
 // Initialize the global state with the value 0.
@@ -523,7 +525,7 @@ For a class component, the analogous method is
 The `dispatch` parameter on a reducer allows you to write "sagas," or a single
 reducer that dispatches other reducers.
 
-```JavaScript
+```javascript
 // add(1)
 addReducer('add', (global, dispatch, i) => ({
   x: global.x + i,
@@ -555,7 +557,7 @@ should use `useDispatch` or `this.dispatch`.
 
 `getDispatch` has no parameters.
 
-```JavaScript
+```javascript
 import { getDispatch } from 'reactn';
 
 // Access this.dispatch.reducerName outside of a Component.
@@ -577,7 +579,7 @@ nothing more than return a current snapshot of the global state.
 
 `getGlobal` has no parameters.
 
-```JavaScript
+```javascript
 import { getGlobal } from 'reactn';
 
 // Access this.global.value outside of a Component.
@@ -596,7 +598,7 @@ the return value of `addCallback`.
 
 The only parameter is the callback function itself.
 
-```JavaScript
+```javascript
 import { addCallback, removeCallback, setGlobal } from 'reactn';
 
 function alertCallback(global) {
@@ -624,7 +626,7 @@ including callbacks, property listeners, and reducers.
 
 There are no parameters.
 
-```JavaScript
+```javascript
 import { getGlobal, resetGlobal, setGlobal } from 'reactn';
 
 // Set the value.
@@ -652,7 +654,7 @@ The optional second parameter is a callback.
 
 `setGlobal` with a new global state:
 
-```JavaScript
+```javascript
 import { setGlobal } from 'reactn';
 
 // Set loading to true.
@@ -663,7 +665,7 @@ setGlobal({
 
 `setGlobal` with a new global state and a callback:
 
-```JavaScript
+```javascript
 import { setGlobal } from 'reactn';
 
 // Set loading to true.
@@ -690,7 +692,7 @@ The first parameter is a function for getting global state values.
 The second parameter is a function for setting global state values (similar to
 `dispatch`).
 
-```JavaScript
+```javascript
 import React, { withGlobal } from 'reactn';
 
 // A button that displays the value and, when clicked, increments it.
@@ -727,7 +729,41 @@ export default withGlobal(
     }
   })
 )(MyComponent);
+```
 
+##### withInit
+
+In some cases (such as when using Next.js), you may be unable to run a setup
+script prior to your ReactN components mounting. In order to instantiate your
+global state and reducers prior to mounting, you may use the `withInit` Higher
+Order Component. This HOC will await the setting of your global state before
+mounting the provided Lower Order Component (e.g. `<App />`).
+
+```javascript
+import React, { useDispatch, useGlobal, withInit } from 'reactn';
+
+const INITIAL_REDUCERS = {
+  addOne: ({ count }) => ({
+    count: count + 1,
+  }),
+};
+
+const INITIAL_STATE = {
+  count: 0,
+};
+
+export default withInit(
+  INITIAL_STATE,
+  INITIAL_REDUCERS,
+)(function App() {
+  const addOne = useDispatch('addOne');
+  const [ count ] = useGlobal('count');
+  return (
+    <button onClick={addOne}>
+      Count: {count}
+    </button>
+  );
+});
 ```
 
 ## Support

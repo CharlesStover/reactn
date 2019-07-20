@@ -105,10 +105,9 @@ describe('Components', (): void => {
   });
 
   afterEach((): void => {
+    cleanup();
     resetGlobal(defaultGlobalStateManager);
   });
-
-  afterEach(cleanup);
 
 
 

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render } from 'react-testing-library';
+import { cleanup, render } from 'react-testing-library';
 import ReactN = require('../src/index');
 import ReactNProvider from '../types/provider';
 import { Getter } from '../types/with-global';
@@ -31,6 +31,7 @@ const TestComponent = ({ z }: Props): JSX.Element => {
 describe('withGlobal', (): void => {
 
   afterEach((): void => {
+    cleanup();
     ReactN.resetGlobal();
   });
 

@@ -12,6 +12,7 @@ import ReactNProvider from '../types/provider';
 import Reducer, { AdditionalReducers } from '../types/reducer';
 import { GlobalTuple, StateTuple } from '../types/use-global';
 import WithGlobal, { Getter, Setter } from '../types/with-global';
+import WithInit from '../types/with-init';
 import { ReactNComponent, ReactNPureComponent } from './components';
 import addCallback from './add-callback';
 import addReducer from './add-reducer';
@@ -27,6 +28,7 @@ import setGlobal from './set-global';
 import useDispatch from './use-dispatch';
 import useGlobal from './use-global';
 import withGlobal from './with-global';
+import withInit from './with-init';
 import React = require('react');
 
 
@@ -43,13 +45,17 @@ interface ReactN extends Omit<typeof React, 'Component' | 'default' | 'PureCompo
     callback: Callback<G>,
   ): BooleanFunction;
 
-  addReducer<G extends {} = State>(
+  addReducer<G extends {} = State, R extends {} = Reducers, ReducerName extends keyof R = keyof R>(
+    name: ReducerName,
+    reducer: R[ReducerName],
+  ): BooleanFunction;
+  addReducer<G extends {} = State, R extends {} = Reducers>(
     name: string,
-    reducer: Reducer<G>,
+    reducer: Reducer<G, R & AdditionalReducers<G, R>>,
   ): BooleanFunction;
 
-  addReducers<G extends {} = State, R extends {} = Reducers>(
-    reducers: AdditionalReducers<G, R>,
+  addReducers<G extends {} = State, R extends {} = Reducers, AR extends AdditionalReducers<G, R> = AdditionalReducers<G, R>, ARR extends AdditionalReducers<G, R & AR> = AdditionalReducers<G, R & AR>>(
+    reducers: Partial<R> & ARR,
   ): BooleanFunction;
 
   // This line should not need to exist, since `Component` exists on both the
@@ -106,6 +112,11 @@ interface ReactN extends Omit<typeof React, 'Component' | 'default' | 'PureCompo
     getter?: Getter<G, R, HP, LP>,
     setter?: Setter<G, R, HP, LP>,
   ): WithGlobal<HP, LP>;
+
+  withInit<G extends {} = State, R extends {} = Reducers, P extends {} = {}>(
+    initialGlobal?: NewGlobalState<G> | null,
+    initialReducers?: null | R,
+  ): WithInit<P, G, R>;
 }
 
 declare namespace ReactNTypes {
@@ -166,4 +177,5 @@ export = Object.assign(reactn, React, {
   useDispatch: useDispatch.bind(null, null),
   useGlobal: useGlobal.bind(null, null),
   withGlobal: withGlobal.bind(null, null),
+  withInit,
 }) as ReactN & typeof ReactNTypes;

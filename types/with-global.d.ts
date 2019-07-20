@@ -12,9 +12,6 @@ export type Getter<
 > = (global: G, dispatch: Dispatchers<G, R>, props: HP) =>
   null | Partial<LP> | void;
 
-export type LowerOrderComponent<P = {}> =
-  ComponentClass<P> | FunctionComponent<P> | string;
-
 type SetGlobal<G extends {} = State> = (
   newGlobalState: NewGlobalState<G>,
   callback?: Callback<G>,
@@ -28,7 +25,7 @@ export type Setter<
 > = (setGlobal: SetGlobal<G>, dispatch: Dispatchers<G, R>, props: HP) =>
   null | Partial<LP> | void;
 
-type WithGlobal<HP, LP> =
-  (Component: LowerOrderComponent<LP>) => ComponentClass<HP>;
+type WithGlobal<HP extends {} = {}, LP extends {} = {}> =
+  (Component: React.ComponentType<LP> | string) => ComponentClass<HP>;
 
 export default WithGlobal;

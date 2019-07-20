@@ -127,4 +127,10 @@ describe('package.json main', (): void => {
     expect(ReactN.withGlobal).toHaveLength(2);
   });
 
+  // withInit
+  it('should contain withInit', (): void => {
+    expect(ReactN.withInit).toBeInstanceOf(Function);
+    expect(ReactN.withInit).toHaveLength(2);
+  });
+
 });

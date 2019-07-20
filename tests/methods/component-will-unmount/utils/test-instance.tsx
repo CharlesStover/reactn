@@ -2,9 +2,6 @@ import * as React from 'react';
 import { render } from 'react-testing-library';
 import { ReactNComponent } from '../../../../src/components';
 import { ReactNComponentWillUnmount } from '../../../../src/methods';
-import {
-  componentWillUnmountInstance,
-} from '../../../../src/utils/component-will-unmount';
 
 
 
@@ -34,8 +31,8 @@ export default function testUndefined(
 
     expect(ReactNComponentWillUnmount).toHaveBeenCalledTimes(1);
     // expect(ReactNComponentWillUnmount).toHaveBeenCalledWith()
-    expect(componentWillUnmountInstance).toHaveBeenCalledTimes(1);
-    // expect(componentWillUnmountInstance).toHaveBeenCalledWith();;
+    // expect(componentWillUnmountInstance).toHaveBeenCalledTimes(1);
+    // expect(componentWillUnmountInstance).toHaveBeenCalledWith();
     expect(mockComponentWillUnmount).toHaveBeenCalledTimes(1);
     expect(mockComponentWillUnmount).toHaveBeenCalledWith();
   };
