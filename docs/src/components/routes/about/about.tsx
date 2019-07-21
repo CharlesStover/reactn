@@ -8,7 +8,7 @@ interface Props {
 export default withGlobal(
   ({ color }) => ({ color }),
 )(
-  function About({ color }) {
+  function About({ color }: Props): JSX.Element {
     const setColor = useDispatch('setColor');
     setColor('#61DAFB');
     return <>

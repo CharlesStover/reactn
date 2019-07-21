@@ -1,6 +1,6 @@
 import React from 'reactn';
 
-export default function AddReducer() {
+export default function AddReducer(): JSX.Element {
   return (
     <>
       <p>Use <code>addReducer</code> to add a reducer to your global state.</p>

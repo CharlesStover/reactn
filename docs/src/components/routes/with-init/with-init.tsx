@@ -1,6 +1,6 @@
 import React from 'reactn';
 
-export default function UseDispatch(): JSX.Element {
+export default function WithInit(): JSX.Element {
   return (
     <p>Coming soon...</p>
   );

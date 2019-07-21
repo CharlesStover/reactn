@@ -1,6 +1,6 @@
 import React from 'reactn';
 
-export default function AddCallback() {
+export default function AddCallback(): JSX.Element {
   return (
     <>
       <p>
