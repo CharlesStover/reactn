@@ -1,7 +1,9 @@
 import { Component } from 'react';
 import createProvider from '../src/create-provider';
+import REACT_CONTEXT_ERROR from '../src/utils/react-context-error';
 import ReactNProvider from '../types/provider';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from './utils/initial';
+import { hasContext } from './utils/react-version';
 
 
 
@@ -19,6 +21,13 @@ describe('createProvider', (): void => {
     expect(createProvider).toBeInstanceOf(Function);
     expect(createProvider).toHaveLength(2);
   });
+
+
+
+  // If Context is not supported,
+  if (!hasContext) {
+    return;
+  }
 
 
 

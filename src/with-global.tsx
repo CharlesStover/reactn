@@ -7,9 +7,9 @@ import WithGlobal, { Getter, Setter } from '../types/with-global';
 import NewGlobalState from '../types/new-global-state';
 import { ReactNComponent } from './components';
 import ReactNContext from './context';
-import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager from './global-state-manager';
 import { ReactNGlobal, ReactNSetGlobal } from './methods';
+import getGlobalStateManager from './utils/get-global-state-manager';
 
 
 
@@ -86,7 +86,7 @@ export default function _withGlobal<
         if (this.context instanceof GlobalStateManager) {
           return this.context;
         }
-        return defaultGlobalStateManager as GlobalStateManager<G, R>;
+        return getGlobalStateManager<G, R>();
       }
 
       public setGlobal = (

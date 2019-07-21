@@ -1,4 +1,4 @@
-import { render } from 'react-testing-library';
+import { render } from '@testing-library/react';
 import React, { ComponentClass } from '../../build';
 import spyOn from '../utils/spy-on-global-state-manager';
 

@@ -34,15 +34,9 @@ const NEW_STATE: G = {
 describe('useGlobal(string)', (): void => {
 
   let globalStateManager: GlobalStateManager<G, R>;
-  let testUseGlobal: HookTest<P, T>;
-
   beforeEach((): void => {
     globalStateManager =
       new GlobalStateManager<G, R>(INITIAL_STATE, INITIAL_REDUCERS);
-    testUseGlobal =
-      new HookTest<P, T>(
-        (property: P[0]): T => useGlobal(globalStateManager, property),
-      );
   });
 
 
@@ -50,11 +44,22 @@ describe('useGlobal(string)', (): void => {
   // If Hooks are not supported,
   if (!hasHooks) {
     it('should require Hooks', (): void => {
-      testUseGlobal.render(PROPERTY);
-      expect(testUseGlobal.error).toBe(REACT_HOOKS_ERROR);
+      expect((): void => {
+        useGlobal(globalStateManager, PROPERTY);
+      }).toThrowError(REACT_HOOKS_ERROR);
     });
     return;
   }
+
+
+
+  let testUseGlobal: HookTest<P, T>;
+  beforeEach((): void => {
+    testUseGlobal =
+      new HookTest<P, T>(
+        (property: P[0]): T => useGlobal(globalStateManager, property),
+      );
+  });
 
 
 

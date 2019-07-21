@@ -1,10 +1,8 @@
+import { render } from '@testing-library/react';
 import * as React from 'react';
-import { cleanup, render } from 'react-testing-library';
 import { ReactNComponent } from '../src/components';
 import defaultGlobalStateManager from '../src/default-global-state-manager';
-import GlobalStateManager from '../src/global-state-manager';
 import resetGlobal from '../src/reset-global';
-import useGlobal from '../src/use-global';
 import withInit from '../src/with-init';
 import { ReactNComponentClass } from '../types/component-class';
 import WithInit from '../types/with-init';
@@ -14,24 +12,15 @@ import spyOn from './utils/spy-on-global-state-manager';
 
 
 
-// TS2339: Property 'innerHTML' does not exist on type 'HTMLSpanElement'.
-interface Container extends HTMLSpanElement {
-  innerHTML: string;
+const INNER_TEXT: string = `function ${INITIAL_STATE.z}`;
+
+class TestComponent extends ReactNComponent<{}, {}, G, R> {
+  public render(): JSX.Element {
+    return <span data-testid="test">
+      {typeof this.dispatch.increment} {this.global.z}
+    </span>;
+  }
 }
-
-
-
-const INNER_HTML: string = `<span>${INITIAL_STATE.z}</span>`;
-
-const TestComponent = (): JSX.Element => {
-  const [ z ] = useGlobal<G>(
-    defaultGlobalStateManager as GlobalStateManager<G, R>,
-    'z',
-  );
-  return <span>{z}</span>;
-};
-
-
 
 
 
@@ -65,10 +54,6 @@ describe('withInit', (): void => {
         Component = withInitHoc(TestComponent);
       });
 
-      afterEach((): void => {
-        cleanup();
-      });
-
       /*
       it('should be a ReactN component class', (): void => {
         expect(Component).toBeInstanceOf(ReactNComponent);
@@ -82,10 +67,14 @@ describe('withInit', (): void => {
       });
 
       it('should render correctly', async (): Promise<void> => {
-        const testComponent = render(<Component />);
+        const { getByTestId } = render(<Component />);
         await flushPromises();
-        const span: Container = testComponent.container as Container;
-        expect(span.innerHTML).toBe(INNER_HTML);
+        // @ts-ignore:
+        //   Argument of type '"test"' is not assignable to parameter of type
+        //     'MatcherOptions'.
+        //   Property 'toHaveTextContent' does not exist on type
+        //     'Matchers<HTMLElement>'.
+        expect(getByTestId('test')).toHaveTextContent(INNER_TEXT);
       });
 
       describe('reducers', (): void => {

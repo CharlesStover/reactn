@@ -3,18 +3,11 @@ import Callback from '../types/callback';
 import Dispatchers from '../types/dispatchers';
 import NewGlobalState from '../types/new-global-state';
 import { ReactNComponent, ReactNPureComponent } from './components';
-import Context from './context';
-import defaultGlobalStateManager from './default-global-state-manager';
 import GlobalStateManager from './global-state-manager';
 import setGlobal from './set-global';
+import getGlobalStateManager from './utils/get-global-state-manager';
 
-const getGlobalStateManager = <
-  G extends {} = State,
-  R extends {} = Reducers,
->(): GlobalStateManager<G, R> =>
-  Context &&
-  (Context._currentValue2 as GlobalStateManager<G, R>) ||
-  (defaultGlobalStateManager as GlobalStateManager<G, R>);
+
 
 // Accurately define React components as having an updater member variable.
 interface TrueComponent extends ReactNComponent {

@@ -5,7 +5,7 @@ import Dispatcher, { ExtractArguments } from '../../types/dispatcher';
 import ReactNProvider from '../../types/provider';
 import HookTest from '../utils/hook-test';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
-import { hasContext } from '../utils/react-version';
+import { hasHooks } from '../utils/react-version';
 import spyOn from '../utils/spy-on-global-state-manager';
 
 
@@ -24,35 +24,40 @@ const EMPTY_STATE: {} = Object.create(null);
 
 const NAME: keyof R = 'append';
 
-const Provider: ReactNProvider<G, R> = createProvider<G, R>(
-  INITIAL_STATE,
-  INITIAL_REDUCERS,
-);
-
-const STATE_CHANGE: Partial<G> = INITIAL_REDUCERS[NAME](
-  INITIAL_STATE,
-  Provider.dispatch,
-  ...ARGS,
-);
-
-const NEW_STATE: G = {
-  ...INITIAL_STATE,
-  ...STATE_CHANGE,
-};
-
 
 
 describe('Context useDispatch(string)', (): void => {
 
-  // If Context is not supported,
-  if (!hasContext) {
+  // If Hooks are not supported,
+  if (!hasHooks) {
+    it.todo('should require hooks');
     return;
   }
 
-  let reducer: Dispatcher<G, A>;
-  let testUseDispatch: HookTest<P, V>;
+
+
+  const Provider: ReactNProvider<G, R> = createProvider<G, R>(
+    INITIAL_STATE,
+    INITIAL_REDUCERS,
+  );
+
   const spy = spyOn('set');
 
+  const STATE_CHANGE: Partial<G> = INITIAL_REDUCERS[NAME](
+    INITIAL_STATE,
+    Provider.dispatch,
+    ...ARGS,
+  );
+  
+  const NEW_STATE: G = {
+    ...INITIAL_STATE,
+    ...STATE_CHANGE,
+  };
+
+
+
+  let dispatch: Dispatcher<G, A>;
+  let testUseDispatch: HookTest<P, V>;
   beforeEach((): void => {
     testUseDispatch =
       new HookTest<P, V>(
@@ -60,7 +65,7 @@ describe('Context useDispatch(string)', (): void => {
       )
         .addParent(Provider);
     testUseDispatch.render(NAME);
-    reducer = testUseDispatch.value;
+    dispatch = testUseDispatch.value;
   });
 
   afterEach((): void => {
@@ -70,18 +75,18 @@ describe('Context useDispatch(string)', (): void => {
 
 
   it('should call GlobalStateManager.set', async (): Promise<void> => {
-    await reducer(...ARGS);
+    await dispatch(...ARGS);
     expect(spy.set).toHaveBeenCalledTimes(1);
     expect(spy.set).toHaveBeenCalledWith(STATE_CHANGE, NAME, ARGS);
   });
 
   it('should update the Context global state', async (): Promise<void> => {
-    await reducer(...ARGS);
+    await dispatch(...ARGS);
     expect(Provider.global).toEqual(NEW_STATE);
   });
 
   it('should not update the default global state', async (): Promise<void> => {
-    await reducer(...ARGS);
+    await dispatch(...ARGS);
     expect(defaultGlobalStateManager.state).toStrictEqual(EMPTY_STATE);
   });
 

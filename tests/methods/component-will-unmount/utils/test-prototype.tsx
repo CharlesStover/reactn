@@ -1,5 +1,5 @@
+import { render } from '@testing-library/react';
 import * as React from 'react';
-import { render } from 'react-testing-library';
 import { ReactNComponent } from '../../../../src/components';
 import { ReactNComponentWillUnmount } from '../../../../src/methods';
 import {

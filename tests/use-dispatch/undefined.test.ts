@@ -37,18 +37,9 @@ REDUCER_NAMES.sort();
 describe('useDispatch()', (): void => {
 
   let globalStateManager: GlobalStateManager<G, R>;
-  let testUseDispatch: HookTest<P, V>;
-  const spy = spyOn('dispatchers', 'set');
-
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<G, R>(
-      INITIAL_STATE,
-      INITIAL_REDUCERS,
-    );
-    testUseDispatch =
-      new HookTest<P, V>(
-        (): V => useDispatch(globalStateManager),
-      );
+    globalStateManager =
+      new GlobalStateManager<G, R>(INITIAL_STATE, INITIAL_REDUCERS);
   });
 
 
@@ -56,11 +47,26 @@ describe('useDispatch()', (): void => {
   // If Hooks are not supported,
   if (!hasHooks) {
     it('should require Hooks', (): void => {
-      testUseDispatch.render();
-      expect(testUseDispatch.error).toBe(REACT_HOOKS_ERROR);
+      expect((): void => {
+        useDispatch(globalStateManager);
+      }).toThrowError(REACT_HOOKS_ERROR);
     });
     return;
   }
+
+
+
+  const spy = spyOn('dispatchers', 'set');
+
+
+
+  let testUseDispatch: HookTest<P, V>;
+  beforeEach((): void => {
+    testUseDispatch =
+      new HookTest<P, V>(
+        (): V => useDispatch(globalStateManager),
+      );
+  });
 
 
 

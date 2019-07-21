@@ -1,6 +1,6 @@
 module.exports = {
   cacheDirectory: './jest/cache',
-  collectCoverage: true,
+  collectCoverage: false,
   collectCoverageFrom: [
     'src/**/*',
   ],
@@ -10,6 +10,10 @@ module.exports = {
   resetModules: true,
   restoreMocks: true,
   roots: [ "<rootDir>/tests" ],
+  setupFilesAfterEnv: [
+    '@testing-library/jest-dom/extend-expect',
+    '@testing-library/react/cleanup-after-each',
+  ],
   testRegex: '/tests/.+\\.test\\.tsx?$',
   verbose: false,
 };

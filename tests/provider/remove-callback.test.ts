@@ -1,6 +1,8 @@
 import createProvider from '../../src/create-provider';
 import ReactNProvider from '../../types/provider';
+import { hasContext } from '../utils/react-version';
 import spyOn from '../utils/spy-on-global-state-manager';
+import itShouldRequireContext from './utils/it-should-require-context';
 
 
 
@@ -9,6 +11,14 @@ const CALLBACK = (): void => { };
 
 
 describe('Provider.removeCallback', (): void => {
+
+  // If Context is not supported,
+  if (!hasContext) {
+    itShouldRequireContext();
+    return;
+  }
+
+
 
   let Provider: ReactNProvider;
   const spy = spyOn('removeCallback');

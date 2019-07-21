@@ -1,6 +1,6 @@
 {
   "name": "reactn",
-  "version": "2.1.5",
+  "version": "2.1.6",
   "author": "Charles Stover <reactn@charlesstover.com>",
   "description": "React, but with built-in global state management.",
   "homepage": "https://github.com/CharlesStover/reactn#readme",
@@ -35,6 +35,8 @@
     "@babel/core": "^7.4.0",
     "@babel/preset-env": "^7.4.2",
     "@babel/preset-typescript": "^7.3.3",
+    "@testing-library/jest-dom": "^4.0.0",
+    "@testing-library/react": "^8.0.5",
     "@types/jest": "^24.0.11",
     "@types/node": "^12.6.2",
     "@types/react": "^16.7.13",
@@ -46,14 +48,13 @@
     "jest": "^24.6.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
-    "react-testing-library": "^6.0.4",
     "ts-jest": "^24.0.1",
     "ts-node": "^8.0.2",
     "typescript": "^3.3.1"
   },
   "peerDependencies": {
     "@types/react": "^16.8.0",
-    "react": "^16.3.0",
-    "react-dom": "^16.3.0"
+    "react": "*",
+    "react-dom": "*"
   }
 }

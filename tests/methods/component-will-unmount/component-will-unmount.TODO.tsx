@@ -1,4 +1,3 @@
-import { cleanup } from 'react-testing-library';
 // import unmock from './utils/mock-component-will-unmount';
 import { ReactNComponent, ReactNPureComponent } from '../../../src/components';
 // import testPrototype from './utils/test-prototype';
@@ -7,10 +6,6 @@ import testUndefined from './utils/test-undefined';
 
 
 describe('componentWillUnmount', (): void => {
-
-  afterEach((): void => {
-    cleanup();
-  });
 
   /*
   afterAll((): void => {

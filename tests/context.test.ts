@@ -9,8 +9,13 @@ describe('ReactN Context', (): void => {
 
   // If Context is not supported,
   if (!hasContext) {
+    it('should require Context', (): void => {
+      expect(ReactNContext).toBe(null);
+    });
     return;
   }
+
+
 
   it('should be a React Context', (): void => {
     const reactContext: Context<null> = createContext(null);
@@ -22,7 +27,11 @@ describe('ReactN Context', (): void => {
   it('should default to the default global state manager', (): void => {
     expect(ReactNContext._currentValue)
       .toStrictEqual(defaultGlobalStateManager);
-    expect(ReactNContext._currentValue2)
-      .toStrictEqual(defaultGlobalStateManager);
+
+    // React 16.3 does not have a _currentValue2.
+    if (ReactNContext._currentValue2) {
+      expect(ReactNContext._currentValue2)
+        .toStrictEqual(defaultGlobalStateManager);
+    }
   });
 });

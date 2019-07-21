@@ -1,5 +1,7 @@
 # Provider
 
+_Requires React >= 16.3.0_
+
 ReactN's global components attempt to receive the global state from a React
 Context. If the ReactN Context cannot be found, then the global components will
 fallback to a default global state.
@@ -84,15 +86,15 @@ Provider.resetGlobal();
 
 Provider.setGlobal({ x: 1 });
 
-Provider.useDispatch();
+Provider.useDispatch(); // Requires React >= 16.8.0
 
-Provider.useDispatch('name');
+Provider.useDispatch('name'); // Requires React >= 16.8.0
 
-Provider.useDispatch(reducerFunction);
+Provider.useDispatch(reducerFunction); // Requires React >= 16.8.0
 
-Provider.useGlobal();
+Provider.useGlobal(); // Requires React >= 16.8.0
 
-Provider.useGlobal('property');
+Provider.useGlobal('property'); // Requires React >= 16.8.0
 ```
 
 ## useGlobal and withGlobal

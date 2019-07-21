@@ -10,12 +10,16 @@ const [ major, minor ] = semVer;
 
 export const hasContext = (
   major > 16 ||
-  major === 16 &&
-  minor >= 3
+  (
+    major === 16 &&
+    minor >= 3
+  )
 );
 
 export const hasHooks = (
   major > 16 ||
-  major === 16 &&
-  minor >= 8
+  (
+    major === 16 &&
+    minor >= 8
+  )
 );

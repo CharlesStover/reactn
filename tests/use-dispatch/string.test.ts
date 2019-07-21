@@ -24,18 +24,9 @@ const NAME: keyof R = 'append';
 describe('useDispatch(string)', (): void => {
 
   let globalStateManager: GlobalStateManager<G, R>;
-  let testUseDispatch: HookTest<P, V>;
-  const spy = spyOn('getDispatcher', 'set');
-
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<G, R>(
-      INITIAL_STATE,
-      INITIAL_REDUCERS,
-    );
-    testUseDispatch =
-      new HookTest<P, V>(
-        (name: keyof R): V => useDispatch(globalStateManager, name),
-      );
+    globalStateManager =
+      new GlobalStateManager<G, R>(INITIAL_STATE, INITIAL_REDUCERS);
   });
 
 
@@ -43,11 +34,26 @@ describe('useDispatch(string)', (): void => {
   // If Hooks are not supported,
   if (!hasHooks) {
     it('should require Hooks', (): void => {
-      testUseDispatch.render(NAME);
-      expect(testUseDispatch.error).toBe(REACT_HOOKS_ERROR);
+      expect((): void => {
+        useDispatch(globalStateManager, NAME);
+      }).toThrowError(REACT_HOOKS_ERROR);
     });
     return;
   }
+
+
+
+  const spy = spyOn('getDispatcher', 'set');
+
+
+
+  let testUseDispatch: HookTest<P, V>;
+  beforeEach((): void => {
+    testUseDispatch =
+      new HookTest<P, V>(
+        (name: keyof R): V => useDispatch(globalStateManager, name),
+      );
+  });
 
 
 

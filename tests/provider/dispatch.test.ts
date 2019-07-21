@@ -1,6 +1,8 @@
 import createProvider from '../../src/create-provider';
 import ReactNProvider from '../../types/provider';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
+import { hasContext } from '../utils/react-version';
+import itShouldRequireContext from './utils/it-should-require-context';
 
 
 
@@ -11,6 +13,14 @@ INITIAL_REDUCERS_KEYS.sort();
 
 
 describe('Provider.dispatch', (): void => {
+
+  // If Context is not supported,
+  if (!hasContext) {
+    itShouldRequireContext();
+    return;
+  }
+
+
 
   let Provider: ReactNProvider<G, R>;
   beforeEach((): void => {

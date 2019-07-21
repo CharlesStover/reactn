@@ -1,8 +1,8 @@
+import * as React from 'react';
 import { Reducers, State } from '../default';
 import Callback from '../types/callback';
 import { DispatcherMap } from '../types/dispatchers';
 import NewGlobalState from '../types/new-global-state';
-import { Component, PureComponent } from 'react';
 import {
   ReactNDispatch,
   ReactNGlobal,
@@ -18,6 +18,8 @@ const isComponentDidMount = false;
 const isComponentDidUpdate = false;
 const isSetGlobalCallback = false;
 
+const ReactPureComponent = React.PureComponent || React.Component;
+
 
 
 export class ReactNComponent<
@@ -26,7 +28,7 @@ export class ReactNComponent<
   G extends {} = State,
   R extends {} = Reducers,
   SS = any,
-> extends Component<P, S, SS> {
+> extends React.Component<P, S, SS> {
 
   public constructor(props: Readonly<P>, context?: any) {
     super(props, context);
@@ -65,7 +67,7 @@ export class ReactNPureComponent<
   G extends {} = State,
   R extends {} = Reducers,
   SS = any,
-> extends PureComponent<P, S, SS> {
+> extends ReactPureComponent<P, S, SS> {
 
   public constructor(props: Readonly<P>, context?: any) {
     super(props, context);

@@ -44,27 +44,34 @@ const NEW_STATE: G = {
 describe('useDispatch(Function, keyof State)', (): void => {
 
   let globalStateManager: GlobalStateManager<G>;
+  beforeEach((): void => {
+    globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
+  });
+
+
+
+  // If Hooks are not supported,
+  if (!hasHooks) {
+    it('should require Hooks', (): void => {
+      expect((): void => {
+        useDispatch(globalStateManager, REDUCER, PROPERTY);
+      }).toThrowError(REACT_HOOKS_ERROR);
+    });
+    return;
+  }
+
+
+
   let testUseDispatch: HookTest<Params, V>;
   const spy = spyOn('set');
 
   beforeEach((): void => {
-    globalStateManager = new GlobalStateManager<G>(INITIAL_STATE);
     testUseDispatch =
       new HookTest<Params, V>(
         (reducer: ZReducer, property: Property): V =>
           useDispatch<G, {}, Property, A>(globalStateManager, reducer, property),
       );
   });
-
-
-  // If Hooks are not supported,
-  if (!hasHooks) {
-    it('should require Hooks', (): void => {
-      testUseDispatch.render(REDUCER, PROPERTY);
-      expect(testUseDispatch.error).toBe(REACT_HOOKS_ERROR);
-    });
-    return;
-  }
 
 
 

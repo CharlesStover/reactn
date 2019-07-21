@@ -97,8 +97,11 @@ with deeply nested objects, a
       * [removeCallback](#removecallback)
       * [resetGlobal](#resetglobal)
       * [setGlobal](#setglobal)
+      * [useDispatch](#usedispatch)
+      * [useGlobal](#useglobal)
       * [withGlobal](#withglobal)
       * [withInit](#withinit)
+* [Terminology](#terminology)
 * [Frequently Asked Questions](https://github.com/CharlesStover/reactn/blob/master/FAQ.md)
 * [Support](#support)
 
@@ -681,6 +684,152 @@ setGlobal(
 );
 ```
 
+##### useDispatch
+
+_Requires React >= 16.8.0_
+
+The `useDispatch` helper function is a React Hook analogous to the `useReducer`
+hook built into React itself. `useDispatch` will dispatch a global reducer that
+has been added to ReactN via the [`addReducer`](#addreducer),
+[`addReducers`](#addreducers), or [`withInit`](#withinit) helper functions or a
+global reducer that you specify inline as a parameter.
+
+###### useDispatch()
+
+`useDispatch()` with no parameters will return a map of all of your global
+reducers.
+
+```javascript
+import { useDispatch } from 'reactn';
+
+function MyComponent() {
+  const dispatch = useDispatch();
+  dispatch.add(1);
+  dispatch.substract(2);
+  return null;
+}
+```
+
+###### useDispatch(Function)
+
+`useDispatch(f)` allows you to define your global reducer inline. This method
+is particularly useful if you prefer to import your reducers as needed or keep
+your singleton reducers with the components that use them.
+
+```javascript
+import React, { useDispatch, useGlobal } from 'reactn';
+
+function MyComponent() {
+  const [ count ] = useGlobal('count');
+  const add = useDispatch(
+    (global, _dispatch, n) => ({
+      count: global.count + n,
+    }),
+  );
+  return (
+    <button onClick={() => add(1)}>
+      {count}.
+    </span>
+  );
+}
+```
+
+###### useDispatch(Function, keyof State)
+
+`useDispatch(f, 'property')` allows you to define your global property reducer
+inline. A property reducer changes only one property of the global state, which
+can greatly simplify your reducer logic.
+
+```javascript
+import React, { useDispatch, useGlobal } from 'reactn';
+
+function MyComponent() {
+  const [ count ] = useGlobal('count');
+  const add = useDispatch(
+    (count, n) => count + n,
+    'count',
+  );
+  return (
+    <button onClick={() => add(1)}>
+      {count}.
+    </span>
+  );
+}
+```
+
+###### useDispatch(keyof Reducers)
+
+`useDispatch('reducerName')` allows you to dispatch a global reducer.
+
+```javascript
+import React, { useDispatch, useGlobal } from 'reactn';
+
+function MyComponent() {
+  const [ count ] = useGlobal('count');
+  const add = useDispatch('add');
+  return (
+    <button onClick={() => add(1)}>
+      {count}.
+    </span>
+  );
+}
+```
+
+##### useGlobal
+
+_Requires React >= 16.8.0_
+
+`useGlobal` is a React Hook analogous to the `useState` Hook built into React
+itself. `useGlobal` returns the global state or parts thereof.
+
+###### useGlobal()
+
+`useGlobal()` with no parameters will return the entire global state object and
+a function for changing properties of the global state.
+
+The `setGlobal` function returned by `useGlobal` is analogous to the
+[`setGlobal`](#setglobal) helper function and `this.setGlobal` class method.
+
+```javascript
+import React, { useGlobal } from 'reactn';
+
+function MyComponent() {
+  const [ global, setGlobal ] = useGlobal();
+  const generateNumber = () => {
+    setGlobal(g => ({
+      generations: g.generations + 1,
+      myNumber: Math.floor(Math.random() * 100),
+    });
+  };
+  return (
+    <button onClick={generateNumber}>
+      #{global.generations}: {global.myNumber}
+    </button>
+  );
+}
+```
+
+###### useGlobal(keyof State)
+
+`useGlobal('property')` returns a specific global state property and a function
+for updating that property.
+
+```javascript
+import React, { useGlobal } from 'reactn';
+
+const getRandomNumber = () =>
+  Math.floor(Math.random() * 100);
+
+function MyComponent() {
+  const [ myNumber, setMyNumber ] = useGlobal('myNumber');
+  return (
+    <button onClick={() => setMyNumber(getRandomNumber())}>
+      {myNumber}
+    </button>
+  )
+}
+```
+
 ##### withGlobal
 
 Use `withGlobal` to return a higher-order component to convert global state
@@ -764,6 +913,133 @@ export default withInit(
     </button>
   );
 });
+```
+
+## Terminology
+
+ReactN strictly maintains accurate terminology for its data structures. The
+majority of ReactN's data structures are meant to be black box to simplify the
+user experience, only referenced by name in the package's code. They are
+outlined here for transparency and to ease community contributions.
+
+### Dispatcher
+
+When you pass a reducer to ReactN via [`addReducer`](#addreducer),
+[`addReducers`](#addreducers), [`useDispatch`](#usedispatch), or
+[`withInit`](#withinit), ReactN returns a dispatcher.
+
+A dispatcher is a function that wraps a reducer, passing the global state and
+global reducers as parameters tying its return value to the global state.
+Dispatchers and reducers have a 1-to-1 relationship and are tightly bound to
+each other.
+
+In documentation, dispatchers are often referred to as reducers to decrease the
+cognitive overhead and conceptually strengthen their 1-to-1 relationship.
+
+For example, an "add" reducer may be defined as follows:
+
+```javascript
+function add(global, _dispatch, n) {
+  return { count: global.count + n };
+}
+```
+
+When you call this reducer, you only need to call `add(1)`. This difference in
+call signature is because you are calling the _dispatcher_.
+
+A dispatcher, in pseudo-code, conceptually looks as follows:
+
+```javascript
+function dispatchAdd(n) {
+  const { dispatchers, set, state } = globalStateManager;
+  const newGlobalState = add(state, dispatchers, n);
+  return set(newGlobalState);
+}
+```
+
+### Global State Manager
+
+The global state manager is the core object that powers ReactN. It maintains
+the state, global dispatchers, and subscriptions.
+
+#### Default Global State Manager
+
+The default global state manager is the global state manager used by all of
+ReactN _unless otherwise specified_. To specify a different global state
+manager, you must use a
+[Provider](https://github.com/CharlesStover/reactn/blob/master/Provider.md).
+
+ReactN Components and Hooks will attempt to find a global state manager via
+the Context. If one does not exist via Context, it will fallback to the default
+global state manager.
+
+### Reducer
+
+A reducer is a function that accepts the current global state, a map of all
+global reducers, and any number of additional parameters. A reducer returns a
+change to the global state. It does not need to return the entire new global
+state. It only needs to return key-value pairs of changed properties.
+
+An example "add" reducer may be defined as follows:
+
+```javascript
+function add(global, _dispatch, n) {
+  return { count: global.count + n };
+}
+```
+
+A reducer may be asynchronous (return a Promise) and asynchronously dispatch
+other reducers. You can use a reducer that dispatches other reducers to create
+a "saga" of state changes.
+
+```javascript
+async function mySaga(global, dispatch, shouldMultiply) {
+  if (global.count < 0) {
+    await dispatch.add(1);
+  }
+  await dispatch.subtract(2);
+  if (shouldMultiply) {
+    await dispatch.multiply(3);
+  }
+}
+
+mySaga(true); // shouldMultiply = true
+```
+
+#### Property Reducer
+
+A property reducer is a reducer that only changes one property. They only
+receive that property's value as a parameter instead of the entire global state
+object, and they do not receive the dispatch object as a parameter at all.
+
+An example "add" property reducer may be defined as follows:
+
+```javascript
+function add(count, n) {
+  return count + n;
+}
+```
+
+You must specify the property when _using_ a property reducer. Property
+reducers cannot be added to or remembered by the global state manager.
+
+```javascript
+import React, { useDispatch, useGlobal } from 'reactn';
+
+function add(count, n) {
+  return count + n;
+}
+
+function MyComponent() {
+  const [ count ] = useGlobal('count');
+  // Use the "add" property reducer on the "count" property.
+  const dispatch = useDispatch(add, 'count');
+  return (
+    <button onClick={() => dispatch(1)}>
+      {count}
+    </button>
+  )
+}
 ```
 
 ## Support

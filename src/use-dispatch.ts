@@ -31,7 +31,7 @@ type VoidFunction = () => void;
 
 
 
-// useGlobal()
+// useDispatch()
 export default function _useDispatch<
   G extends {} = State,
   R extends {} = Reducers,

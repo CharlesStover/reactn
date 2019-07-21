@@ -1,11 +1,21 @@
 import createProvider from '../../src/create-provider';
 import ReactNProvider from '../../types/provider';
 import { G, INITIAL_STATE } from '../utils/initial';
+import { hasContext } from '../utils/react-version';
 import spyOn from '../utils/spy-on-global-state-manager';
+import itShouldRequireContext from './utils/it-should-require-context';
 
 
 
 describe('Provider.global', (): void => {
+
+  // If Context is not supported,
+  if (!hasContext) {
+    itShouldRequireContext();
+    return;
+  }
+
+
 
   let Provider: ReactNProvider<G>;
   const spy = spyOn('state');

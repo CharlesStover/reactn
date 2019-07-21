@@ -1,5 +1,4 @@
 import { Component } from 'react';
-import { cleanup } from 'react-testing-library';
 import addReducers from '../../src/add-reducers';
 import { ReactNComponent, ReactNPureComponent } from '../../src/components';
 import reactn from '../../src/decorator';
@@ -105,7 +104,6 @@ describe('Components', (): void => {
   });
 
   afterEach((): void => {
-    cleanup();
     resetGlobal(defaultGlobalStateManager);
   });
 
