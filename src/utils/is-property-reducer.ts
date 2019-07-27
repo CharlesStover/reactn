@@ -1,7 +1,7 @@
 import { Reducers, State } from '../../default';
 import Reducer, { PropertyReducer } from '../../types/reducer';
 
-// Used to accurately identify the reducer as a property reducer is a property
+// Used to accurately identify the reducer as a property reducer if a property
 //   is specified.
 export default function isPropertyReducer<
   G extends {} = State,
