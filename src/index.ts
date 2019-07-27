@@ -4,12 +4,12 @@ import {
   ReactNComponentClass,
   ReactNPureComponentClass,
 } from '../types/component-class';
-import Dispatcher, { ExtractArguments } from '../types/dispatcher';
+import Dispatcher, { ExtractArguments, PropertyDispatcher } from '../types/dispatcher';
 import Dispatchers from '../types/dispatchers';
 import NewGlobalState from '../types/new-global-state';
 import Omit from '../types/omit';
 import ReactNProvider from '../types/provider';
-import Reducer, { AdditionalReducers } from '../types/reducer';
+import Reducer, { AdditionalReducers, PropertyReducer } from '../types/reducer';
 import { GlobalTuple, StateTuple } from '../types/use-global';
 import WithGlobal, { Getter, Setter } from '../types/with-global';
 import WithInit from '../types/with-init';
@@ -91,21 +91,32 @@ interface ReactN extends Omit<typeof React, 'Component' | 'default' | 'PureCompo
     callback?: Callback<G>,
   ): Promise<G>;
 
+  // useDispatch()
   useDispatch<G extends {} = State, R extends {} = Reducers>(
   ): Dispatchers<G, R>;
 
+  // useDispatch(Function)
   useDispatch<G extends {} = State, R extends {} = Reducers, A extends any[] = any[]>(
     reducer: Reducer<G, R, A>,
   ): Dispatcher<G, A>;
 
+  // useDispatch(Function, keyof State)
+  useDispatch<G extends {} = State, R extends {} = Reducers, P extends keyof G = keyof G, A extends any[] = any[]>(
+    reducer: PropertyReducer<G, P, A>,
+    property: P,
+  ): PropertyDispatcher<G, P, A>;
+
+  // useDispatch(keyof Reducers)
   useDispatch<G extends {} = State, R extends {} = Reducers, K extends keyof R = keyof R>(
     reducer: K,
   ): Dispatcher<G, ExtractArguments<R[K]>>;
 
+  // useGlobal(keyof State)
   useGlobal<G extends {} = State, Property extends keyof G = keyof G>(
     property: Property,
   ): StateTuple<G, Property>;
 
+  // useGlobal()
   useGlobal<G extends {} = State>(): GlobalTuple<G>;
 
   withGlobal<G extends {} = State, R extends {} = Reducers, HP extends {} = {}, LP extends {} = {}>(

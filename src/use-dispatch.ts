@@ -49,7 +49,7 @@ export default function _useDispatch<
   reducer: Reducer<G, R, A>,
 ): Dispatcher<G, A>;
 
-// useDispatch(Function, 'property')
+// useDispatch(Function, keyof State)
 export default function _useDispatch<
   G extends {} = State,
   R extends {} = Reducers,
@@ -61,7 +61,7 @@ export default function _useDispatch<
   property: P,
 ): PropertyDispatcher<G, P, A>;
 
-// useDispatch('name')
+// useDispatch(keyof Reducers)
 export default function _useDispatch<
   G extends {} = State,
   R extends {} = Reducers,
@@ -71,7 +71,7 @@ export default function _useDispatch<
   reducer: K,
 ): Dispatcher<G, ExtractArguments<R[K]>>;
 
-// useDispatch('name', 'property')
+// useDispatch(keyof Reducers, keyof State)
 /*
 export default function _useDispatch<
   G extends {} = State,
@@ -168,7 +168,7 @@ export default function _useDispatch<
       // Iterators must have a Symbol.iterator property.
       const propertyDispatcherIterator =
         (): IterableIterator<G[P] | Dispatcher<G, A>> => {
-          let index: number = 0;
+          let index = 0;
           const propertyDispatcherIteratorNext =
             (): IteratorResult<Dispatcher<G, A> | G[P]> => {
 
