@@ -21,7 +21,7 @@ const supportedVersions = [
   '~16.0',
   '~16.3', // Context
   '~16.8', // Hooks
-  'latest',
+  // 'latest', // async act
 ];
 
 const header = str => {
