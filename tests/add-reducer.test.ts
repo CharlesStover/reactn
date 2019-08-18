@@ -4,7 +4,7 @@ import spyOn from './utils/spy-on-global-state-manager';
 
 
 
-const REDUCER = (_globalState, _one, _two, _three): void => { };
+const REDUCER = (_globalState, _dispatch, _one, _two, _three): void => { };
 
 const REDUCER_NAME = 'reducerName';
 

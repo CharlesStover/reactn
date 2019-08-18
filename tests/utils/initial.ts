@@ -1,4 +1,5 @@
 import GlobalStateManager from '../../src/global-state-manager';
+import NewGlobalState from '../../types/new-global-state';
 import Reducer from '../../types/reducer';
 
 
@@ -7,12 +8,13 @@ import Reducer from '../../types/reducer';
 //   a type in order to be compared to index signatures as opposed to having an
 //   index signature of its own.
 // https://github.com/Microsoft/TypeScript/issues/15300#issuecomment-332366024
-export type D = {
+export interface D {
+  (newGlobalState: NewGlobalState<G>): Promise<G>;
   append(...args: string[]): Promise<G>;
   increment(i: number): Promise<G>;
   reset(): Promise<G>;
   toggle(): Promise<G>;
-};
+}
 
 
 
