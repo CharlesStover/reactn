@@ -50,7 +50,8 @@ describe('Provider.setGlobal', (): void => {
       expect(CALLBACK).toHaveBeenCalledTimes(1);
       expect(CALLBACK)
         .toHaveBeenCalledWith(NEW_STATE, expect.anything(), STATE_CHANGE);
-      // expect(CALLBACK.mock.calls[0][1].toString()).toBe(Provider.dispatcherMap.toString());
+      expect(CALLBACK.mock.calls[0][1].toString())
+        .toBe(Provider.dispatcherMap.toString());
     }
   );
 

@@ -2,6 +2,7 @@ import ReactN = require('../../src/index');
 import createProvider from '../../src/create-provider';
 import defaultGlobalStateManager from '../../src/default-global-state-manager';
 import Dispatcher, { ExtractArguments } from '../../types/dispatcher';
+import DispatchFunction from '../../types/dispatch-function';
 import Dispatchers from '../../types/dispatchers';
 import ReactNProvider from '../../types/provider';
 import HookTest from '../utils/hook-test';
@@ -15,7 +16,7 @@ type A = ExtractArguments<R[typeof REDUCER]>;
 
 type P = [ ];
 
-type V = Dispatchers<G, R>;
+type V = DispatchFunction<G> & Dispatchers<G, R>;
 
 
 
@@ -50,7 +51,7 @@ describe('Context useDispatch()', (): void => {
   
   const STATE_CHANGE: Partial<G> = INITIAL_REDUCERS[REDUCER](
     INITIAL_STATE,
-    Provider.dispatch,
+    Provider.dispatcherMap,
     ...ARGS,
   );
 

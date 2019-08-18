@@ -47,7 +47,7 @@ describe('Context useDispatch(Function)', (): void => {
   const spy = spyOn('set');
 
   const STATE_CHANGE: Partial<G> =
-    REDUCER(INITIAL_STATE, Provider.dispatch, ...ARGS);
+    REDUCER(INITIAL_STATE, Provider.dispatcherMap, ...ARGS);
 
   const NEW_STATE: G = {
     ...INITIAL_STATE,

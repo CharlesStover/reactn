@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Reducers, State } from '../default';
 import Callback from '../types/callback';
+import DispatchFunction from '../types/dispatch-function';
 import Dispatcher, {
   ExtractArguments,
   PropertyDispatcher,
@@ -67,6 +68,10 @@ export default function _createProvider<
 
     public static get dispatch(): Dispatchers<G, R> {
       return globalStateManager.dispatchers;
+    }
+
+    public static get dispatcherMap(): DispatchFunction<G> & Dispatchers<G, R> {
+      return globalStateManager.dispatcherMap;
     }
 
     public static getDispatch(): Dispatchers<G, R> {

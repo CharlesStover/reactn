@@ -9,6 +9,7 @@ import NewGlobalState from './new-global-state';
 import Reducer, { AdditionalReducers, PropertyReducer } from './reducer';
 import { GlobalTuple, StateTuple } from './use-global';
 import WithGlobal, { Getter, Setter } from './with-global';
+import DispatchFunction from './dispatch-function';
 
 
 
@@ -30,6 +31,7 @@ export default interface ReactNProvider<
 
   addReducers(reducers: AdditionalReducers<G, R>): BooleanFunction;
   dispatch: Dispatchers<G, R>;
+  dispatcherMap: DispatchFunction<G> & Dispatchers<G, R>;
 
   getDispatch(): Dispatchers<G, R>;
 

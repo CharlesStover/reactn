@@ -45,7 +45,7 @@ describe('Context useDispatch(string)', (): void => {
 
   const STATE_CHANGE: Partial<G> = INITIAL_REDUCERS[NAME](
     INITIAL_STATE,
-    Provider.dispatch,
+    Provider.dispatcherMap,
     ...ARGS,
   );
   

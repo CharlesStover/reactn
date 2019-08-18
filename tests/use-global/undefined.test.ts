@@ -154,7 +154,8 @@ describe('useGlobal()', (): void => {
           expect.anything(),
           STATE_CHANGE,
         );
-        expect(CALLBACK.mock.calls[0][1].toString()).toBe(globalStateManager.dispatcherMap.toString());
+        expect(CALLBACK.mock.calls[0][1].toString())
+          .toBe(globalStateManager.dispatcherMap.toString());
       });
     });
 

@@ -1,7 +1,9 @@
 import GlobalStateManager from '../../src/global-state-manager';
 import useDispatch from '../../src/use-dispatch';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
+import DispatchFunction from '../../types/dispatch-function';
 import Dispatcher from '../../types/dispatcher';
+import Dispatchers from '../../types/dispatchers';
 import Reducer from '../../types/reducer';
 import HookTest from '../utils/hook-test';
 import { G, INITIAL_REDUCERS, INITIAL_STATE } from '../utils/initial';
@@ -22,10 +24,15 @@ type V = Dispatcher<G, A>;
 
 const ARGS: string[] = [ 'te', 'st' ];
 
+const NOOP = () => {};
+
 const REDUCER: AppendReducer = INITIAL_REDUCERS.append;
 
-const STATE_CHANGE: Partial<G> =
-  REDUCER(INITIAL_STATE, {}, ...ARGS) as Partial<G>;
+const STATE_CHANGE: Partial<G> = REDUCER(
+  INITIAL_STATE,
+  NOOP as any as DispatchFunction<G> & Dispatchers<G>,
+  ...ARGS,
+) as Partial<G>;
 
 const NEW_STATE: G = {
   ...INITIAL_STATE,
