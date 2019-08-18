@@ -1,5 +1,6 @@
 import { Reducers, State } from '../default';
 import Callback from '../types/callback';
+import DispatchFunction from '../types/dispatch-function';
 import Dispatcher, { ExtractArguments } from '../types/dispatcher';
 import Dispatchers from '../types/dispatchers';
 import Middleware, { MiddlewareCreator } from '../types/middleware';
@@ -135,14 +136,25 @@ export default class GlobalStateManager<
   ): Dispatcher<G, A> {
     return (...args: A): Promise<G> => {
       return this.set(
-        reducer(this.state, this.dispatchers, ...args),
-        name,
+        reducer(this.state, this.dispatcherMap, ...args),
+        name, 
         args,
       )
         .then((): G => this.state);
     };
   }
 
+  // The dispatcher map, contrary to this.dispatchers, is the map that belongs
+  //   *to* a dispatcher. In addition to the map *of* dispatchers, it includes
+  //   a dispatch function that sets the global state.
+  public get dispatcherMap(): DispatchFunction<G> & Dispatchers<G, R> {
+    const dispatch: DispatchFunction<G> = (newGlobalState: NewGlobalState<G>): Promise<G> =>
+      this.set(newGlobalState).then((): G => this.state);
+    return Object.assign(dispatch, this.dispatchers);
+  }
+
+  // The dispatchers are a map *of* dispatchers. This is in contrast to
+  //   this.dispatcherMap, which is a map that belongs *to* a dispatcher.
   public get dispatchers(): Dispatchers<G, R> {
     return copyObject(this._dispatchers);
   }

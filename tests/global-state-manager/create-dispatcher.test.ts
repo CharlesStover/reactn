@@ -71,9 +71,10 @@ describe('GlobalStateManager.createDispatcher', (): void => {
       expect(spy).toHaveBeenCalledTimes(1);
       expect(spy).toHaveBeenCalledWith(
         startState,
-        globalStateManager.dispatchers,
+        expect.anything(),
         ...REDUCER_ARGS,
       );
+      expect(spy.mock.calls[0][1].toString()).toBe(globalStateManager.dispatcherMap.toString());
     });
 
     const spy = spyOn('set');

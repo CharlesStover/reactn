@@ -77,7 +77,7 @@ describe('useDispatch()', (): void => {
 
   it('should return an object of dispatchers', (): void => {
     testUseDispatch.render();
-    expect(typeof testUseDispatch.value).toEqual('object');
+    expect(testUseDispatch.value).toBeInstanceOf(Function);
     const DISPATCHER_NAMES: string[] = Object.keys(testUseDispatch.value);
     DISPATCHER_NAMES.sort();
     expect(DISPATCHER_NAMES).toEqual(REDUCER_NAMES);

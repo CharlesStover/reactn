@@ -1,11 +1,13 @@
 import GlobalStateManager from '../src/global-state-manager';
 import setGlobal from '../src/set-global';
+import DispatchFunction from '../types/dispatch-function';
+import Dispatchers from '../types/dispatchers';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from './utils/initial';
 import spyOn from './utils/spy-on-global-state-manager';
 
 
 
-const CALLBACK: jest.Mock<void, []> = jest.fn();
+const CALLBACK: jest.Mock<void, [G, DispatchFunction<G> & Dispatchers<G, R>]> = jest.fn();
 
 const STATE_CHANGE: Partial<G> = {
   x: true,
@@ -60,9 +62,10 @@ describe('setGlobal', (): void => {
       expect(CALLBACK).toHaveBeenCalledTimes(1);
       expect(CALLBACK).toHaveBeenCalledWith(
         NEW_STATE,
-        globalStateManager.dispatchers,
+        expect.anything(),
         STATE_CHANGE,
       );
+      expect(CALLBACK.mock.calls[0][1].toString()).toBe(globalStateManager.dispatcherMap.toString());
     }
   );
 

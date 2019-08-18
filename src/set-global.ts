@@ -30,7 +30,7 @@ export default function _setGlobal<
         globalStateManager,
         callback(
           globalStateManager.state,
-          globalStateManager.dispatchers,
+          globalStateManager.dispatcherMap,
           stateChange,
         ),
       )

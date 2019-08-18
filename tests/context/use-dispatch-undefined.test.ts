@@ -78,8 +78,8 @@ describe('Context useDispatch()', (): void => {
   });
 
 
-  it('should return an object', (): void => {
-    expect(typeof dispatchers).toBe('object');
+  it('should return a function', (): void => {
+    expect(dispatchers).toBeInstanceOf(Function);
   });
 
   it('should return the global dispatch object', async (): Promise<void> => {

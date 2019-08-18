@@ -4,6 +4,7 @@ import {
   ReactNComponentClass,
   ReactNPureComponentClass,
 } from '../types/component-class';
+import DispatchFunction from '../types/dispatch-function';
 import Dispatcher, { ExtractArguments, PropertyDispatcher } from '../types/dispatcher';
 import Dispatchers from '../types/dispatchers';
 import NewGlobalState from '../types/new-global-state';
@@ -93,7 +94,7 @@ interface ReactN extends Omit<typeof React, 'Component' | 'default' | 'PureCompo
 
   // useDispatch()
   useDispatch<G extends {} = State, R extends {} = Reducers>(
-  ): Dispatchers<G, R>;
+  ): DispatchFunction<G> & Dispatchers<G, R>;
 
   // useDispatch(Function)
   useDispatch<G extends {} = State, R extends {} = Reducers, A extends any[] = any[]>(

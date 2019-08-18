@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import useForceUpdate from 'use-force-update';
 import { Reducers, State } from '../default';
+import DispatchFunction from '../types/dispatch-function';
 import Dispatcher, {
   ExtractArguments,
   PropertyDispatcher,
@@ -37,7 +38,7 @@ export default function _useDispatch<
   R extends {} = Reducers,
 >(
   overrideGlobalStateManager: GlobalStateManager<G, R> | null,
-): Dispatchers<G, R>;
+): DispatchFunction<G> & Dispatchers<G, R>;
 
 // useDispatch(Function)
 export default function _useDispatch<
@@ -113,7 +114,7 @@ export default function _useDispatch<
 
   // Return all dispatchers.
   if (typeof reducer === 'undefined') {
-    return globalStateManager.dispatchers;
+    return globalStateManager.dispatcherMap;
   }
 
   // Use a custom reducer.

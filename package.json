@@ -1,6 +1,6 @@
 {
   "name": "reactn",
-  "version": "2.1.7",
+  "version": "2.2.0",
   "author": "Charles Stover <reactn@charlesstover.com>",
   "description": "React, but with built-in global state management.",
   "homepage": "https://github.com/CharlesStover/reactn#readme",
@@ -36,7 +36,7 @@
     "@babel/preset-env": "^7.4.2",
     "@babel/preset-typescript": "^7.3.3",
     "@testing-library/jest-dom": "^4.0.0",
-    "@testing-library/react": "^8.0.5",
+    "@testing-library/react": "8.0.5",
     "@types/jest": "^24.0.11",
     "@types/node": "^12.6.2",
     "@types/react": "^16.7.13",
@@ -46,8 +46,8 @@
     "eslint": "^5.15.2",
     "eslint-plugin-react": "^7.12.4",
     "jest": "^24.6.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
+    "react": "~16.8",
+    "react-dom": "~16.8",
     "ts-jest": "^24.0.1",
     "ts-node": "^8.0.2",
     "typescript": "^3.3.1"

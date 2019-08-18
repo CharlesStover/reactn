@@ -1,6 +1,8 @@
 import GlobalStateManager from '../../src/global-state-manager';
 import useGlobal from '../../src/use-global';
 import REACT_HOOKS_ERROR from '../../src/utils/react-hooks-error';
+import DispatchFunction from '../../types/dispatch-function';
+import Dispatchers from '../../types/dispatchers';
 import { GlobalTuple } from '../../types/use-global';
 import HookTest from '../utils/hook-test';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
@@ -119,7 +121,7 @@ describe('useGlobal()', (): void => {
   describe('setter', (): void => {
 
     describe('with callback', (): void => {
-      const CALLBACK: jest.Mock<void, [ G ]> = jest.fn();
+      const CALLBACK: jest.Mock<void, [ G, DispatchFunction<G> & Dispatchers<G, R> ]> = jest.fn();
 
       it(
         'should return a Promise of the new global state',
@@ -149,9 +151,10 @@ describe('useGlobal()', (): void => {
         expect(CALLBACK).toHaveBeenCalledTimes(1);
         expect(CALLBACK).toHaveBeenCalledWith(
           NEW_STATE,
-          globalStateManager.dispatchers,
+          expect.anything(),
           STATE_CHANGE,
         );
+        expect(CALLBACK.mock.calls[0][1].toString()).toBe(globalStateManager.dispatcherMap.toString());
       });
     });
 
