@@ -120,6 +120,14 @@ describe('useGlobal()', (): void => {
 
   describe('setter', (): void => {
 
+    it('should maintain reference across renders', async (): Promise<void> => {
+      testUseGlobal.render();
+      const [ , setGlobal ]: T = testUseGlobal.value;
+      await setGlobal(STATE_CHANGE);
+      const [ , setGlobal2 ]: T = testUseGlobal.value;
+      expect(setGlobal).toBe(setGlobal2);
+    });
+
     describe('with callback', (): void => {
       const CALLBACK: jest.Mock<void, [ G, DispatchFunction<G> & Dispatchers<G, R> ]> = jest.fn();
 

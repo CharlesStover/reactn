@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-var-requires: 0 */
 const { execSync } = require('child_process');
 
 const supportedVersions = [
@@ -21,7 +22,8 @@ const supportedVersions = [
   '~16.0',
   '~16.3', // Context
   '~16.8', // Hooks
-  // 'latest', // async act
+  // '~16.9', // async act
+  // 'latest',
 ];
 
 const header = str => {
@@ -40,8 +42,8 @@ for (const supportedVersion of supportedVersions) {
   execSync(
     `yarn add react@${supportedVersion} react-dom@${supportedVersion} ` +
     '--dev --no-lockfile', {
-    stdio: 'inherit',
-  });
+      stdio: 'inherit',
+    });
 
   const { version } = require('react/package.json');
   delete require.cache[require.resolve('react/package.json')];

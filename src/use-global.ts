@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import useForceUpdate from 'use-force-update';
 import { State } from '../default';
 import Callback from '../types/callback';
@@ -62,11 +62,14 @@ export default function _useGlobal<
     //   listener.
     useEffect((): VoidFunction => removeForceUpdateListener);
 
-    const globalStateSetter = (
-      newGlobalState: NewGlobalState<G>,
-      callback: Callback<G> | null = null,
-    ): Promise<G> =>
-      setGlobal(globalStateManager, newGlobalState, callback);
+    const globalStateSetter = useCallback(
+      (
+        newGlobalState: NewGlobalState<G>,
+        callback: Callback<G> | null = null,
+      ): Promise<G> =>
+        setGlobal(globalStateManager, newGlobalState, callback),
+      [],
+    );
 
     return [
       globalStateManager.spyState(forceUpdate),
@@ -89,14 +92,17 @@ export default function _useGlobal<
     return removeForceUpdateListener;
   });
 
-  const globalPropertySetter = (
-    value: G[Property],
-    callback: Callback<G> | null = null,
-  ): Promise<G> => {
-    const newGlobalState: Partial<G> = Object.create(null);
-    newGlobalState[property] = value;
-    return setGlobal(globalStateManager, newGlobalState, callback);
-  };
+  const globalPropertySetter = useCallback(
+    (
+      value: G[Property],
+      callback: Callback<G> | null = null,
+    ): Promise<G> => {
+      const newGlobalState: Partial<G> = Object.create(null);
+      newGlobalState[property] = value;
+      return setGlobal(globalStateManager, newGlobalState, callback);
+    },
+    [],
+  );
 
   // Return both getter and setter.
   return [
