@@ -1,4 +1,3 @@
-import { unstable_batchedUpdates } from 'react-dom';
 import { Reducers, State } from '../default';
 import Callback from '../types/callback';
 import DispatchFunction from '../types/dispatch-function';
@@ -194,11 +193,9 @@ export default class GlobalStateManager<
     this.clearQueue();
 
     // Force update all components that were a part of the queue.
-    unstable_batchedUpdates((): void => {
-      for (const propertyListener of propertyListeners) {
-        propertyListener();
-      }
-    });
+    for (const propertyListener of propertyListeners) {
+      propertyListener();
+    }
 
     // Call each global callback.
     for (const callback of this._callbacks) {
