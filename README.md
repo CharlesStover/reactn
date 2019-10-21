@@ -9,6 +9,9 @@ of third party libraries.
 For support, reach out to us on the 
 [Reactiflux Discord channel #reactn](https://discord.gg/Tae4vuX).
 
+💗 this project?
+[Become a sponsor.](https://github.com/sponsors/CharlesStover)
+
 ## Install
 
 * `npm install reactn` or
@@ -1041,6 +1044,12 @@ function MyComponent() {
   )
 }
 ```
+
+## Sponsor
+
+If you are a fan of this project, you may
+[become a sponsor](https://github.com/sponsors/CharlesStover)
+via GitHub's Sponsors Program.
 
 ## Support
 
