@@ -91,7 +91,7 @@ with deeply nested objects, a
   * [Examples](#examples)
     * [Class Components](#class-components)
     * [Class Components (with Decorator)](#class-components-with-decorator)
-    * [Function Components](#function-components)
+    * [Function Components](#function-components-1)
     * [Helper Functions](#helper-functions)
       * [addCallback](#addcallback)
       * [addReducer](#addreducer)
