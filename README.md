@@ -6,7 +6,7 @@ of third party libraries.
 
 [![banner](https://user-images.githubusercontent.com/343837/53267742-fe3f4900-3698-11e9-82fd-3c3a1decb7fd.png)](https://www.npmjs.com/package/reactn)
 
-For support, reach out to us on the 
+For support, reach out to us on the
 [Reactiflux Discord channel #reactn](https://discord.gg/Tae4vuX).
 
 💗 this project?
@@ -14,12 +14,12 @@ For support, reach out to us on the
 
 ## Install
 
-* `npm install reactn` or
-* `yarn add reactn`
+- `npm install reactn` or
+- `yarn add reactn`
 
 ## Features
 
-### No Boilerplate!
+### No boilerplate
 
 For function components, `import { useGlobal } from 'reactn';` to harness the
 power of React Hooks!
@@ -32,9 +32,9 @@ If you prefer class decorators, you can continue to
 `import React from 'react';` for your components and additionally
 `import reactn from 'reactn';` for access to the `@reactn` decorator!
 
-### Intuitive!
+### Intuitive
 
-#### Function Components
+#### Function components
 
 Global state in function components behaves almost identically to local state.
 
@@ -44,7 +44,7 @@ object.
 You use `[ value, setValue ] = useGlobal(property)` where `property` is the
 property of the global state you want to get and set.
 
-Global reducers  in function components behaves almost identically to local
+Global reducers in function components behaves almost identically to local
 reducers.
 
 You use `dispatch = useDispatch(reducerFunction)` to mimic the behavior of
@@ -59,7 +59,7 @@ You use `dispatch = useDispatch(reducerFunction, property)` or
 reducer specifically to a global state property. This is very similar to
 React's native `useReducer` functionality.
 
-#### Class Components
+#### Class components
 
 Global state in class components behaves exactly like local state!
 
@@ -71,46 +71,47 @@ by the `addReducer` helper function.
 The `@reactn` decorator allows you to convert classes that extend
 `React.Component` to ReactN global state components.
 
-#### Map State to Props
+#### Map state to props
 
 If you prefer Redux's `connect` functionality, pure functions, or are dealing
 with deeply nested objects, a
 [`withGlobal` higher-order component](#withglobal) is also available.
 
-## Table of Contents
+## Table of contents
 
-* [Install](#install)
-* [Features](#features)
-  * [No Boilerplate!](#no-boilerplate)
-  * [Intuitive!](#intuitive)
-* [Getting Started](#getting-started)
-  * [Managing Multiple States](#managing-multiple-states)
-  * [Initializing Your State](#initializing-your-state)
-  * [TypeScript Support](#typescript-support)
-  * [Developer Tools](#developer-tools)
-  * [Examples](#examples)
-    * [Class Components](#class-components)
-    * [Class Components (with Decorator)](#class-components-with-decorator)
-    * [Function Components](#function-components-1)
-    * [Helper Functions](#helper-functions)
-      * [addCallback](#addcallback)
-      * [addReducer](#addreducer)
-      * [getDispatch](#getdispatch)
-      * [getGlobal](#getglobal)
-      * [removeCallback](#removecallback)
-      * [resetGlobal](#resetglobal)
-      * [setGlobal](#setglobal)
-      * [useDispatch](#usedispatch)
-      * [useGlobal](#useglobal)
-      * [withGlobal](#withglobal)
-      * [withInit](#withinit)
-* [Terminology](#terminology)
-* [Frequently Asked Questions](https://github.com/CharlesStover/reactn/blob/master/FAQ.md)
-* [Support](#support)
+- [Install](#install)
+- [Features](#features)
+  - [No boilerplate](#no-boilerplate)
+  - [Intuitive](#intuitive)
+- [Getting started](#getting-started)
+  - [Managing multiple states](#managing-multiple-states)
+  - [Initializing your state](#initializing-your-state)
+  - [TypeScript support](#typescript-support)
+  - [Developer tools](#developer-tools)
+  - [Examples](#examples)
+    - [Class components](#class-components)
+    - [Class components (with decorator)](#class-components-with-decorator)
+    - [Function components](#function-components-1)
+    - [Helper functions](#helper-functions)
+      - [addCallback](#addcallback)
+      - [addReducer](#addreducer)
+      - [getDispatch](#getdispatch)
+      - [getGlobal](#getglobal)
+      - [removeCallback](#removecallback)
+      - [resetGlobal](#resetglobal)
+      - [setGlobal](#setglobal)
+      - [useDispatch](#usedispatch)
+      - [useGlobal](#useglobal)
+      - [withGlobal](#withglobal)
+      - [withInit](#withinit)
+- [Known issues](#known-issues)
+- [Terminology](#terminology)
+- [Frequently asked questions](https://github.com/CharlesStover/reactn/blob/master/FAQ.md)
+- [Support](#support)
 
-## Getting Started
+## Getting started
 
-### Managing Multiple States
+### Managing multiple states
 
 **This README is for managing a single global state.** This is ideal for most
 applications. If you are using concurrent server-side rendering or otherwise
@@ -121,7 +122,7 @@ component, which allows you to limit a ReactN state to a React Context.
 If you are unsure whether or not you need multiple global states, then you do
 not need multiple global states.
 
-### Initializing Your State
+### Initializing your state
 
 You can initialize your global state using the `setGlobal` helper function. In
 most cases, you do not want to initialize your global state in a component
@@ -144,13 +145,10 @@ setGlobal({
   x: 1,
 });
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('root')
-);
+ReactDOM.render(<App />, document.getElementById('root'));
 ```
 
-### TypeScript Support
+### TypeScript support
 
 ReactN supports TypeScript out of the box! It is written entirely in TypeScript.
 This gives it powerful intellisense, auto-complete, and error-catching abilities.
@@ -170,7 +168,7 @@ import 'reactn';
 declare module 'reactn/default' {
 
   export interface Reducers {
- 
+
     append: (
       global: State,
       dispatch: Dispatch,
@@ -207,24 +205,24 @@ and return values will also be correctly typed. In addition, it will also
 add `count` and `value` to your `useGlobal` and `this.global` auto-competion
 with the appropriate types as well.
 
-### Developer Tools
+### Developer tools
 
 ReactN is compatible with the
 [Redux DevTools extension](https://github.com/zalmoxisus/redux-devtools-extension#installation).
 
-* Install the Redux DevTools extension to your browser or environment.
-* Install the `redux` package to your project via `npm` or `yarn`. This is used
+- Install the Redux DevTools extension to your browser or environment.
+- Install the `redux` package to your project via `npm` or `yarn`. This is used
   to create a middleware Redux store for the Redux DevTools extension.
-  * You do _not_ have to import or use the `redux` package anywhere in your
+  - You do _not_ have to import or use the `redux` package anywhere in your
     project.
-  * You do _not_ need to create a Redux store, reducer, or actions.
-  * `redux` is just a peer dependency. It will be managed automatically.
-* Follow the instructions on the
+  - You do _not_ need to create a Redux store, reducer, or actions.
+  - `redux` is just a peer dependency. It will be managed automatically.
+- Follow the instructions on the
   [ReactN DevTools README](https://github.com/CharlesStover/reactn-devtools#readme).
 
 ### Examples
 
-#### Class Components
+#### Class components
 
 By importing React from `reactn` instead of `react`, you bake global state
 directly into the React namespace. As a result, `Component` and `PureComponent`
@@ -237,12 +235,9 @@ import Card from '../card/card';
 
 // Render all cards in the global state.
 export default class Cards extends React.PureComponent {
-
   componentDidMount() {
-
     // Hydrate the global state with the response from /api/cards.
     this.setGlobal(
-
       // Despite fetch returning a Promise, ReactN can handle it.
       fetch('/api/cards')
         .then(response => response.json())
@@ -252,30 +247,26 @@ export default class Cards extends React.PureComponent {
 
         // Fail gracefully, set the global `error`
         //   property to the caught error.
-        .catch(err => ({ error: err }))
+        .catch(err => ({ error: err })),
     );
   }
 
   render() {
-
     // For each card in the global state, render a Card component.
     // this.global returns the global state,
     //   much the same way this.state returns the local state.
     return (
       <div>
-        {this.global.cards.map(card =>
-          <Card
-            key={card.id}
-            {...card}
-          />
-        )}
+        {this.global.cards.map(card => (
+          <Card key={card.id} {...card} />
+        ))}
       </div>
     );
   }
 }
 ```
 
-#### Class Components (with Decorator)
+#### Class components (with decorator)
 
 By importing React and ReactN separately, the React namespace remains
 unchanged. You can inject ReactN's global functionality into your vanilla React
@@ -289,12 +280,9 @@ import Card from '../card/card';
 // Render all cards in the global state.
 @reactn
 export default class Cards extends React.PureComponent {
-
   componentDidMount() {
-
     // Hydrate the global state with the response from /api/cards.
     this.setGlobal(
-
       // Despite fetch returning a Promise, ReactN can handle it.
       fetch('/api/cards')
         .then(response => response.json())
@@ -304,30 +292,26 @@ export default class Cards extends React.PureComponent {
 
         // Fail gracefully, set the global `error`
         //   property to the caught error.
-        .catch(err => ({ error: err }))
+        .catch(err => ({ error: err })),
     );
   }
 
   render() {
-
     // For each card in the global state, render a Card component.
     // this.global returns the global state,
     //   much the same way this.state returns the local state.
     return (
       <div>
-        {this.global.cards.map(card =>
-          <Card
-            key={card.id}
-            {...card}
-          />
-        )}
+        {this.global.cards.map(card => (
+          <Card key={card.id} {...card} />
+        ))}
       </div>
     );
   }
 }
 ```
 
-#### Function Components
+#### Function components
 
 Using [React Hooks](https://reactjs.org/docs/hooks-intro.html), you can harness
 `useGlobal` to access the global state.
@@ -338,20 +322,16 @@ import Card from '../card/card';
 
 // Render all cards in the global state.
 const Cards = () => {
-
   // Use the hook to get all cards in the global state.
   //   setCards is not used in this example.
-  const [ cards, setCards ] = useGlobal('cards');
+  const [cards, setCards] = useGlobal('cards');
 
   // For each card in the global state, render a Card component.
   return (
     <div>
-      {cards.map(card =>
-        <Card
-          key={card.id}
-          {...card}
-        />
-      )}
+      {cards.map(card => (
+        <Card key={card.id} {...card} />
+      ))}
     </div>
   );
 };
@@ -396,11 +376,9 @@ state. This allows you to write your reducers similar to React's `useReducer`.
 ```javascript
 import React, { useDispatch } from 'reactn'; // <-- reactn
 
-const incrementReducer = (count, action) =>
-  count + action.amount;
+const incrementReducer = (count, action) => count + action.amount;
 
-const decrementReducer = (count, action) =>
-  count - action.amount;
+const decrementReducer = (count, action) => count - action.amount;
 
 const MyComponent = () => {
   const increment = useDispatch(incrementReducer, 'count');
@@ -418,7 +396,7 @@ const MyComponent = () => {
 export default MyComponent;
 ```
 
-#### Helper Functions
+#### Helper functions
 
 ##### addCallback
 
@@ -495,18 +473,17 @@ setGlobal({ value: 0 });
 
 // When the increment reducer is called, increment the global value by X.
 addReducer('increment', (global, dispatch, x = 1) => ({
-  value: global.value + x
+  value: global.value + x,
 }));
 
 function MyComponent() {
   const increment = useDispatch('increment');
-  const [ value ] = useGlobal('value');
+  const [value] = useGlobal('value');
   return (
     <>
       The value is{' '}
       <button
         onClick={() => {
-
           // Increment from 0 to 1.
           // (the default value of the reducer is 1)
           if (value === 0) {
@@ -665,7 +642,7 @@ import { setGlobal } from 'reactn';
 
 // Set loading to true.
 setGlobal({
-  loading: true
+  loading: true,
 });
 ```
 
@@ -677,13 +654,13 @@ import { setGlobal } from 'reactn';
 // Set loading to true.
 setGlobal(
   {
-    loading: true
+    loading: true,
   },
 
   // After it is set, assert that loading is true.
   global => {
     assert(global.loading === true);
-  }
+  },
 );
 ```
 
@@ -723,17 +700,11 @@ your singleton reducers with the components that use them.
 import React, { useDispatch, useGlobal } from 'reactn';
 
 function MyComponent() {
-  const [ count ] = useGlobal('count');
-  const add = useDispatch(
-    (global, _dispatch, n) => ({
-      count: global.count + n,
-    }),
-  );
-  return (
-    <button onClick={() => add(1)}>
-      {count}.
-    </span>
-  );
+  const [count] = useGlobal('count');
+  const add = useDispatch((global, _dispatch, n) => ({
+    count: global.count + n,
+  }));
+  return <button onClick={() => add(1)}>{count}.</span>;
 }
 ```
 
@@ -747,16 +718,9 @@ can greatly simplify your reducer logic.
 import React, { useDispatch, useGlobal } from 'reactn';
 
 function MyComponent() {
-  const [ count ] = useGlobal('count');
-  const add = useDispatch(
-    (count, n) => count + n,
-    'count',
-  );
-  return (
-    <button onClick={() => add(1)}>
-      {count}.
-    </span>
-  );
+  const [count] = useGlobal('count');
+  const add = useDispatch((count, n) => count + n, 'count');
+  return <button onClick={() => add(1)}>{count}.</span>;
 }
 ```
 
@@ -768,13 +732,9 @@ function MyComponent() {
 import React, { useDispatch, useGlobal } from 'reactn';
 
 function MyComponent() {
-  const [ count ] = useGlobal('count');
+  const [count] = useGlobal('count');
   const add = useDispatch('add');
-  return (
-    <button onClick={() => add(1)}>
-      {count}.
-    </span>
-  );
+  return <button onClick={() => add(1)}>{count}.</span>;
 }
 ```
 
@@ -820,16 +780,13 @@ for updating that property.
 ```javascript
 import React, { useGlobal } from 'reactn';
 
-const getRandomNumber = () =>
-  Math.floor(Math.random() * 100);
+const getRandomNumber = () => Math.floor(Math.random() * 100);
 
 function MyComponent() {
-  const [ myNumber, setMyNumber ] = useGlobal('myNumber');
+  const [myNumber, setMyNumber] = useGlobal('myNumber');
   return (
-    <button onClick={() => setMyNumber(getRandomNumber())}>
-      {myNumber}
-    </button>
-  )
+    <button onClick={() => setMyNumber(getRandomNumber())}>{myNumber}</button>
+  );
 }
 ```
 
@@ -851,20 +808,15 @@ import React, { withGlobal } from 'reactn';
 function MyComponent(props) {
   return (
     <>
-      My value is{' '}
-      <button
-        onClick={props.incrementValue}
-        value={props.value}
-      />
+      My value is <button onClick={props.incrementValue} value={props.value} />
     </>
   );
 }
 
 export default withGlobal(
-
   // Set the `value` prop equal to the global state's `value` property.
   global => ({
-    value: global.value
+    value: global.value,
   }),
 
   // Important Note: This is not the setGlobal helper function.
@@ -872,14 +824,13 @@ export default withGlobal(
   //   state's `value` property.
   setGlobal => ({
     incrementValue: () => {
-
       // Important Note: This is not the setGlobal helper function.
       // This is the parameter referenced 4 lines up.
       setGlobal(global => ({
-        value: global.value + 1
+        value: global.value + 1,
       }));
-    }
-  })
+    },
+  }),
 )(MyComponent);
 ```
 
@@ -909,14 +860,18 @@ export default withInit(
   INITIAL_REDUCERS,
 )(function App() {
   const addOne = useDispatch('addOne');
-  const [ count ] = useGlobal('count');
-  return (
-    <button onClick={addOne}>
-      Count: {count}
-    </button>
-  );
+  const [count] = useGlobal('count');
+  return <button onClick={addOne}>Count: {count}</button>;
 });
 ```
+
+## Known issues
+
+- `super(props)` is incompatible with TypeScript. #126
+- Components re-render once per changed subscribed property. #129
+- Class components use `componentWillUpdate` without the `UNSAFE_` prefix. #134
+- Class components are incompatible with Providers in newer versions of React.
+  #132
 
 ## Terminology
 
@@ -960,12 +915,12 @@ function dispatchAdd(n) {
 }
 ```
 
-### Global State Manager
+### Global state manager
 
 The global state manager is the core object that powers ReactN. It maintains
 the state, global dispatchers, and subscriptions.
 
-#### Default Global State Manager
+#### Default global state manager
 
 The default global state manager is the global state manager used by all of
 ReactN _unless otherwise specified_. To specify a different global state
@@ -1009,7 +964,7 @@ async function mySaga(global, dispatch, shouldMultiply) {
 mySaga(true); // shouldMultiply = true
 ```
 
-#### Property Reducer
+#### Property reducer
 
 A property reducer is a reducer that only changes one property. They only
 receive that property's value as a parameter instead of the entire global state
@@ -1034,14 +989,10 @@ function add(count, n) {
 }
 
 function MyComponent() {
-  const [ count ] = useGlobal('count');
+  const [count] = useGlobal('count');
   // Use the "add" property reducer on the "count" property.
   const dispatch = useDispatch(add, 'count');
-  return (
-    <button onClick={() => dispatch(1)}>
-      {count}
-    </button>
-  )
+  return <button onClick={() => dispatch(1)}>{count}</button>;
 }
 ```
 
@@ -1053,7 +1004,7 @@ via GitHub's Sponsors Program.
 
 ## Support
 
-For support, reach out to us on the 
+For support, reach out to us on the
 [Reactiflux Discord channel #reactn](https://discord.gg/Tae4vuX).
 
 [![chat](https://img.shields.io/discord/102860784329052160.svg)](https://discord.gg/Tae4vuX)
