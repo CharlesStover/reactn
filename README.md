@@ -631,7 +631,8 @@ Use `setGlobal` to initialize or update your global state. This is analogous to
 calling `this.setGlobal` in a class component or `useGlobal()[1]` in a
 function component.
 
-The first parameter is the new global state that you want to set.
+The first parameter is merged into the global state in the same way a class
+component's `this.setGlobal` merges its first parameter into the local state.
 
 The optional second parameter is a callback.
 
