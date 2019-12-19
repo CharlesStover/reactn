@@ -14,7 +14,7 @@ export default (
 
   const spy = spyOn('removePropertyListener');
 
-  it(`should maintain componentWillUpdate behavior on ${source}`, (): void => {
+  it(`should maintain shouldComponentUpdate behavior on ${source}`, (): void => {
     const { rerender } = render(<TestComponent a={false} />);
     rerender(<TestComponent a={true} />);
     expect(spyCwu).toHaveBeenCalledTimes(1);

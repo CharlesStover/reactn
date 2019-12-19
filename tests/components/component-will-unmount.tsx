@@ -12,7 +12,7 @@ export default (
 
   const spy = spyOn('removePropertyListener');
 
-  it(`should maintain componentWillUpdate behavior on ${source}`, (): void => {
+  it(`should maintain shouldComponentUpdate behavior on ${source}`, (): void => {
     expect(spyCwu).not.toHaveBeenCalled();
     const { unmount } = render(<TestComponent />);
     expect(spyCwu).not.toHaveBeenCalled();

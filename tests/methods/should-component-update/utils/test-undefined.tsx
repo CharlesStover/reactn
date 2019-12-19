@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
 import { ReactNComponent } from '../../../../src/components';
-import { ReactNComponentWillUpdate } from '../../../../src/methods';
+import { ReactNShouldComponentUpdate } from '../../../../src/methods';
 
 
 
@@ -27,7 +27,7 @@ export default function testUndefined(
     const testComponent = render(<TestComponent n={1} />)
     testComponent.rerender(<TestComponent n={2} />);
  
-    expect(ReactNComponentWillUpdate).toHaveBeenCalledTimes(1);
-    // expect(ReactNComponentWillUpdate).toHaveBeenCalledWith();
+    expect(ReactNShouldComponentUpdate).toHaveBeenCalledTimes(1);
+    // expect(ReactNShouldComponentUpdate).toHaveBeenCalledWith();
   };
 };

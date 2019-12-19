@@ -2,16 +2,16 @@ import { Reducers, State } from '../../default';
 import { ReactNComponent, ReactNPureComponent } from '../../types/component';
 import {
   ReactNComponentWillUnmount,
-  ReactNComponentWillUpdate,
+  ReactNShouldComponentUpdate,
 } from '../methods';
 import {
   // componentWillUnmountInstance,
   componentWillUnmountPrototype,
 } from './component-will-unmount';
 import {
-  // componentWillUpdateInstance,
-  componentWillUpdatePrototype,
-} from './component-will-update';
+  // shouldComponentUpdateInstance,
+  shouldComponentUpdatePrototype,
+} from './should-component-update';
 
 
 
@@ -38,14 +38,15 @@ export default function bindLifecycleMethods<
   }
 
   if (
-    // !componentWillUpdateInstance(that) &&
-    !componentWillUpdatePrototype(that)
+    // !shouldComponentUpdateInstance(that) &&
+    !shouldComponentUpdatePrototype(that)
   ) {
 
-    // Warning: If componentWillUpdate is defined in the constructor (or as an
+    // Warning: If shouldComponentUpdate is defined in the constructor (or as an
     //   arrow function), this will be overridden.
-    that.componentWillUpdate = (): void => {
-      ReactNComponentWillUpdate(that);
+    that.shouldComponentUpdate = (): boolean => {
+      ReactNShouldComponentUpdate(that);
+      return true; // If shouldComponentUpdate is not defined it defaults to true
     };
   }
 };

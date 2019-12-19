@@ -870,7 +870,6 @@ export default withInit(
 
 - `super(props)` is incompatible with TypeScript. #126
 - Components re-render once per changed subscribed property. #129
-- Class components use `componentWillUpdate` without the `UNSAFE_` prefix. #134
 - Class components are incompatible with Providers in newer versions of React.
   #132
 

@@ -7,7 +7,7 @@ import resetGlobal from '../../src/reset-global';
 import setGlobal from '../../src/set-global';
 import { G, INITIAL_REDUCERS, INITIAL_STATE, R } from '../utils/initial';
 import testComponentWillUnmount from './component-will-unmount';
-import testComponentWillUpdate from './component-will-update';
+import testShouldComponentUpdate from './should-component-update';
 import testMount from './mount';
 import Props from './props';
 
@@ -59,31 +59,31 @@ const testComponent = (
   );
   */
 
-  // componentWillUpdate (prototype)
+  // shouldComponentUpdate (prototype)
   const spyUpdatePrototype = jest.fn();
-  testComponentWillUpdate(
+  testShouldComponentUpdate(
     'prototype',
     class TestUpdatePrototype extends _Super<Props, {}, G, R> {
-      public componentWillUpdate(): void { spyUpdatePrototype(); }
+      public shouldComponentUpdate(): boolean { return spyUpdatePrototype(); }
       public render(): null { return null; }
     },
     spyUpdatePrototype,
   );
 
   /**
-   * componentWillUpdate (instance)
+   * shouldComponentUpdate (instance)
    * Does not work because the Component calling
-   *   this.componentWillUpdate = () => { } in its constructor will override
-   *   the componentWillUpdate on its prototype that is set by the ReactN
+   *   this.shouldComponentUpdate = () => { } in its constructor will override
+   *   the shouldComponentUpdate on its prototype that is set by the ReactN
    *   Component class.
    * The Component's constructor executes after the ReactN Component's
    *   constructor, so ReactN cannot mutate the one set by the developer.
    * 
   const spyUpdateInstance = jest.fn();
-  testComponentWillUpdate(
+  testShouldComponentUpdate(
     'instance',
     class TestCwuInstance extends _Super<Props, {}, G, R> {
-      componentWillUpdate = spyUpdateInstance;
+      shouldComponentUpdate = spyUpdateInstance;
       render() { return null; }
     },
     spyUpdateInstance,
@@ -156,13 +156,13 @@ describe('Components', (): void => {
     );
     */
   
-    // componentWillUpdate (prototype)
+    // shouldComponentUpdate (prototype)
     const spyUpdatePrototype = jest.fn();
-    testComponentWillUpdate(
+    testShouldComponentUpdate(
       'prototype',
       reactn(
         class DecoratedCwuPrototype extends Component<Props, {}> {
-          public componentWillUpdate(): void { spyUpdatePrototype(); }
+          public shouldComponentUpdate(): boolean { return spyUpdatePrototype(); }
           public render(): null { return null; }
         }
       ),
@@ -170,22 +170,22 @@ describe('Components', (): void => {
     );
 
     /**
-     * componentWillUpdate (instance)
+     * shouldComponentUpdate (instance)
      * Does not work because the extended Component calling
-     *   this.componentWillUpdate = () => { } in its constructor will
-     *   override the componentWillUpdate on its prototype that is set by
+     *   this.shouldComponentUpdate = () => { } in its constructor will
+     *   override the shouldComponentUpdate on its prototype that is set by
      *   the decorator.
-     * This can be fixed by setting componentWillUpdate as a method on the
+     * This can be fixed by setting shouldComponentUpdate as a method on the
      *   instance in the decorator's constructor.
      * This is lower priority, since it isn't even supported by non-decorated
      *   ReactN Components, so ommitted to keep their features in sync.
      * 
     const spyUpdateInstance = jest.fn();
-    testComponentWillUpdate(
+    testShouldComponentUpdate(
       'instance',
       reactn(
         class DecoratedCwuInstance extends Component<Props, {}> {
-          componentWillUpdate = spyUpdateInstance;
+          shouldComponentUpdate = spyUpdateInstance;
           render() { return null; }
         }
       ),

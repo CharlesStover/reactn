@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import * as React from 'react';
 import { ReactNComponent } from '../../../../src/components';
-import { ReactNComponentWillUpdate } from '../../../../src/methods';
+import { ReactNShouldComponentUpdate } from '../../../../src/methods';
 
 
 
@@ -18,12 +18,12 @@ export default function testUndefined(
 ): VoidFunction {
   return (): void => {
 
-    const mockComponentWillUpdate: VoidFunction =
+    const mockShouldComponentUpdate: VoidFunction =
       jest.fn((): void => { });
 
     class TestComponent extends Component<P> {
 
-      componentWillUpdate = mockComponentWillUpdate;
+      shouldComponentUpdate = mockShouldComponentUpdate;
 
       render() {
         return null;
@@ -33,11 +33,11 @@ export default function testUndefined(
     const testComponent = render(<TestComponent n={1} />)
     testComponent.rerender(<TestComponent n={2} />);
 
-    expect(ReactNComponentWillUpdate).toHaveBeenCalledTimes(1);
-    // expect(ReactNComponentWillUpdate).toHaveBeenCalledWith();
-    // expect(componentWillUpdateInstance).toHaveBeenCalledTimes(1);
-    // expect(componentWillUpdateInstance).toHaveBeenCalledWith();
-    expect(mockComponentWillUpdate).toHaveBeenCalledTimes(1);
-    expect(mockComponentWillUpdate).toHaveBeenCalledWith();
+    expect(ReactNShouldComponentUpdate).toHaveBeenCalledTimes(1);
+    // expect(ReactNShouldComponentUpdate).toHaveBeenCalledWith();
+    // expect(shouldComponentUpdateInstance).toHaveBeenCalledTimes(1);
+    // expect(shouldComponentUpdateInstance).toHaveBeenCalledWith();
+    expect(mockShouldComponentUpdate).toHaveBeenCalledTimes(1);
+    expect(mockShouldComponentUpdate).toHaveBeenCalledWith();
   };
 };

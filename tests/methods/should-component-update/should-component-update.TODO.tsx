@@ -1,11 +1,11 @@
-// import unmock from './utils/mock-component-will-update';
+// import unmock from './utils/mock-should-component-update';
 import { ReactNComponent, ReactNPureComponent } from '../../../src/components';
 // import testPrototype from './utils/test-prototype';
 import testUndefined from './utils/test-undefined';
 
 
 
-describe('componentWillUpdate', (): void => {
+describe('shouldComponentUpdate', (): void => {
 
   /*
   afterAll((): void => {
@@ -13,7 +13,7 @@ describe('componentWillUpdate', (): void => {
   });
   */
 
-  describe('undefined componentWillUpdate', (): void => {
+  describe('undefined shouldComponentUpdate', (): void => {
     it('will fire on Components', testUndefined(ReactNComponent));
     it('will fire on PureComponents', testUndefined(ReactNPureComponent));
   });
@@ -22,14 +22,14 @@ describe('componentWillUpdate', (): void => {
   /*
   This works, but the jest.mocks for the tested helper functions are not
     binding correctly.
-  describe('prototype componentWillUpdate', (): void => {
+  describe('prototype shouldComponentUpdate', (): void => {
     it('will fire on Components', testPrototype(ReactNComponent));
     it('will fire on PureComponents', testPrototype(ReactNPureComponent));
   });
   */
 
   /*
-  describe('instance componentWillUpdate', (): void => {
+  describe('instance shouldComponentUpdate', (): void => {
     it('will fire on Components', testInstance(ReactNComponent));
     it('will fire on PureComponents', testInstance(ReactNPureComponent));
   });

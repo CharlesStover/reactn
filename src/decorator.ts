@@ -7,7 +7,7 @@ import NewGlobalState from '../types/new-global-state';
 import {
   // createReactNGetDerivedStateFromProps,
   ReactNComponentWillUnmount,
-  ReactNComponentWillUpdate,
+  ReactNShouldComponentUpdate,
   ReactNDispatch,
   ReactNGlobal,
   ReactNGlobalCallback,
@@ -58,11 +58,9 @@ export default function ReactN<
       }
     }
 
-    public componentWillUpdate(...args: [ P, S, any ]): void {
-      ReactNComponentWillUpdate(this);
-      if (super.componentWillUpdate) {
-        super.componentWillUpdate(...args);
-      }
+    public shouldComponentupdate(...args: [ P, S, any ]): boolean {
+      ReactNShouldComponentUpdate(this);
+      return super.shouldComponentUpdate ? super.shouldComponentUpdate(...args) : true
     }
 
     public get dispatch(): Dispatchers<G, R> {

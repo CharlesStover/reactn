@@ -46,8 +46,8 @@
     "eslint": "^5.15.2",
     "eslint-plugin-react": "^7.12.4",
     "jest": "^24.6.0",
-    "react": "~16.8",
-    "react-dom": "~16.8",
+    "react": "~0.14",
+    "react-dom": "~0.14",
     "ts-jest": "^24.0.1",
     "ts-node": "^8.0.2",
     "typescript": "^3.3.1"
