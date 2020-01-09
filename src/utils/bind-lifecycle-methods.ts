@@ -44,7 +44,7 @@ export default function bindLifecycleMethods<
 
     // Warning: If componentWillUpdate is defined in the constructor (or as an
     //   arrow function), this will be overridden.
-    that.componentWillUpdate = (): void => {
+    that.UNSAFE_componentWillUpdate = (): void => {
       ReactNComponentWillUpdate(that);
     };
   }

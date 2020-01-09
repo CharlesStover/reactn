@@ -58,10 +58,10 @@ export default function ReactN<
       }
     }
 
-    public componentWillUpdate(...args: [ P, S, any ]): void {
+    public UNSAFE_componentWillUpdate(...args: [ P, S, any ]): void {
       ReactNComponentWillUpdate(this);
-      if (super.componentWillUpdate) {
-        super.componentWillUpdate(...args);
+      if (super.UNSAFE_componentWillUpdate) {
+        super.UNSAFE_componentWillUpdate(...args);
       }
     }
 
