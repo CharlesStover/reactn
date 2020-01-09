@@ -53,5 +53,12 @@ export const componentWillUpdatePrototype = <
     };
     return true;
   }
+  if (Object.prototype.hasOwnProperty.call(proto, 'componentWillUpdate')) {
+    that.componentWillUpdate = (...args: [ P, S, any ]): void => {
+      ReactNComponentWillUpdate(that);
+      proto.componentWillUpdate.bind(that)(...args);
+    };
+    return true;
+  }
   return false;
 };

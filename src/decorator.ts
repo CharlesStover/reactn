@@ -1,4 +1,4 @@
-import { ComponentClass } from 'react';
+import { ComponentClass, version } from 'react';
 import { Reducers, State } from '../default';
 import Callback from '../types/callback';
 import { ReactNComponentClass } from '../types/component-class';
@@ -59,9 +59,23 @@ export default function ReactN<
     }
 
     public UNSAFE_componentWillUpdate(...args: [ P, S, any ]): void {
-      ReactNComponentWillUpdate(this);
+      if (parseInt(version.split('.')[0]) > 16 ||
+      (parseInt(version.split('.')[0]) == 16 && parseInt(version.split('.')[1]) >= 3)){
+        ReactNComponentWillUpdate(this);
+      }
       if (super.UNSAFE_componentWillUpdate) {
         super.UNSAFE_componentWillUpdate(...args);
+      }
+      
+    }
+
+    public componentWillUpdate(...args: [ P, S, any ]): void {
+      if (parseInt(version.split('.')[0]) < 16 ||
+      (parseInt(version.split('.')[0]) == 16 && parseInt(version.split('.')[1]) < 3)){
+        ReactNComponentWillUpdate(this);
+      }
+      if (super.componentWillUpdate) {
+        super.componentWillUpdate(...args);
       }
     }
 

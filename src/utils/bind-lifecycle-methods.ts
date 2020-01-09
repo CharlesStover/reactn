@@ -1,5 +1,6 @@
 import { Reducers, State } from '../../default';
 import { ReactNComponent, ReactNPureComponent } from '../../types/component';
+import React = require('react');
 import {
   ReactNComponentWillUnmount,
   ReactNComponentWillUpdate,
@@ -41,11 +42,18 @@ export default function bindLifecycleMethods<
     // !componentWillUpdateInstance(that) &&
     !componentWillUpdatePrototype(that)
   ) {
-
+    const isDeprecated = parseInt(React.version.split('.')[0]) > 16 ||
+    (parseInt(React.version.split('.')[0]) == 16 && parseInt(React.version.split('.')[1]) >= 3)
+    if (isDeprecated) {
+      that.UNSAFE_componentWillUpdate = (): void => {
+        ReactNComponentWillUpdate(that);
+      };
+    } else {
+      that.componentWillUpdate = (): void => {
+        ReactNComponentWillUpdate(that);
+      };
+    }
     // Warning: If componentWillUpdate is defined in the constructor (or as an
     //   arrow function), this will be overridden.
-    that.UNSAFE_componentWillUpdate = (): void => {
-      ReactNComponentWillUpdate(that);
-    };
   }
 };
