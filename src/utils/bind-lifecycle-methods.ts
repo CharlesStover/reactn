@@ -42,7 +42,7 @@ export default function bindLifecycleMethods<
     // !componentWillUpdateInstance(that) &&
     !componentWillUpdatePrototype(that)
   ) {
-    const [ rVerMaj, rVerMin ] = React.version.split('.').map(parseInt)
+    const [ rVerMaj, rVerMin ] = React.version.split('.').map((v): number => parseInt(v));
     if (rVerMaj > 16 || (rVerMaj === 16 && rVerMin >= 3)) {
       that.UNSAFE_componentWillUpdate = (): void => {
         ReactNComponentWillUpdate(that);
