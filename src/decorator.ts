@@ -59,19 +59,18 @@ export default function ReactN<
     }
 
     public UNSAFE_componentWillUpdate(...args: [ P, S, any ]): void {
-      if (parseInt(version.split('.')[0]) > 16 ||
-      (parseInt(version.split('.')[0]) == 16 && parseInt(version.split('.')[1]) >= 3)){
+      const [ rVerMaj, rVerMin ] = version.split('.').map(parseInt)
+      if (rVerMaj > 16 || (rVerMaj === 16 && rVerMin >= 3)) {
         ReactNComponentWillUpdate(this);
       }
       if (super.UNSAFE_componentWillUpdate) {
         super.UNSAFE_componentWillUpdate(...args);
       }
-      
     }
 
     public componentWillUpdate(...args: [ P, S, any ]): void {
-      if (parseInt(version.split('.')[0]) < 16 ||
-      (parseInt(version.split('.')[0]) == 16 && parseInt(version.split('.')[1]) < 3)){
+      const [ rVerMaj, rVerMin ] = version.split('.').map(parseInt)
+      if (rVerMaj < 16 || (rVerMaj === 16 && rVerMin < 3)) {
         ReactNComponentWillUpdate(this);
       }
       if (super.componentWillUpdate) {

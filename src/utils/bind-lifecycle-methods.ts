@@ -42,9 +42,8 @@ export default function bindLifecycleMethods<
     // !componentWillUpdateInstance(that) &&
     !componentWillUpdatePrototype(that)
   ) {
-    const isDeprecated = parseInt(React.version.split('.')[0]) > 16 ||
-    (parseInt(React.version.split('.')[0]) == 16 && parseInt(React.version.split('.')[1]) >= 3)
-    if (isDeprecated) {
+    const [ rVerMaj, rVerMin ] = React.version.split('.').map(parseInt)
+    if (rVerMaj > 16 || (rVerMaj === 16 && rVerMin >= 3)) {
       that.UNSAFE_componentWillUpdate = (): void => {
         ReactNComponentWillUpdate(that);
       };
