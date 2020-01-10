@@ -54,7 +54,7 @@ export function ReactNComponentWillUnmount<G extends {} = State>(
 
 
 
-// this.componentWillUnmount
+// this.componentWillUpdate
 export function ReactNComponentWillUpdate<G extends {} = State>(
   that: ReactNComponent<any, any, G> | ReactNPureComponent<any, any, G>,
 ): void {
@@ -63,6 +63,14 @@ export function ReactNComponentWillUpdate<G extends {} = State>(
   getGlobalStateManager<G>().removePropertyListener(that._globalCallback);
 }
 
+// this.shouldComponentUpdate
+export function ReactNCShouldComponentUpdate<G extends {} = State>(
+  that: ReactNComponent<any, any, G> | ReactNPureComponent<any, any, G>,
+): void {
+
+  // No longer re-render this component on global state change.
+  getGlobalStateManager<G>().removePropertyListener(that._globalCallback);
+}
 
 
 // this.dispatch

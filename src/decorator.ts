@@ -8,6 +8,7 @@ import {
   // createReactNGetDerivedStateFromProps,
   ReactNComponentWillUnmount,
   ReactNComponentWillUpdate,
+  ReactNCShouldComponentUpdate,
   ReactNDispatch,
   ReactNGlobal,
   ReactNGlobalCallback,
@@ -58,14 +59,12 @@ export default function ReactN<
       }
     }
 
-    public UNSAFE_componentWillUpdate(...args: [ P, S, any ]): void {
+    public shouldComponentUpdate(...args: [ P, S, any ]): boolean {
       const [ rVerMaj, rVerMin ] = version.split('.').map((v): number => parseInt(v));
       if (rVerMaj > 16 || (rVerMaj === 16 && rVerMin >= 3)) {
-        ReactNComponentWillUpdate(this);
+        ReactNCShouldComponentUpdate(this);
       }
-      if (super.UNSAFE_componentWillUpdate) {
-        super.UNSAFE_componentWillUpdate(...args);
-      }
+      return super.shouldComponentUpdate ? super.shouldComponentUpdate(...args) : true;
     }
 
     public componentWillUpdate(...args: [ P, S, any ]): void {
