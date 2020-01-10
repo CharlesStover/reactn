@@ -48,7 +48,7 @@ export const componentWillUpdatePrototype = <
     Object.getPrototypeOf(that);
   const [ rVerMaj, rVerMin ] = React.version.split('.').map((v): number => parseInt(v));
   if (Object.prototype.hasOwnProperty.call(proto, 'componentWillUpdate')
-    && ((rVerMaj < 16 || (rVerMaj === 16 && rVerMin < 3)))) { // Using old react version)
+    && ((rVerMaj < 16 || (rVerMaj === 16 && rVerMin < 3)))) { // Using old react version
     that.componentWillUpdate = (...args: [ P, S, any ]): void => {
       ReactNComponentWillUpdate(that);
       proto.componentWillUpdate.bind(that)(...args);

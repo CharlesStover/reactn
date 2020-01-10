@@ -50,11 +50,13 @@ export default function bindLifecycleMethods<
     !componentWillUpdatePrototype(that) &&
     ((rVerMaj < 16 || (rVerMaj === 16 && rVerMin < 3))) // Using old react version
   ) {
+
+    // Warning: If componentWillUpdate is defined in the constructor (or as an
+    //   arrow function), this will be overridden.
     that.componentWillUpdate = (): void => {
       ReactNComponentWillUpdate(that);
     };
-    // Warning: If componentWillUpdate is defined in the constructor (or as an
-    //   arrow function), this will be overridden.
+    
   }
 
   if (
