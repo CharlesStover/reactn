@@ -1,7 +1,7 @@
 import { Reducers, State } from '../../default';
 import { ReactNComponent, ReactNPureComponent } from '../../types/component';
 import { ReactNCShouldComponentUpdate } from '../methods';
-
+import React = require('react');
 
 
 /*
@@ -47,11 +47,14 @@ export const shouldComponentUpdatePrototype = <
 
   const proto: ReactNComponent | ReactNPureComponent =
     Object.getPrototypeOf(that);
-  if (Object.prototype.hasOwnProperty.call(proto, 'shouldComponentUpdate')) {
+  const [ rVerMaj, rVerMin ] = React.version.split('.').map((v): number => parseInt(v));
+  if (Object.prototype.hasOwnProperty.call(proto, 'shouldComponentUpdate')
+    && ((rVerMaj > 16 || (rVerMaj === 16 && rVerMin >= 3)))) {
     that.shouldComponentUpdate = (...args: [ P, S, any ]): boolean => {
       ReactNCShouldComponentUpdate(that);
       return proto.shouldComponentUpdate.bind(that)(...args); // Returns outcome of shouldComponentUpdate method
     };
+    return true;
   }
   return false;
 };
