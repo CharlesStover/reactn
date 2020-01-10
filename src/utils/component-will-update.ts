@@ -46,6 +46,13 @@ export const componentWillUpdatePrototype = <
 ): boolean => {
   const proto: ReactNComponent | ReactNPureComponent =
     Object.getPrototypeOf(that);
+  if (Object.prototype.hasOwnProperty.call(proto, 'UNSAFE_componentWillUpdate')) {
+    that.UNSAFE_componentWillUpdate = (...args: [ P, S, any ]): void => {
+      ReactNComponentWillUpdate(that);
+      proto.UNSAFE_componentWillUpdate.bind(that)(...args);
+    };
+    return true;
+  }
   if (Object.prototype.hasOwnProperty.call(proto, 'componentWillUpdate')) {
     that.componentWillUpdate = (...args: [ P, S, any ]): void => {
       ReactNComponentWillUpdate(that);

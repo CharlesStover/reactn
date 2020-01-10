@@ -1,4 +1,4 @@
-import { ComponentClass } from 'react';
+import { ComponentClass, version } from 'react';
 import { Reducers, State } from '../default';
 import Callback from '../types/callback';
 import { ReactNComponentClass } from '../types/component-class';
@@ -58,8 +58,21 @@ export default function ReactN<
       }
     }
 
+    public UNSAFE_componentWillUpdate(...args: [ P, S, any ]): void {
+      const [ rVerMaj, rVerMin ] = version.split('.').map((v): number => parseInt(v));
+      if (rVerMaj > 16 || (rVerMaj === 16 && rVerMin >= 3)) {
+        ReactNComponentWillUpdate(this);
+      }
+      if (super.UNSAFE_componentWillUpdate) {
+        super.UNSAFE_componentWillUpdate(...args);
+      }
+    }
+
     public componentWillUpdate(...args: [ P, S, any ]): void {
-      ReactNComponentWillUpdate(this);
+      const [ rVerMaj, rVerMin ] = version.split('.').map((v): number => parseInt(v));
+      if (rVerMaj < 16 || (rVerMaj === 16 && rVerMin < 3)) {
+        ReactNComponentWillUpdate(this);
+      }
       if (super.componentWillUpdate) {
         super.componentWillUpdate(...args);
       }
