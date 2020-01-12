@@ -64,7 +64,7 @@ export function ReactNComponentWillUpdate<G extends {} = State>(
 }
 
 // this.shouldComponentUpdate
-export function ReactNCShouldComponentUpdate<G extends {} = State>(
+export function ReactNShouldComponentUpdate<G extends {} = State>(
   that: ReactNComponent<any, any, G> | ReactNPureComponent<any, any, G>,
 ): void {
 
