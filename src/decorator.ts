@@ -8,7 +8,6 @@ import {
   // createReactNGetDerivedStateFromProps,
   ReactNComponentWillUnmount,
   ReactNComponentWillUpdate,
-  // ReactNShouldComponentUpdate,
   ReactNDispatch,
   ReactNGlobal,
   ReactNGlobalCallback,
@@ -24,7 +23,6 @@ const isSetGlobalCallback = false;
 
 const [ rVerMaj, rVerMin ] = version.split('.').map((v): number => parseInt(v));
 const isUsingOldReact = rVerMaj < 16 || (rVerMaj === 16 && rVerMin < 3);
-const isPureComponent = (name: string): boolean => name === 'DecoratedCwuPrototype-ReactN'
 
 // Get the name of a Component.
 const componentName = <
@@ -73,23 +71,13 @@ export default function ReactN<
     }
 
     public UNSAFE_componentWillUpdate(...args: [ P, S, any ]): void {
-      if (!isUsingOldReact /* && isPureComponent(this.constructor.name) see shouldComponentUpdate */) {
+      if (!isUsingOldReact) {
         ReactNComponentWillUpdate(this);
       }
       if (super.UNSAFE_componentWillUpdate) {
         super.UNSAFE_componentWillUpdate(...args);
       }
     }
-
-    /*
-    // Commenting this out...seems that shouldComponentUpdate is not firing for decorated components      
-    public shouldComponentUpdate(...args: [ P, S, any ]): boolean {
-      console.log('I'm firing!'); <= This never shows in tests
-      if (!isUsingOldReact && !isPureComponent(this.constructor.name)) {
-        ReactNShouldComponentUpdate(this);
-      }
-      return super.shouldComponentUpdate ? super.shouldComponentUpdate(...args) : true;
-    } */
 
     public get dispatch(): Dispatchers<G, R> {
       return ReactNDispatch<G, R>();
@@ -122,11 +110,6 @@ export default function ReactN<
     ReactNComponent.getDerivedStateFromProps = createReactNGetDerivedStateFromProps(Component);
   }
   */
-
-  if (isPureComponent(DecoratedReactNComponent.displayName)) {
-    // Must remove shouldComponentUpdate from prototype for pure components or it will get warning and side effects
-    delete DecoratedReactNComponent.prototype.shouldComponentUpdate
-  }
 
   return DecoratedReactNComponent;
 };
