@@ -21,6 +21,9 @@ const isComponentDidMount = false;
 const isComponentDidUpdate = false;
 const isSetGlobalCallback = false;
 
+const [ rVerMaj, rVerMin ] = version.split('.').map((v): number => parseInt(v));
+const isUsingOldReact = rVerMaj < 16 || (rVerMaj === 16 && rVerMin < 3);
+
 // Get the name of a Component.
 const componentName = <
   P extends {} = {},
@@ -44,7 +47,7 @@ export default function ReactN<
   class DecoratedReactNComponent extends DecoratedComponent {
 
     public static displayName: string =
-      `${componentName(DecoratedComponent)}-ReactN`;
+    `${componentName(DecoratedComponent)}-ReactN`;
 
     public constructor(props: Readonly<P>, context?: any) {
       super(props, context);
@@ -58,23 +61,21 @@ export default function ReactN<
       }
     }
 
-    public UNSAFE_componentWillUpdate(...args: [ P, S, any ]): void {
-      const [ rVerMaj, rVerMin ] = version.split('.').map((v): number => parseInt(v));
-      if (rVerMaj > 16 || (rVerMaj === 16 && rVerMin >= 3)) {
-        ReactNComponentWillUpdate(this);
-      }
-      if (super.UNSAFE_componentWillUpdate) {
-        super.UNSAFE_componentWillUpdate(...args);
-      }
-    }
-
     public componentWillUpdate(...args: [ P, S, any ]): void {
-      const [ rVerMaj, rVerMin ] = version.split('.').map((v): number => parseInt(v));
-      if (rVerMaj < 16 || (rVerMaj === 16 && rVerMin < 3)) {
+      if (isUsingOldReact) {
         ReactNComponentWillUpdate(this);
       }
       if (super.componentWillUpdate) {
         super.componentWillUpdate(...args);
+      }
+    }
+
+    public UNSAFE_componentWillUpdate(...args: [ P, S, any ]): void {
+      if (!isUsingOldReact) {
+        ReactNComponentWillUpdate(this);
+      }
+      if (super.UNSAFE_componentWillUpdate) {
+        super.UNSAFE_componentWillUpdate(...args);
       }
     }
 

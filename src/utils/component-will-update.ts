@@ -1,7 +1,7 @@
 import { Reducers, State } from '../../default';
 import { ReactNComponent, ReactNPureComponent } from '../../types/component';
 import { ReactNComponentWillUpdate } from '../methods';
-
+import React = require('react');
 
 
 /*
@@ -46,14 +46,9 @@ export const componentWillUpdatePrototype = <
 ): boolean => {
   const proto: ReactNComponent | ReactNPureComponent =
     Object.getPrototypeOf(that);
-  if (Object.prototype.hasOwnProperty.call(proto, 'UNSAFE_componentWillUpdate')) {
-    that.UNSAFE_componentWillUpdate = (...args: [ P, S, any ]): void => {
-      ReactNComponentWillUpdate(that);
-      proto.UNSAFE_componentWillUpdate.bind(that)(...args);
-    };
-    return true;
-  }
-  if (Object.prototype.hasOwnProperty.call(proto, 'componentWillUpdate')) {
+  const [ rVerMaj, rVerMin ] = React.version.split('.').map((v): number => parseInt(v));
+  if (Object.prototype.hasOwnProperty.call(proto, 'componentWillUpdate')
+    && ((rVerMaj < 16 || (rVerMaj === 16 && rVerMin < 3)))) { // Using old react version
     that.componentWillUpdate = (...args: [ P, S, any ]): void => {
       ReactNComponentWillUpdate(that);
       proto.componentWillUpdate.bind(that)(...args);
