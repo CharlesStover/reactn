@@ -10,11 +10,7 @@ import GlobalStateManager from './global-state-manager';
 import setGlobal from './set-global';
 import REACT_HOOKS_ERROR from './utils/react-hooks-error';
 
-
-
 type VoidFunction = () => void;
-
-
 
 // useGlobal()
 export default function _useGlobal<G extends {} = State>(
@@ -24,7 +20,7 @@ export default function _useGlobal<G extends {} = State>(
 // useGlobal('property')
 export default function _useGlobal<
   G extends {} = State,
-  Property extends keyof G = keyof G,
+  Property extends keyof G = keyof G
 >(
   overrideGlobalStateManager: GlobalStateManager<G> | null,
   property: Property,
@@ -33,12 +29,11 @@ export default function _useGlobal<
 // Implementation
 export default function _useGlobal<
   G extends {} = State,
-  Property extends keyof G = keyof G,
+  Property extends keyof G = keyof G
 >(
   overrideGlobalStateManager: GlobalStateManager<G> | null,
   property?: Property,
 ): UseGlobal<G, Property> {
-
   // Require hooks.
   if (!useContext) {
     throw REACT_HOOKS_ERROR;
@@ -56,47 +51,39 @@ export default function _useGlobal<
 
   // Return the entire global state.
   if (typeof property === 'undefined') {
-
-    
     // If this component ever updates or unmounts, remove the force update
     //   listener.
-    useEffect((): VoidFunction => removeForceUpdateListener);
+    useEffect((): VoidFunction => removeForceUpdateListener, []);
 
     const globalStateSetter = useCallback(
       (
         newGlobalState: NewGlobalState<G>,
         callback: Callback<G> | null = null,
-      ): Promise<G> =>
-        setGlobal(globalStateManager, newGlobalState, callback),
+      ): Promise<G> => setGlobal(globalStateManager, newGlobalState, callback),
       [],
     );
 
-    return [
-      globalStateManager.spyState(forceUpdate),
-      globalStateSetter,
-    ];
+    return [globalStateManager.spyState(forceUpdate), globalStateSetter];
   }
 
-  useEffect((): VoidFunction => {
+  useEffect(
+    (): VoidFunction => {
+      // We add the listener as an effect, so that there are not race conditions
+      //   between subscribing and unsubscribing.
+      // Subscribing outside of useEffect via `spyState()[property]` will
+      //   cause the re-render subscription to occur before the unmount
+      //   unsubscription occurs. As a result, the unmount unsubscription
+      //   removes the re-rendered subscription.
+      globalStateManager.addPropertyListener(property, forceUpdate);
 
-    // We add the listener as an effect, so that there are not race conditions
-    //   between subscribing and unsubscribing.
-    // Subscribing outside of useEffect via `spyState()[property]` will
-    //   cause the re-render subscription to occur before the unmount
-    //   unsubscription occurs. As a result, the unmount unsubscription
-    //   removes the re-rendered subscription.
-    globalStateManager.addPropertyListener(property, forceUpdate);
-
-    // If this component ever updates or unmounts, remove the force update
-    //   listener.
-    return removeForceUpdateListener;
-  });
+      // If this component ever updates or unmounts, remove the force update
+      //   listener.
+      return removeForceUpdateListener;
+    },
+  );
 
   const globalPropertySetter = useCallback(
-    (
-      value: G[Property],
-      callback: Callback<G> | null = null,
-    ): Promise<G> => {
+    (value: G[Property], callback: Callback<G> | null = null): Promise<G> => {
       const newGlobalState: Partial<G> = Object.create(null);
       newGlobalState[property] = value;
       return setGlobal(globalStateManager, newGlobalState, callback);
@@ -105,8 +92,5 @@ export default function _useGlobal<
   );
 
   // Return both getter and setter.
-  return [
-    globalStateManager.state[property],
-    globalPropertySetter,
-  ];
-};
+  return [globalStateManager.state[property], globalPropertySetter];
+}
