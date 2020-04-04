@@ -6,7 +6,7 @@ export type GlobalTuple<GS> = [
   (newGlobalState: NewGlobalState<GS>, callback?: Callback<GS>) => Promise<GS>,
 ];
 
-type Setter<G extends {}, P extends keyof G> =
+export type Setter<G extends {}, P extends keyof G> =
   (newValue: G[P], callback?: Callback<G>) => Promise<G>;
 
 export type StateTuple<G extends {}, P extends keyof G> = [
