@@ -21,16 +21,16 @@ For support, reach out to us on the
 
 ### No boilerplate
 
-For function components, `import { useGlobal } from 'reactn';` to harness the
+For function components, `import { useGlobal } from "reactn";` to harness the
 power of React Hooks!
 
-For class components, simply change `import React from 'react';` to
-`import React from 'reactn';`, and your React class components will have global
+For class components, simply change `import React from "react";` to
+`import React from "reactn";`, and your React class components will have global
 state built in!
 
 If you prefer class decorators, you can continue to
-`import React from 'react';` for your components and additionally
-`import reactn from 'reactn';` for access to the `@reactn` decorator!
+`import React from "react";` for your components and additionally
+`import reactn from "reactn";` for access to the `@reactn` decorator!
 
 ### Intuitive
 
@@ -163,9 +163,9 @@ In order to tell TypeScript the shape of your global state when you are not usin
 a Provider, create a file at `src/global.d.ts` with the following contents:
 
 ```javascript
-import 'reactn';
+import "reactn";
 
-declare module 'reactn/default' {
+declare module "reactn/default" {
 
   export interface Reducers {
 
@@ -173,13 +173,13 @@ declare module 'reactn/default' {
       global: State,
       dispatch: Dispatch,
       ...strings: any[]
-    ) => Pick<State, 'value'>;
+    ) => Pick<State, "value">;
 
     increment: (
       global: State,
       dispatch: Dispatch,
       i: number,
-    ) => Pick<State, 'count'>;
+    ) => Pick<State, "count">;
 
     doNothing: (
       global: State,
@@ -195,7 +195,7 @@ declare module 'reactn/default' {
 ```
 
 In the above file, we extend the `Reducers` and `State` interfaces in the
-`'reactn/default'` file. While you will never use `'reactn/default'` in
+`"reactn/default"` file. While you will never use `"reactn/default"` in
 your code, ReactN will use it to determine the shape of the default
 global state.
 
@@ -240,14 +240,14 @@ export default class Cards extends React.PureComponent {
     this.setGlobal(
       // Despite fetch returning a Promise, ReactN can handle it.
       fetch('/api/cards')
-        .then(response => response.json())
+        .then((response) => response.json())
 
         // Set the global `cards` property to the response.
-        .then(cards => ({ cards }))
+        .then((cards) => ({ cards }))
 
         // Fail gracefully, set the global `error`
         //   property to the caught error.
-        .catch(err => ({ error: err })),
+        .catch((err) => ({ error: err }))
     );
   }
 
@@ -257,7 +257,7 @@ export default class Cards extends React.PureComponent {
     //   much the same way this.state returns the local state.
     return (
       <div>
-        {this.global.cards.map(card => (
+        {this.global.cards.map((card) => (
           <Card key={card.id} {...card} />
         ))}
       </div>
@@ -285,14 +285,14 @@ export default class Cards extends React.PureComponent {
     this.setGlobal(
       // Despite fetch returning a Promise, ReactN can handle it.
       fetch('/api/cards')
-        .then(response => response.json())
+        .then((response) => response.json())
 
         // Set the global `cards` property to the response.
-        .then(cards => ({ cards }))
+        .then((cards) => ({ cards }))
 
         // Fail gracefully, set the global `error`
         //   property to the caught error.
-        .catch(err => ({ error: err })),
+        .catch((err) => ({ error: err }))
     );
   }
 
@@ -302,7 +302,7 @@ export default class Cards extends React.PureComponent {
     //   much the same way this.state returns the local state.
     return (
       <div>
-        {this.global.cards.map(card => (
+        {this.global.cards.map((card) => (
           <Card key={card.id} {...card} />
         ))}
       </div>
@@ -329,7 +329,7 @@ const Cards = () => {
   // For each card in the global state, render a Card component.
   return (
     <div>
-      {cards.map(card => (
+      {cards.map((card) => (
         <Card key={card.id} {...card} />
       ))}
     </div>
@@ -412,7 +412,7 @@ The only parameter is the callback function.
 import { addCallback, setGlobal } from 'reactn';
 
 // Every time the global state changes, this function will execute.
-addCallback(global => {
+addCallback((global, dispatcherMap, stateChange) => {
   alert(`The new value is ${global.value}!`);
 
   // If the global state was changed to 1, change it to 2.
@@ -435,7 +435,7 @@ the callback.
 ```javascript
 import { addCallback, setGlobal } from 'reactn';
 
-const removeAlert = addCallback(global => {
+const removeAlert = addCallback((global) => {
   alert(global.value);
 });
 
@@ -456,7 +456,7 @@ setGlobal({ value: 4 });
 Use `addReducer` to add a reducer to your global state.
 
 The first parameter is the name of your reducer. You will access your reducer
-by this name. `this.dispatch.reducerName` or `useDispatch('reducerName')`.
+by this name. `this.dispatch.reducerName` or `useDispatch("reducerName")`.
 
 The second parameter is the reducer function. The reducer function that you
 _write_ has at least two parameters: first, the global state; second, a map of
@@ -659,9 +659,9 @@ setGlobal(
   },
 
   // After it is set, assert that loading is true.
-  global => {
+  (global) => {
     assert(global.loading === true);
-  },
+  }
 );
 ```
 
@@ -711,7 +711,7 @@ function MyComponent() {
 
 ###### useDispatch(Function, keyof State)
 
-`useDispatch(f, 'property')` allows you to define your global property reducer
+`useDispatch(f, "property")` allows you to define your global property reducer
 inline. A property reducer changes only one property of the global state, which
 can greatly simplify your reducer logic.
 
@@ -727,7 +727,7 @@ function MyComponent() {
 
 ###### useDispatch(keyof Reducers)
 
-`useDispatch('reducerName')` allows you to dispatch a global reducer.
+`useDispatch("reducerName")` allows you to dispatch a global reducer.
 
 ```javascript
 import React, { useDispatch, useGlobal } from 'reactn';
@@ -755,7 +755,7 @@ The `setGlobal` function returned by `useGlobal` is analogous to the
 [`setGlobal`](#setglobal) helper function and `this.setGlobal` class method.
 
 ```javascript
-import React, { useGlobal } from 'reactn';
+import React, { useGlobal } from "reactn";
 
 function MyComponent() {
   const [ global, setGlobal ] = useGlobal();
@@ -775,7 +775,7 @@ function MyComponent() {
 
 ###### useGlobal(keyof State)
 
-`useGlobal('property')` returns a specific global state property and a function
+`useGlobal("property")` returns a specific global state property and a function
 for updating that property.
 
 ```javascript
@@ -785,9 +785,7 @@ const getRandomNumber = () => Math.floor(Math.random() * 100);
 
 function MyComponent() {
   const [myNumber, setMyNumber] = useGlobal('myNumber');
-  return (
-    <button onClick={() => setMyNumber(getRandomNumber())}>{myNumber}</button>
-  );
+  return <button onClick={() => setMyNumber(getRandomNumber())}>{myNumber}</button>;
 }
 ```
 
@@ -816,22 +814,22 @@ function MyComponent(props) {
 
 export default withGlobal(
   // Set the `value` prop equal to the global state's `value` property.
-  global => ({
+  (global) => ({
     value: global.value,
   }),
 
   // Important Note: This is not the setGlobal helper function.
   // Set the `incrementValue` prop to a function that increments the global
   //   state's `value` property.
-  setGlobal => ({
+  (setGlobal) => ({
     incrementValue: () => {
       // Important Note: This is not the setGlobal helper function.
       // This is the parameter referenced 4 lines up.
-      setGlobal(global => ({
+      setGlobal((global) => ({
         value: global.value + 1,
       }));
     },
-  }),
+  })
 )(MyComponent);
 ```
 
@@ -858,7 +856,7 @@ const INITIAL_STATE = {
 
 export default withInit(
   INITIAL_STATE,
-  INITIAL_REDUCERS,
+  INITIAL_REDUCERS
 )(function App() {
   const addOne = useDispatch('addOne');
   const [count] = useGlobal('count');
